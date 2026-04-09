@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0A0A12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Cria Ti Na Luz Club</title>
+<meta name="description" content="Plataforma premium de evolução espiritual — Umbanda, Tarot, Meditação e Autoconhecimento">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+::-webkit-scrollbar{width:0;height:0}
+:root{
+  --bg:#0A0A12;--bg-card:#12121E;--bg-card-hover:#1A1A2E;
+  --accent:#C9A84C;--accent-glow:rgba(201,168,76,0.25);
+  --purple:#7B4FC4;--purple-glow:rgba(123,79,196,0.2);--deep-purple:#2D1B69;
+  --teal:#2EC4B6;--rose:#E84D8A;--blue:#4C6EF5;
+  --text:#F0EDE6;--text-muted:#8A8697;--text-dim:#5A5670;
+  --border:rgba(201,168,76,0.12);
+  --font-display:'Cormorant Garamond',Georgia,serif;
+  --font-body:'DM Sans',-apple-system,sans-serif;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--font-body)}
+body{display:flex;justify-content:center}
+
+/* PARTICLES */
+.particles{position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:0;overflow:hidden}
+.particle{position:absolute;border-radius:50%;animation:floatP 12s ease-in-out infinite}
+@keyframes floatP{0%,100%{transform:translateY(0) translateX(0)}33%{transform:translateY(-25px) translateX(12px)}66%{transform:translateY(-10px) translateX(-8px)}}
+
+/* APP SHELL */
+.app-shell{width:100%;max-width:430px;height:100vh;position:relative;overflow:hidden;background:var(--bg)}
+.app-content{height:100%;overflow-y:auto;padding-bottom:80px;scroll-behavior:smooth;position:relative;z-index:1}
+.screen{padding:0 20px 24px;display:none;animation:fadeIn .35s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* BOTTOM NAV */
+.bottom-nav{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-around;align-items:center;padding:8px 0 max(12px,env(safe-area-inset-bottom));background:rgba(10,10,18,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);z-index:10}
+.nav-btn{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 14px;transition:all .2s}
+.nav-btn .icon{font-size:18px;color:var(--text-dim);transition:all .2s}
+.nav-btn .label{font-size:9px;font-weight:600;color:var(--text-dim);letter-spacing:.04em}
+.nav-btn.active .icon{color:var(--accent);filter:drop-shadow(0 0 8px var(--accent-glow))}
+.nav-btn.active .label{color:var(--accent)}
+
+/* COMPONENTS */
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.badge-accent{background:rgba(201,168,76,0.13);color:var(--accent)}
+.badge-purple{background:rgba(123,79,196,0.13);color:var(--purple)}
+.badge-rose{background:rgba(232,77,138,0.13);color:var(--rose)}
+.badge-teal{background:rgba(46,196,182,0.13);color:var(--teal)}
+.badge-blue{background:rgba(76,110,245,0.13);color:var(--blue)}
+
+.progress-bar{width:100%;height:4px;border-radius:4px;background:rgba(255,255,255,0.06);overflow:hidden}
+.progress-fill{height:100%;border-radius:4px;transition:width 1s cubic-bezier(.4,0,.2,1)}
+
+.card{background:var(--bg-card);border-radius:16px;border:1px solid var(--border);padding:18px;margin-bottom:14px;position:relative;overflow:hidden;cursor:pointer;transition:background .2s}
+.card:active{background:var(--bg-card-hover)}
+.card-accent-line{position:absolute;top:0;left:0;right:0;height:3px}
+
+.section-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section-more{font-size:11px;color:var(--accent);cursor:pointer;margin-left:auto}
+
+/* HEADER */
+.header{display:flex;justify-content:space-between;align-items:center;padding:16px 0}
+.header-greeting{font-size:13px;color:var(--text-muted);font-family:var(--font-display)}
+.header-title{font-size:22px;font-weight:700;color:var(--text);font-family:var(--font-display);letter-spacing:-.02em}
+.header-actions{display:flex;gap:12px;align-items:center}
+.header-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--bg-card);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer}
+.header-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--accent));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--bg)}
+
+/* STREAK CARD */
+.streak-card{background:linear-gradient(135deg,var(--deep-purple),var(--bg-card));border-radius:16px;padding:18px 20px;margin-bottom:20px;border:1px solid var(--border);position:relative;overflow:hidden}
+.streak-glow{position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:var(--purple-glow);filter:blur(30px)}
+.streak-number{font-size:36px;font-weight:800;color:var(--accent);font-family:var(--font-display)}
+.streak-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+.week-dots{display:flex;gap:6px;margin-top:14px}
+.week-dot{flex:1;text-align:center}
+.week-dot-label{font-size:9px;color:var(--text-dim);margin-bottom:4px}
+.week-dot-circle{width:28px;height:28px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
+.dot-done{background:var(--accent);color:var(--bg)}
+.dot-today{background:rgba(201,168,76,0.15);color:var(--accent);border:1.5px solid var(--accent)}
+.dot-future{background:rgba(255,255,255,0.04);color:var(--text-dim)}
+
+/* CARD OF THE DAY */
+.tarot-card{border-radius:16px;border:1px solid var(--border);cursor:pointer;transition:all .5s ease;overflow:hidden}
+.tarot-unrevealed{background:linear-gradient(160deg,rgba(201,168,76,0.08),rgba(123,79,196,0.08));padding:28px 20px;text-align:center}
+.tarot-revealed{background:linear-gradient(160deg,var(--deep-purple),var(--bg-card));padding:20px;border-color:rgba(201,168,76,0.25);position:relative}
+.tarot-revealed .glow{position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:var(--accent-glow);filter:blur(40px)}
+.tarot-advice{background:rgba(201,168,76,0.06);border-radius:10px;padding:10px 14px;border-left:3px solid var(--accent);margin-top:12px}
+
+/* LIVE CLASS CAROUSEL */
+.carousel{display:flex;gap:12px;overflow-x:auto;padding-bottom:4px;scroll-snap-type:x mandatory}
+.carousel-item{min-width:220px;flex-shrink:0;scroll-snap-align:start}
+
+/* MEDITATION GRID */
+.med-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.med-card{background:var(--bg-card);border-radius:12px;padding:14px;border:1px solid var(--border);cursor:pointer;transition:background .2s}
+.med-card:active{background:var(--bg-card-hover)}
+.med-icon{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.med-dot{width:8px;height:8px;border-radius:50%}
+
+/* COMMUNITY */
+.post{background:var(--bg-card);border-radius:14px;padding:14px 16px;margin-bottom:10px;border:1px solid var(--border)}
+.post-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.post-avatar{width:32px;height:32px;border-radius:50%;background:var(--deep-purple);display:flex;align-items:center;justify-content:center;font-size:16px}
+.post-actions{display:flex;gap:16px;font-size:11px;color:var(--text-muted)}
+.post-actions span{cursor:pointer}
+
+/* FILTERS */
+.filters{display:flex;gap:8px;overflow-x:auto;margin-bottom:20px;padding-bottom:4px}
+.filter-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;text-transform:capitalize;font-family:var(--font-body);transition:all .2s}
+.filter-btn.active{border-color:var(--accent);background:rgba(201,168,76,0.08);color:var(--accent)}
+
+/* AULA LIST ITEM */
+.aula-item{background:var(--bg-card);border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid var(--border);cursor:pointer;position:relative;overflow:hidden;transition:background .2s}
+.aula-item:active{background:var(--bg-card-hover)}
+.aula-accent{position:absolute;top:0;left:0;bottom:0;width:3px}
+.aula-body{padding-left:8px}
+
+/* TRAIL ITEMS */
+.trail-item{display:flex;gap:14px;align-items:flex-start;position:relative}
+.trail-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+
+/* TRAIL DETAIL */
+.trail-back{background:none;border:none;color:var(--accent);font-size:18px;cursor:pointer;padding:0}
+.module-header{font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px;padding:8px 12px;border-radius:10px;border-left:3px solid var(--purple);background:rgba(123,79,196,0.06)}
+.lesson-item{display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .2s}
+.lesson-item:active{background:rgba(255,255,255,0.02)}
+.lesson-check{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.lesson-done{background:var(--accent);color:var(--bg)}
+.lesson-pending{background:rgba(255,255,255,0.04);border:1.5px solid var(--border);color:var(--text-dim)}
+.lesson-play{font-size:14px;color:var(--text-dim)}
+
+/* ORACLE */
+.oracle-hero{text-align:center;padding:30px 20px;margin-bottom:24px;background:linear-gradient(160deg,var(--deep-purple),var(--bg-card));border-radius:20px;border:1px solid var(--border);position:relative;overflow:hidden}
+.oracle-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200px;height:200px;border-radius:50%;background:var(--purple-glow);filter:blur(60px)}
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.oracle-card{aspect-ratio:3/4;border-radius:16px;cursor:pointer;background:linear-gradient(160deg,var(--deep-purple),rgba(123,79,196,0.15));border:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:transform .2s,box-shadow .2s}
+.oracle-card:active{transform:scale(0.96)}
+.revealing-animation{text-align:center;padding:60px 20px}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.1)}}
+.pulse{animation:pulse 1s ease-in-out infinite}
+.revealed-card{background:linear-gradient(160deg,var(--deep-purple),var(--bg-card));border-radius:20px;padding:28px 24px;margin-bottom:20px;border:1px solid rgba(201,168,76,0.2);text-align:center;position:relative;overflow:hidden}
+.meaning-box{background:var(--bg-card);border-radius:16px;padding:18px;margin-bottom:14px;border:1px solid var(--border)}
+.advice-box{background:rgba(201,168,76,0.04);border-radius:16px;padding:18px;border:1px solid rgba(201,168,76,0.12);margin-bottom:20px}
+.oracle-reset{width:100%;padding:14px;border-radius:14px;border:1px solid var(--border);background:var(--bg-card);color:var(--accent);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-body);transition:background .2s}
+.oracle-reset:active{background:var(--bg-card-hover)}
+
+/* PROFILE */
+.profile-header{text-align:center;padding:24px 0 20px}
+.profile-avatar{width:80px;height:80px;border-radius:50%;margin:0 auto 14px;background:linear-gradient(135deg,var(--purple),var(--accent));display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:var(--bg);box-shadow:0 0 30px var(--accent-glow)}
+.profile-name{font-size:20px;font-weight:700;color:var(--text);font-family:var(--font-display)}
+.profile-badges{display:flex;justify-content:center;gap:8px;margin-top:8px}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+.stat-card{background:var(--bg-card);border-radius:14px;padding:16px;text-align:center;border:1px solid var(--border)}
+.stat-value{font-size:24px;font-weight:800;color:var(--accent);font-family:var(--font-display)}
+.stat-label{font-size:10px;color:var(--text-muted);margin-top:4px}
+.level-track{display:flex;justify-content:space-between;margin-top:14px}
+.level-node{text-align:center}
+.level-circle{width:32px;height:32px;border-radius:50%;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.level-reached{background:var(--accent);color:var(--bg)}
+.level-next{border:1.5px dashed rgba(201,168,76,0.3);color:var(--text-dim)}
+.level-locked{background:rgba(255,255,255,0.04);color:var(--text-dim)}
+.level-name{font-size:9px}
+.plan-card{background:linear-gradient(135deg,var(--deep-purple),var(--bg-card));border-radius:16px;padding:18px;border:1px solid rgba(201,168,76,0.2);margin-bottom:14px}
+.plan-upgrade{width:100%;margin-top:14px;padding:10px;border-radius:10px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);color:var(--accent);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font-body)}
+.menu-item{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.menu-item:active{opacity:.7}
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<div class="app-shell">
+  <div class="app-content" id="appContent">
+
+    <!-- ==================== HOME ==================== -->
+    <div class="screen active" id="screen-home">
+      <div class="header">
+        <div>
+          <div class="header-greeting">Axé, Eddy ☀️</div>
+          <div class="header-title">Sua Jornada ✦</div>
+        </div>
+        <div class="header-actions">
+          <div class="header-btn">🔔</div>
+          <div class="header-avatar">E</div>
+        </div>
+      </div>
+
+      <!-- Streak -->
+      <div class="streak-card">
+        <div class="streak-glow"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;position:relative">
+          <div>
+            <div class="streak-label">Streak Espiritual</div>
+            <div style="display:flex;align-items:baseline;gap:6px">
+              <span class="streak-number">12</span>
+              <span style="font-size:13px;color:var(--text-muted)">dias</span>
+            </div>
+          </div>
+          <div style="text-align:right">
+            <span class="badge badge-purple">Nível: Adepto</span>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:6px">1.240 pts</div>
+          </div>
+        </div>
+        <div class="week-dots">
+          <div class="week-dot"><div class="week-dot-label">S</div><div class="week-dot-circle dot-done">✓</div></div>
+          <div class="week-dot"><div class="week-dot-label">T</div><div class="week-dot-circle dot-done">✓</div></div>
+          <div class="week-dot"><div class="week-dot-label">Q</div><div class="week-dot-circle dot-done">✓</div></div>
+          <div class="week-dot"><div class="week-dot-label">Q</div><div class="week-dot-circle dot-done">✓</div></div>
+          <div class="week-dot"><div class="week-dot-label">S</div><div class="week-dot-circle dot-done">✓</div></div>
+          <div class="week-dot"><div class="week-dot-label">S</div><div class="week-dot-circle dot-today">◉</div></div>
+          <div class="week-dot"><div class="week-dot-label">D</div><div class="week-dot-circle dot-future">·</div></div>
+        </div>
+      </div>
+
+      <!-- Carta do Dia -->
+      <div style="margin-bottom:24px">
+        <div class="section-title"><span style="color:var(--accent)">☽</span> Carta do Dia</div>
+        <div class="tarot-card" id="homeCard" onclick="toggleHomeCard()">
+          <div class="tarot-unrevealed" id="homeCardHidden">
+            <div style="font-size:40px;margin-bottom:8px">🃏</div>
+            <div style="font-size:14px;color:var(--accent);font-weight:600;font-family:var(--font-display)">Toque para revelar sua carta</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Orientação espiritual para hoje</div>
+          </div>
+          <div class="tarot-revealed" id="homeCardShown" style="display:none">
+            <div class="glow"></div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;position:relative">
+              <div>
+                <div style="font-size:11px;color:var(--accent);font-weight:700;letter-spacing:.1em">XVII</div>
+                <div style="font-size:22px;font-weight:700;color:var(--text);font-family:var(--font-display)">A Estrela</div>
+              </div>
+              <div style="font-size:36px">⭐</div>
+            </div>
+            <div style="font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:12px">Esperança, inspiração e renovação espiritual. As energias cósmicas estão alinhadas ao seu favor hoje.</div>
+            <div class="tarot-advice">
+              <div style="font-size:10px;color:var(--accent);font-weight:700;letter-spacing:.08em;margin-bottom:4px">CONSELHO</div>
+              <div style="font-size:12px;color:var(--text);line-height:1.5">Confie no universo. Algo que você pediu está se manifestando agora. Mantenha fé.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aulas ao Vivo -->
+      <div style="margin-bottom:24px">
+        <div class="section-title">
+          <span style="color:var(--rose)">◉</span> Aulas ao Vivo
+          <span class="section-more" onclick="switchTab('aulas')">Ver todas →</span>
+        </div>
+        <div class="carousel">
+          <div class="carousel-item">
+            <div class="card" style="margin-bottom:0">
+              <div class="card-accent-line" style="background:linear-gradient(90deg,var(--rose),transparent)"></div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+                <span class="badge badge-rose">AO VIVO</span>
+                <span style="font-size:10px;color:var(--text-muted)">👁 142</span>
+              </div>
+              <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.4">Desenvolvimento Mediúnico — Nível 2</div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-size:11px;color:var(--text-muted)">Mãe Stella</span>
+                <span style="font-size:11px;color:var(--accent);font-weight:700">20:00</span>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="card" style="margin-bottom:0">
+              <div class="card-accent-line" style="background:linear-gradient(90deg,var(--teal),transparent)"></div>
+              <div style="margin-bottom:10px"><span class="badge badge-teal">HOJE</span></div>
+              <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.4">Meditação de Cura com Pretos Velhos</div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-size:11px;color:var(--text-muted)">Pai João</span>
+                <span style="font-size:11px;color:var(--accent);font-weight:700">21:30</span>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="card" style="margin-bottom:0">
+              <div class="card-accent-line" style="background:linear-gradient(90deg,var(--purple),transparent)"></div>
+              <div style="margin-bottom:10px"><span class="badge badge-purple">AMANHÃ</span></div>
+              <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.4">Ritual de Limpeza — Ciclo Lunar</div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-size:11px;color:var(--text-muted)">Yalorixá Renata</span>
+                <span style="font-size:11px;color:var(--accent);font-weight:700">19:00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Meditações -->
+      <div style="margin-bottom:24px">
+        <div class="section-title"><span style="color:var(--teal)">◈</span> Meditações</div>
+        <div class="med-grid">
+          <div class="med-card">
+            <div class="med-icon" style="background:rgba(123,79,196,0.12)"><div class="med-dot" style="background:var(--purple)"></div></div>
+            <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">Cura com Pretos Velhos</div>
+            <div style="display:flex;justify-content:space-between"><span style="font-size:10px;color:var(--text-muted)">15min</span><span class="badge badge-purple">Cura</span></div>
+          </div>
+          <div class="med-card">
+            <div class="med-icon" style="background:rgba(201,168,76,0.12)"><div class="med-dot" style="background:var(--accent)"></div></div>
+            <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">Proteção de Ogum</div>
+            <div style="display:flex;justify-content:space-between"><span style="font-size:10px;color:var(--text-muted)">12min</span><span class="badge badge-accent">Proteção</span></div>
+          </div>
+          <div class="med-card">
+            <div class="med-icon" style="background:rgba(232,77,138,0.12)"><div class="med-dot" style="background:var(--rose)"></div></div>
+            <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">Energia de Oxum</div>
+            <div style="display:flex;justify-content:space-between"><span style="font-size:10px;color:var(--text-muted)">20min</span><span class="badge badge-rose">Amor</span></div>
+          </div>
+          <div class="med-card">
+            <div class="med-icon" style="background:rgba(46,196,182,0.12)"><div class="med-dot" style="background:var(--teal)"></div></div>
+            <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">Foco com Xangô</div>
+            <div style="display:flex;justify-content:space-between"><span style="font-size:10px;color:var(--text-muted)">10min</span><span class="badge badge-teal">Foco</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comunidade -->
+      <div>
+        <div class="section-title"><span style="color:var(--purple)">◎</span> Comunidade</div>
+        <div class="post">
+          <div class="post-header">
+            <div class="post-avatar">🌙</div>
+            <div style="flex:1">
+              <div style="font-size:12px;font-weight:600;color:var(--text)">Marina S. <span class="badge badge-purple">Adepta</span></div>
+              <div style="font-size:10px;color:var(--text-dim)">2h atrás</div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;margin-bottom:10px">Acabei de completar o módulo 2 da trilha Despertar Espiritual! Sentindo uma energia incrível depois do banho de ervas 🌿</div>
+          <div class="post-actions"><span>❤️ 47</span><span>💬 Comentar</span><span>🔗 Compartilhar</span></div>
+        </div>
+        <div class="post">
+          <div class="post-header">
+            <div class="post-avatar">⭐</div>
+            <div style="flex:1">
+              <div style="font-size:12px;font-weight:600;color:var(--text)">Carlos R. <span class="badge badge-accent">Mestre</span></div>
+              <div style="font-size:10px;color:var(--text-dim)">4h atrás</div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;margin-bottom:10px">Desafio 21 dias de meditação — Dia 15! Nunca imaginei que conseguiria manter o streak. Obrigado comunidade! 🙏</div>
+          <div class="post-actions"><span>❤️ 83</span><span>💬 Comentar</span><span>🔗 Compartilhar</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== AULAS ==================== -->
+    <div class="screen" id="screen-aulas">
+      <div class="header">
+        <div>
+          <div class="header-title">Aulas</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Evolua no seu tempo, com orientação sagrada</div>
+        </div>
+      </div>
+      <div class="filters">
+        <button class="filter-btn active" onclick="setFilter(this)">todas</button>
+        <button class="filter-btn" onclick="setFilter(this)">ao vivo</button>
+        <button class="filter-btn" onclick="setFilter(this)">mediúnica</button>
+        <button class="filter-btn" onclick="setFilter(this)">ritual</button>
+        <button class="filter-btn" onclick="setFilter(this)">meditação</button>
+      </div>
+
+      <div class="aula-item"><div class="aula-accent" style="background:var(--rose)"></div><div class="aula-body"><div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><span class="badge badge-rose">AO VIVO</span><span style="font-size:10px;color:var(--rose)">● 142 assistindo</span></div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3">Desenvolvimento Mediúnico — Nível 2</div><div style="font-size:11px;color:var(--text-muted);line-height:1.4;margin-bottom:8px">Técnicas avançadas de percepção e incorporação consciente</div><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;color:var(--text-muted)">Mãe Stella</span><span style="font-size:11px;color:var(--accent);font-weight:600">20:00 hoje</span></div></div></div>
+
+      <div class="aula-item"><div class="aula-accent" style="background:var(--purple)"></div><div class="aula-body"><div style="margin-bottom:6px"><span class="badge badge-purple">RITUAL</span></div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3">Ritual de Limpeza — Lua Minguante</div><div style="font-size:11px;color:var(--text-muted);line-height:1.4;margin-bottom:8px">Banho de descarrego e defumação com ervas sagradas</div><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;color:var(--text-muted)">Yalorixá Renata</span><span style="font-size:11px;color:var(--accent);font-weight:600">19:00 amanhã</span></div></div></div>
+
+      <div class="aula-item"><div class="aula-accent" style="background:var(--teal)"></div><div class="aula-body"><div style="margin-bottom:6px"><span class="badge badge-teal">MEDITAÇÃO</span></div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3">Meditação: Frequência de Cura 528Hz</div><div style="font-size:11px;color:var(--text-muted);line-height:1.4;margin-bottom:8px">Harmonização dos chakras com frequência do amor</div><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;color:var(--text-muted)">Pai João</span><span style="font-size:11px;color:var(--accent);font-weight:600">06:30 diário</span></div></div></div>
+
+      <div class="aula-item"><div class="aula-accent" style="background:var(--accent)"></div><div class="aula-body"><div style="margin-bottom:6px"><span class="badge badge-accent">REPLAY</span></div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3">Passe Magnético — Teoria e Prática</div><div style="font-size:11px;color:var(--text-muted);line-height:1.4;margin-bottom:8px">Aprenda a aplicar passes de cura à distância</div><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;color:var(--text-muted)">Mãe Stella</span><span style="font-size:11px;color:var(--accent);font-weight:600">Gravado</span></div></div></div>
+
+      <div class="aula-item"><div class="aula-accent" style="background:var(--accent)"></div><div class="aula-body"><div style="margin-bottom:6px"><span class="badge badge-accent">SEMANAL</span></div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3">Jogo de Búzios: Interpretação Básica</div><div style="font-size:11px;color:var(--text-muted);line-height:1.4;margin-bottom:8px">Entenda as caídas e mensagens dos Orixás</div><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;color:var(--text-muted)">Babalorixá Marcos</span><span style="font-size:11px;color:var(--accent);font-weight:600">Sáb 15:00</span></div></div></div>
+
+      <div class="aula-item"><div class="aula-accent" style="background:var(--blue)"></div><div class="aula-body"><div style="margin-bottom:6px"><span class="badge badge-blue">ESPECIAL</span></div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3">Workshop: Ervas Sagradas na Umbanda</div><div style="font-size:11px;color:var(--text-muted);line-height:1.4;margin-bottom:8px">Propriedades espirituais e uso correto das ervas</div><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;color:var(--text-muted)">Yalorixá Renata</span><span style="font-size:11px;color:var(--accent);font-weight:600">Dom 10:00</span></div></div></div>
+    </div>
+
+    <!-- ==================== TRILHAS ==================== -->
+    <div class="screen" id="screen-trilhas">
+      <div class="header">
+        <div>
+          <div class="header-title">Trilhas de Evolução</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Jornadas completas por objetivo de vida</div>
+        </div>
+      </div>
+      <div id="trailList">
+        <!-- filled by JS -->
+      </div>
+    </div>
+
+    <!-- TRAIL DETAIL (hidden by default) -->
+    <div class="screen" id="screen-trail-detail">
+      <div class="header" style="display:flex;align-items:center;gap:12px">
+        <button class="trail-back" onclick="backToTrails()">←</button>
+        <div>
+          <div class="header-title" style="font-size:20px">🕯️ Despertar Espiritual</div>
+          <div style="font-size:11px;color:var(--text-muted)">8 módulos · 32 aulas · ~12h de conteúdo</div>
+        </div>
+      </div>
+      <div style="margin-bottom:20px">
+        <div class="progress-bar" style="height:6px"><div class="progress-fill" style="width:65%;background:linear-gradient(90deg,var(--purple),var(--purple));box-shadow:0 0 12px rgba(123,79,196,0.3)"></div></div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;text-align:right">65% completo</div>
+      </div>
+
+      <!-- Module 1 -->
+      <div style="margin-bottom:20px">
+        <div class="module-header">Módulo 1 — Fundamentos da Umbanda</div>
+        <div class="lesson-item"><div class="lesson-check lesson-done">✓</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text-muted);line-height:1.3">O que é Umbanda: história e fundamentos</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">18min</div></div><span class="lesson-play">▶</span></div>
+        <div class="lesson-item"><div class="lesson-check lesson-done">✓</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text-muted);line-height:1.3">As 7 Linhas da Umbanda</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">22min</div></div><span class="lesson-play">▶</span></div>
+        <div class="lesson-item"><div class="lesson-check lesson-done">✓</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text-muted);line-height:1.3">Orixás: quem são e como atuam</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">25min</div></div><span class="lesson-play">▶</span></div>
+        <div class="lesson-item"><div class="lesson-check lesson-done">✓</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text-muted);line-height:1.3">Exercício: Identificando seu Orixá de cabeça</div><div style="display:flex;gap:8px;margin-top:4px"><span style="font-size:10px;color:var(--text-dim)">15min</span><span class="badge badge-teal">exercício</span></div></div><span class="lesson-play">▶</span></div>
+      </div>
+
+      <!-- Module 2 -->
+      <div style="margin-bottom:20px">
+        <div class="module-header">Módulo 2 — Mediunidade Consciente</div>
+        <div class="lesson-item"><div class="lesson-check lesson-done">✓</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text-muted);line-height:1.3">Tipos de mediunidade na Umbanda</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">20min</div></div><span class="lesson-play">▶</span></div>
+        <div class="lesson-item"><div class="lesson-check lesson-done">✓</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text-muted);line-height:1.3">Sinais de desenvolvimento mediúnico</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">18min</div></div><span class="lesson-play">▶</span></div>
+        <div class="lesson-item"><div class="lesson-check lesson-pending">3</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.3">Ritual: Banho de ervas para abertura</div><div style="display:flex;gap:8px;margin-top:4px"><span style="font-size:10px;color:var(--text-dim)">12min</span><span class="badge badge-rose">ritual</span></div></div><span class="lesson-play">▶</span></div>
+        <div class="lesson-item"><div class="lesson-check lesson-pending">4</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.3">Meditação: Conexão com seu mentor espiritual</div><div style="display:flex;gap:8px;margin-top:4px"><span style="font-size:10px;color:var(--text-dim)">15min</span><span class="badge badge-purple">meditação</span></div></div><span class="lesson-play">▶</span></div>
+      </div>
+
+      <!-- Module 3 -->
+      <div style="margin-bottom:20px">
+        <div class="module-header">Módulo 3 — Incorporação e Passes</div>
+        <div class="lesson-item"><div class="lesson-check lesson-pending">1</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.3">Entendendo a incorporação consciente</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">24min</div></div><span class="lesson-play">▶</span></div>
+        <div class="lesson-item"><div class="lesson-check lesson-pending">2</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.3">Passes magnéticos: teoria e prática</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">20min</div></div><span class="lesson-play">▶</span></div>
+        <div class="lesson-item"><div class="lesson-check lesson-pending">3</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.3">Exercício: Passe à distância guiado</div><div style="display:flex;gap:8px;margin-top:4px"><span style="font-size:10px;color:var(--text-dim)">18min</span><span class="badge badge-teal">exercício</span></div></div><span class="lesson-play">▶</span></div>
+        <div class="lesson-item"><div class="lesson-check lesson-pending">4</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.3">Ritual: Defumação de proteção pessoal</div><div style="display:flex;gap:8px;margin-top:4px"><span style="font-size:10px;color:var(--text-dim)">10min</span><span class="badge badge-rose">ritual</span></div></div><span class="lesson-play">▶</span></div>
+      </div>
+
+      <!-- Module 4 -->
+      <div style="margin-bottom:20px">
+        <div class="module-header">Módulo 4 — Entidades e Guias Espirituais</div>
+        <div class="lesson-item"><div class="lesson-check lesson-pending">1</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.3">Caboclos: energia e mensagem</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">22min</div></div><span class="lesson-play">▶</span></div>
+        <div class="lesson-item"><div class="lesson-check lesson-pending">2</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.3">Pretos Velhos: sabedoria ancestral</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">20min</div></div><span class="lesson-play">▶</span></div>
+        <div class="lesson-item"><div class="lesson-check lesson-pending">3</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.3">Crianças (Erês): pureza e cura</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">18min</div></div><span class="lesson-play">▶</span></div>
+        <div class="lesson-item"><div class="lesson-check lesson-pending">4</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.3">Exus e Pombagiras: proteção e justiça</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">25min</div></div><span class="lesson-play">▶</span></div>
+      </div>
+    </div>
+
+    <!-- ==================== ORÁCULO ==================== -->
+    <div class="screen" id="screen-oraculo">
+      <div class="header">
+        <div>
+          <div class="header-title">Oráculo Sagrado</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Receba orientação dos guias espirituais</div>
+        </div>
+      </div>
+
+      <div id="oracleChoose">
+        <div class="oracle-hero">
+          <div class="oracle-glow"></div>
+          <div style="position:relative">
+            <div style="font-size:36px;margin-bottom:12px">☽ ✦ ☾</div>
+            <div style="font-size:16px;font-weight:700;color:var(--text);font-family:var(--font-display);margin-bottom:8px">Escolha uma carta</div>
+            <div style="font-size:12px;color:var(--text-muted)">Concentre-se na sua pergunta e selecione</div>
+          </div>
+        </div>
+        <div class="card-grid">
+          <div class="oracle-card" onclick="revealOracle(0)"><div style="text-align:center"><div style="font-size:32px;margin-bottom:8px">✦</div><div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.15em">Carta 1</div></div></div>
+          <div class="oracle-card" onclick="revealOracle(1)"><div style="text-align:center"><div style="font-size:32px;margin-bottom:8px">✦</div><div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.15em">Carta 2</div></div></div>
+          <div class="oracle-card" onclick="revealOracle(2)"><div style="text-align:center"><div style="font-size:32px;margin-bottom:8px">✦</div><div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.15em">Carta 3</div></div></div>
+          <div class="oracle-card" onclick="revealOracle(3)"><div style="text-align:center"><div style="font-size:32px;margin-bottom:8px">✦</div><div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.15em">Carta 4</div></div></div>
+        </div>
+      </div>
+
+      <div id="oracleRevealing" style="display:none">
+        <div class="revealing-animation">
+          <div style="font-size:48px" class="pulse">✦</div>
+          <div style="font-size:16px;color:var(--accent);font-family:var(--font-display);font-weight:600;margin-top:20px">Consultando os guias...</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:8px">As energias estão se alinhando</div>
+        </div>
+      </div>
+
+      <div id="oracleRevealed" style="display:none">
+        <div class="revealed-card">
+          <div class="glow"></div>
+          <div style="position:relative">
+            <div style="font-size:12px;color:var(--accent);font-weight:700;letter-spacing:.15em;margin-bottom:8px" id="revealedNumber"></div>
+            <div style="font-size:32px;font-weight:800;color:var(--text);font-family:var(--font-display);margin-bottom:4px" id="revealedName"></div>
+            <div style="font-size:48px;margin:16px 0">⭐</div>
+          </div>
+        </div>
+        <div class="meaning-box">
+          <div style="font-size:10px;color:var(--purple);font-weight:700;letter-spacing:.1em;margin-bottom:8px;text-transform:uppercase">SIGNIFICADO</div>
+          <div style="font-size:13px;color:var(--text-muted);line-height:1.6" id="revealedMeaning"></div>
+        </div>
+        <div class="advice-box">
+          <div style="font-size:10px;color:var(--accent);font-weight:700;letter-spacing:.1em;margin-bottom:8px;text-transform:uppercase">CONSELHO ESPIRITUAL</div>
+          <div style="font-size:13px;color:var(--text);line-height:1.6" id="revealedAdvice"></div>
+        </div>
+        <button class="oracle-reset" onclick="resetOracle()">Nova consulta ☽</button>
+      </div>
+    </div>
+
+    <!-- ==================== PERFIL ==================== -->
+    <div class="screen" id="screen-perfil">
+      <div class="profile-header">
+        <div class="profile-avatar">E</div>
+        <div class="profile-name">Eddy</div>
+        <div class="profile-badges">
+          <span class="badge badge-purple">Nível: Adepto</span>
+          <span class="badge badge-accent">PRO</span>
+        </div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:8px">Membro desde Março 2026 · 12 dias de streak 🔥</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-value">47</div><div class="stat-label">Aulas assistidas</div></div>
+        <div class="stat-card"><div class="stat-value">32h</div><div class="stat-label">Horas de prática</div></div>
+        <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Trilhas ativas</div></div>
+        <div class="stat-card"><div class="stat-value">2</div><div class="stat-label">Desafios completos</div></div>
+      </div>
+
+      <!-- Evolução -->
+      <div class="card">
+        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:14px">Evolução Espiritual</div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:11px;color:var(--text-muted)">Adepto → Mestre</span>
+          <span style="font-size:11px;color:var(--accent);font-weight:700">1.240 / 2.000 pts</span>
+        </div>
+        <div class="progress-bar" style="height:6px"><div class="progress-fill" style="width:62%;background:var(--accent);box-shadow:0 0 12px rgba(201,168,76,0.3)"></div></div>
+        <div class="level-track">
+          <div class="level-node"><div class="level-circle level-reached">✓</div><div class="level-name" style="color:var(--accent)">Iniciante</div></div>
+          <div class="level-node"><div class="level-circle level-reached">✓</div><div class="level-name" style="color:var(--accent)">Adepto</div></div>
+          <div class="level-node"><div class="level-circle level-next">◎</div><div class="level-name" style="color:var(--text-dim)">Mestre</div></div>
+          <div class="level-node"><div class="level-circle level-locked">◇</div><div class="level-name" style="color:var(--text-dim)">Guia</div></div>
+        </div>
+      </div>
+
+      <!-- Desafios -->
+      <div class="card">
+        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:14px">Desafios Ativos</div>
+        <div style="margin-bottom:14px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+            <span style="font-size:12px;color:var(--text)">21 Dias de Meditação</span>
+            <span style="font-size:11px;color:var(--teal);font-weight:600">Dia 12/21</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:57%;background:var(--teal);box-shadow:0 0 12px rgba(46,196,182,0.3)"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+            <span style="font-size:12px;color:var(--text)">7 Dias de Gratidão</span>
+            <span style="font-size:11px;color:var(--rose);font-weight:600">Dia 6/7</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:85%;background:var(--rose);box-shadow:0 0 12px rgba(232,77,138,0.3)"></div></div>
+        </div>
+      </div>
+
+      <!-- Plano -->
+      <div class="plan-card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--accent)">Plano PRO</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:2px">R$ 39,90/mês · Renovação em 15 dias</div>
+          </div>
+          <span class="badge badge-accent">ATIVO</span>
+        </div>
+        <button class="plan-upgrade">Upgrade para VIP — R$ 79,90/mês</button>
+      </div>
+
+      <!-- Menu -->
+      <div class="menu-item"><span style="font-size:13px;color:var(--text)">Objetivos espirituais</span><span style="font-size:14px;color:var(--text-dim)">›</span></div>
+      <div class="menu-item"><span style="font-size:13px;color:var(--text)">Histórico de atividades</span><span style="font-size:14px;color:var(--text-dim)">›</span></div>
+      <div class="menu-item"><span style="font-size:13px;color:var(--text)">Configurações</span><span style="font-size:14px;color:var(--text-dim)">›</span></div>
+      <div class="menu-item"><span style="font-size:13px;color:var(--text)">Ajuda & suporte</span><span style="font-size:14px;color:var(--text-dim)">›</span></div>
+    </div>
+
+  </div><!-- /app-content -->
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <button class="nav-btn active" data-tab="home" onclick="switchTab('home')"><span class="icon">✦</span><span class="label">Home</span></button>
+    <button class="nav-btn" data-tab="aulas" onclick="switchTab('aulas')"><span class="icon">◉</span><span class="label">Aulas</span></button>
+    <button class="nav-btn" data-tab="trilhas" onclick="switchTab('trilhas')"><span class="icon">◈</span><span class="label">Trilhas</span></button>
+    <button class="nav-btn" data-tab="oraculo" onclick="switchTab('oraculo')"><span class="icon">☽</span><span class="label">Oráculo</span></button>
+    <button class="nav-btn" data-tab="perfil" onclick="switchTab('perfil')"><span class="icon">◎</span><span class="label">Perfil</span></button>
+  </div>
+</div>
+
+<script>
+// ========== DATA ==========
+const TAROT = [
+  { name:"A Estrela", number:"XVII", meaning:"Esperança, inspiração e renovação espiritual. As energias cósmicas estão alinhadas ao seu favor hoje.", advice:"Confie no universo. Algo que você pediu está se manifestando agora. Mantenha fé." },
+  { name:"A Lua", number:"XVIII", meaning:"Intuição profunda e mistérios revelados. Seu inconsciente está mais ativo que o normal.", advice:"Preste atenção aos sonhos esta noite. Uma mensagem importante virá por eles." },
+  { name:"O Sol", number:"XIX", meaning:"Vitalidade, sucesso e clareza. Um dia de grande energia positiva e realizações.", advice:"Aproveite para iniciar projetos. A luz solar carrega sua intenção com força." },
+  { name:"O Mundo", number:"XXI", meaning:"Completude, realização e ciclo cumprido. Você está pronto para um novo nível.", advice:"Celebre suas conquistas. Você evoluiu mais do que imagina." },
+];
+
+const TRAILS = [
+  { title:"Despertar Espiritual", icon:"🕯️", modules:8, progress:65, color:"#7B4FC4", desc:"Fundamentos da Umbanda e mediunidade" },
+  { title:"Cura Emocional", icon:"💜", modules:6, progress:30, color:"#E84D8A", desc:"Liberte traumas e bloqueios emocionais" },
+  { title:"Prosperidade Sagrada", icon:"✨", modules:7, progress:0, color:"#C9A84C", desc:"Desbloqueie sua abundância financeira" },
+  { title:"Amor Próprio Divino", icon:"🌹", modules:5, progress:0, color:"#2EC4B6", desc:"Reconecte com seu valor sagrado" },
+  { title:"Proteção Espiritual", icon:"🛡️", modules:6, progress:45, color:"#4C6EF5", desc:"Blindagem e defesa energética" },
+  { title:"Relacionamentos Sagrados", icon:"💫", modules:5, progress:0, color:"#FF6B6B", desc:"Transforme seus vínculos afetivos" },
+];
+
+// ========== PARTICLES ==========
+(function initParticles(){
+  const c=document.getElementById('particles');
+  for(let i=0;i<15;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    const s=2+Math.random()*3;
+    const colors=['#C9A84C','#7B4FC4','#2EC4B6'];
+    Object.assign(p.style,{
+      width:s+'px',height:s+'px',
+      background:colors[i%3],
+      opacity:0.12+Math.random()*0.15,
+      left:Math.random()*100+'%',top:Math.random()*100+'%',
+      animationDuration:(8+Math.random()*12)+'s',
+      animationDelay:Math.random()*5+'s'
+    });
+    c.appendChild(p);
+  }
+})();
+
+// ========== NAVIGATION ==========
+function switchTab(tab){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+tab).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>{
+    b.classList.toggle('active',b.dataset.tab===tab);
+  });
+  document.getElementById('appContent').scrollTop=0;
+}
+
+// ========== HOME CARD ==========
+function toggleHomeCard(){
+  const h=document.getElementById('homeCardHidden');
+  const s=document.getElementById('homeCardShown');
+  if(h.style.display!=='none'){h.style.display='none';s.style.display='block';}
+  else{h.style.display='block';s.style.display='none';}
+}
+
+// ========== FILTERS ==========
+function setFilter(btn){
+  btn.parentElement.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ========== TRAILS ==========
+(function renderTrails(){
+  const list=document.getElementById('trailList');
+  list.innerHTML=TRAILS.map((t,i)=>`
+    <div class="card" onclick="openTrail(${i})" style="position:relative;overflow:hidden">
+      <div style="position:absolute;top:-40px;right:-40px;width:100px;height:100px;border-radius:50%;background:${t.color}11;filter:blur(30px)"></div>
+      <div class="trail-item" style="position:relative">
+        <div class="trail-icon" style="background:${t.color}18">${t.icon}</div>
+        <div style="flex:1">
+          <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px">${t.title}</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;line-height:1.4">${t.desc}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <span style="font-size:10px;color:var(--text-dim)">${t.modules} módulos</span>
+            ${t.progress>0?`<span style="font-size:10px;color:${t.color};font-weight:700">${t.progress}%</span>`:''}
+          </div>
+          ${t.progress>0?`<div class="progress-bar"><div class="progress-fill" style="width:${t.progress}%;background:${t.color};box-shadow:0 0 12px ${t.color}44"></div></div>`
+          :`<div style="font-size:11px;color:var(--accent);font-weight:600">Começar trilha →</div>`}
+        </div>
+      </div>
+    </div>
+  `).join('');
+})();
+
+function openTrail(i){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-trail-detail').classList.add('active');
+  document.getElementById('appContent').scrollTop=0;
+}
+function backToTrails(){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-trilhas').classList.add('active');
+  document.getElementById('appContent').scrollTop=0;
+}
+
+// ========== ORACLE ==========
+function revealOracle(idx){
+  document.getElementById('oracleChoose').style.display='none';
+  document.getElementById('oracleRevealing').style.display='block';
+  setTimeout(()=>{
+    const card=TAROT[idx];
+    document.getElementById('revealedNumber').textContent=card.number;
+    document.getElementById('revealedName').textContent=card.name;
+    document.getElementById('revealedMeaning').textContent=card.meaning;
+    document.getElementById('revealedAdvice').textContent=card.advice;
+    document.getElementById('oracleRevealing').style.display='none';
+    document.getElementById('oracleRevealed').style.display='block';
+  },1500);
+}
+function resetOracle(){
+  document.getElementById('oracleRevealed').style.display='none';
+  document.getElementById('oracleChoose').style.display='block';
+}
+</script>
+</body>
+</html>
