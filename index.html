@@ -2,698 +2,1283 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0A0A12">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
 <title>Cria Ti Na Luz Club</title>
 <meta name="description" content="Plataforma premium de evolução espiritual — Umbanda, Tarot, Meditação e Autoconhecimento">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;0,800;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+/* ============ RESET & VARIABLES ============ */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 ::-webkit-scrollbar{width:0;height:0}
 :root{
-  --bg:#0A0A12;--bg-card:#12121E;--bg-card-hover:#1A1A2E;
-  --accent:#C9A84C;--accent-glow:rgba(201,168,76,0.25);
+  --bg:#0A0A12;--bg-card:#111120;--bg-card-hover:#191930;--bg-elevated:#16162A;
+  --accent:#C9A84C;--accent-glow:rgba(201,168,76,0.25);--accent-dim:rgba(201,168,76,0.08);
   --purple:#7B4FC4;--purple-glow:rgba(123,79,196,0.2);--deep-purple:#2D1B69;
-  --teal:#2EC4B6;--rose:#E84D8A;--blue:#4C6EF5;
+  --teal:#2EC4B6;--rose:#E84D8A;--blue:#4C6EF5;--green:#34D399;
   --text:#F0EDE6;--text-muted:#8A8697;--text-dim:#5A5670;
-  --border:rgba(201,168,76,0.12);
+  --border:rgba(201,168,76,0.10);--border-strong:rgba(201,168,76,0.22);
   --font-display:'Cormorant Garamond',Georgia,serif;
-  --font-body:'DM Sans',-apple-system,sans-serif;
+  --font-body:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+  --radius:16px;--radius-sm:12px;--radius-xs:8px;
+  --safe-bottom:max(12px,env(safe-area-inset-bottom));
+  --nav-height:64px;
 }
-html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--font-body)}
-body{display:flex;justify-content:center}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;line-height:1.4}
+body{display:flex;justify-content:center;align-items:stretch}
+input,button,textarea,select{font-family:var(--font-body);font-size:inherit}
+button{border:none;background:none;cursor:pointer}
+img{max-width:100%;display:block}
 
-/* PARTICLES */
-.particles{position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:0;overflow:hidden}
-.particle{position:absolute;border-radius:50%;animation:floatP 12s ease-in-out infinite}
-@keyframes floatP{0%,100%{transform:translateY(0) translateX(0)}33%{transform:translateY(-25px) translateX(12px)}66%{transform:translateY(-10px) translateX(-8px)}}
+/* ============ SPLASH ============ */
+#splash{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s ease,transform .6s ease}
+#splash.hide{opacity:0;transform:scale(1.04);pointer-events:none}
+.splash-logo{font-size:60px;margin-bottom:16px;animation:breathe 2.5s ease-in-out infinite}
+.splash-title{font-family:var(--font-display);font-size:28px;font-weight:800;color:var(--text);letter-spacing:-.01em}
+.splash-sub{font-family:var(--font-display);font-size:14px;color:var(--accent);margin-top:6px;font-style:italic;opacity:0;transform:translateY(8px);animation:fadeUp .8s .5s ease forwards}
+.splash-bar{margin-top:32px;width:120px;height:2px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden}
+.splash-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--purple));border-radius:2px;animation:loadBar 1.6s .3s ease-in-out forwards}
+@keyframes breathe{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0px transparent)}50%{transform:scale(1.06);filter:drop-shadow(0 0 20px var(--accent-glow))}}
+@keyframes loadBar{to{width:100%}}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
 
-/* APP SHELL */
-.app-shell{width:100%;max-width:430px;height:100vh;position:relative;overflow:hidden;background:var(--bg)}
-.app-content{height:100%;overflow-y:auto;padding-bottom:80px;scroll-behavior:smooth;position:relative;z-index:1}
-.screen{padding:0 20px 24px;display:none;animation:fadeIn .35s ease}
-.screen.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* ============ PARTICLES ============ */
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.particle{position:absolute;border-radius:50%;will-change:transform}
+@keyframes floatA{0%,100%{transform:translate(0,0)}25%{transform:translate(8px,-20px)}50%{transform:translate(-5px,-35px)}75%{transform:translate(12px,-15px)}}
 
-/* BOTTOM NAV */
-.bottom-nav{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-around;align-items:center;padding:8px 0 max(12px,env(safe-area-inset-bottom));background:rgba(10,10,18,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);z-index:10}
-.nav-btn{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 14px;transition:all .2s}
-.nav-btn .icon{font-size:18px;color:var(--text-dim);transition:all .2s}
-.nav-btn .label{font-size:9px;font-weight:600;color:var(--text-dim);letter-spacing:.04em}
-.nav-btn.active .icon{color:var(--accent);filter:drop-shadow(0 0 8px var(--accent-glow))}
+/* ============ APP SHELL ============ */
+.app-shell{width:100%;max-width:430px;height:100vh;height:100svh;position:relative;overflow:hidden;background:var(--bg)}
+.app-content{position:absolute;top:0;left:0;right:0;bottom:0;padding-bottom:calc(var(--nav-height) + env(safe-area-inset-bottom,0px) + 16px);overflow-y:auto;overflow-x:hidden;z-index:1;scroll-behavior:smooth;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch}
+.screen{padding:0 20px 20px;display:none;opacity:0;transform:translateY(6px)}
+.screen.active{display:block;animation:screenIn .35s ease forwards}
+@keyframes screenIn{to{opacity:1;transform:translateY(0)}}
+
+/* ============ BOTTOM NAV ============ */
+.bottom-nav{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-around;align-items:center;padding:8px 0 calc(env(safe-area-inset-bottom,0px) + 10px);background:rgba(10,10,18,0.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid var(--border);z-index:10}
+.nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 8px;transition:all .25s;position:relative;-webkit-touch-callout:none;user-select:none}
+.nav-btn .icon{font-size:20px;color:var(--text-dim);transition:all .25s;line-height:1}
+.nav-btn .label{font-size:9px;font-weight:600;color:var(--text-dim);letter-spacing:.05em;text-transform:uppercase;transition:color .25s;line-height:1;white-space:nowrap}
+.nav-btn.active .icon{color:var(--accent);filter:drop-shadow(0 0 10px var(--accent-glow))}
 .nav-btn.active .label{color:var(--accent)}
+.nav-btn.active::before{content:'';position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:20px;height:2px;background:var(--accent);border-radius:0 0 2px 2px}
+.nav-btn:active{transform:scale(0.9)}
+.ndot{position:absolute;top:2px;right:4px;width:6px;height:6px;border-radius:50%;background:var(--rose);pointer-events:none}
 
-/* COMPONENTS */
-.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
-.badge-accent{background:rgba(201,168,76,0.13);color:var(--accent)}
-.badge-purple{background:rgba(123,79,196,0.13);color:var(--purple)}
-.badge-rose{background:rgba(232,77,138,0.13);color:var(--rose)}
-.badge-teal{background:rgba(46,196,182,0.13);color:var(--teal)}
-.badge-blue{background:rgba(76,110,245,0.13);color:var(--blue)}
+/* ============ SHARED COMPONENTS ============ */
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.ba{background:rgba(201,168,76,0.12);color:var(--accent)}
+.bp{background:rgba(123,79,196,0.12);color:var(--purple)}
+.br{background:rgba(232,77,138,0.12);color:var(--rose)}
+.bt{background:rgba(46,196,182,0.12);color:var(--teal)}
+.bb{background:rgba(76,110,245,0.12);color:var(--blue)}
+.bgr{background:rgba(52,211,153,0.12);color:var(--green)}
 
-.progress-bar{width:100%;height:4px;border-radius:4px;background:rgba(255,255,255,0.06);overflow:hidden}
-.progress-fill{height:100%;border-radius:4px;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.pbar{width:100%;height:4px;border-radius:4px;background:rgba(255,255,255,0.05);overflow:hidden}
+.pfill{height:100%;border-radius:4px;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
 
-.card{background:var(--bg-card);border-radius:16px;border:1px solid var(--border);padding:18px;margin-bottom:14px;position:relative;overflow:hidden;cursor:pointer;transition:background .2s}
-.card:active{background:var(--bg-card-hover)}
-.card-accent-line{position:absolute;top:0;left:0;right:0;height:3px}
+.card{background:var(--bg-card);border-radius:var(--radius);border:1px solid var(--border);padding:18px;margin-bottom:12px;position:relative;overflow:hidden;cursor:pointer;transition:background .2s,transform .15s}
+.card:active{background:var(--bg-card-hover);transform:scale(0.985)}
+.card-static{cursor:default}
+.card-static:active{background:var(--bg-card);transform:none}
 
 .section-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
-.section-more{font-size:11px;color:var(--accent);cursor:pointer;margin-left:auto}
+.section-more{font-size:11px;color:var(--accent);cursor:pointer;margin-left:auto;font-weight:500}
+.section-more:active{opacity:.6}
 
-/* HEADER */
-.header{display:flex;justify-content:space-between;align-items:center;padding:16px 0}
-.header-greeting{font-size:13px;color:var(--text-muted);font-family:var(--font-display)}
+.btn{padding:12px 20px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;border:none}
+.btn:active{transform:scale(0.97)}
+.btn-p{background:var(--accent);color:var(--bg)}
+.btn-p:active{box-shadow:0 0 24px var(--accent-glow)}
+.btn-s{background:var(--accent-dim);color:var(--accent);border:1px solid rgba(201,168,76,0.2)}
+
+/* ============ HEADER ============ */
+.header{display:flex;justify-content:space-between;align-items:center;padding:max(14px,env(safe-area-inset-top,14px)) 0 12px}
 .header-title{font-size:22px;font-weight:700;color:var(--text);font-family:var(--font-display);letter-spacing:-.02em}
-.header-actions{display:flex;gap:12px;align-items:center}
-.header-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--bg-card);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer}
-.header-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--accent));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--bg)}
+.header-actions{display:flex;gap:10px;align-items:center}
+.hbtn{width:38px;height:38px;border-radius:50%;border:1px solid var(--border);background:var(--bg-card);display:flex;align-items:center;justify-content:center;font-size:15px;position:relative;transition:all .2s}
+.hbtn:active{background:var(--bg-card-hover);transform:scale(0.9)}
+.havatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--accent));display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:var(--bg);transition:transform .2s}
+.havatar:active{transform:scale(0.9)}
 
-/* STREAK CARD */
-.streak-card{background:linear-gradient(135deg,var(--deep-purple),var(--bg-card));border-radius:16px;padding:18px 20px;margin-bottom:20px;border:1px solid var(--border);position:relative;overflow:hidden}
-.streak-glow{position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:var(--purple-glow);filter:blur(30px)}
-.streak-number{font-size:36px;font-weight:800;color:var(--accent);font-family:var(--font-display)}
-.streak-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
-.week-dots{display:flex;gap:6px;margin-top:14px}
-.week-dot{flex:1;text-align:center}
-.week-dot-label{font-size:9px;color:var(--text-dim);margin-bottom:4px}
-.week-dot-circle{width:28px;height:28px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
-.dot-done{background:var(--accent);color:var(--bg)}
-.dot-today{background:rgba(201,168,76,0.15);color:var(--accent);border:1.5px solid var(--accent)}
-.dot-future{background:rgba(255,255,255,0.04);color:var(--text-dim)}
+/* ============ SEARCH BAR ============ */
+.search-bar{display:flex;align-items:center;gap:10px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:16px;transition:border-color .25s}
+.search-bar:focus-within{border-color:var(--accent)}
+.search-bar input{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:13px}
+.search-bar input::placeholder{color:var(--text-dim)}
 
-/* CARD OF THE DAY */
-.tarot-card{border-radius:16px;border:1px solid var(--border);cursor:pointer;transition:all .5s ease;overflow:hidden}
-.tarot-unrevealed{background:linear-gradient(160deg,rgba(201,168,76,0.08),rgba(123,79,196,0.08));padding:28px 20px;text-align:center}
-.tarot-revealed{background:linear-gradient(160deg,var(--deep-purple),var(--bg-card));padding:20px;border-color:rgba(201,168,76,0.25);position:relative}
-.tarot-revealed .glow{position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:var(--accent-glow);filter:blur(40px)}
-.tarot-advice{background:rgba(201,168,76,0.06);border-radius:10px;padding:10px 14px;border-left:3px solid var(--accent);margin-top:12px}
+/* ============ CAROUSEL ============ */
+.carousel{display:flex;gap:12px;overflow-x:auto;padding:0 0 6px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.carousel::-webkit-scrollbar{display:none}
+.carousel-item{min-width:min(240px,75vw);flex-shrink:0;scroll-snap-align:start}
 
-/* LIVE CLASS CAROUSEL */
-.carousel{display:flex;gap:12px;overflow-x:auto;padding-bottom:4px;scroll-snap-type:x mandatory}
-.carousel-item{min-width:220px;flex-shrink:0;scroll-snap-align:start}
+/* ============ FILTERS ============ */
+.filters{display:flex;gap:8px;overflow-x:auto;margin-bottom:18px;padding-bottom:4px}
+.filters::-webkit-scrollbar{display:none}
+.fbtn{padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:11px;font-weight:600;white-space:nowrap;transition:all .2s}
+.fbtn:active{transform:scale(0.95)}
+.fbtn.active{border-color:var(--accent);background:var(--accent-dim);color:var(--accent)}
 
-/* MEDITATION GRID */
-.med-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.med-card{background:var(--bg-card);border-radius:12px;padding:14px;border:1px solid var(--border);cursor:pointer;transition:background .2s}
-.med-card:active{background:var(--bg-card-hover)}
-.med-icon{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
-.med-dot{width:8px;height:8px;border-radius:50%}
+/* ============ AUDIO PLAYER ============ */
+.audio-player{position:fixed;bottom:calc(var(--nav-height) + var(--safe-bottom) + 4px);left:50%;transform:translateX(-50%);width:calc(100% - 24px);max-width:406px;background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:var(--radius);padding:14px 16px;z-index:9;display:none;box-shadow:0 -4px 24px rgba(0,0,0,0.4)}
+.audio-player.show{display:block;animation:slideUp .4s ease}
+@keyframes slideUp{from{opacity:0;transform:translateX(-50%) translateY(16px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 
-/* COMMUNITY */
-.post{background:var(--bg-card);border-radius:14px;padding:14px 16px;margin-bottom:10px;border:1px solid var(--border)}
-.post-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.post-avatar{width:32px;height:32px;border-radius:50%;background:var(--deep-purple);display:flex;align-items:center;justify-content:center;font-size:16px}
-.post-actions{display:flex;gap:16px;font-size:11px;color:var(--text-muted)}
-.post-actions span{cursor:pointer}
+/* ============ OVERLAY / MODAL ============ */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:50;display:none;align-items:flex-end;justify-content:center}
+.overlay.show{display:flex}
+.modal{width:100%;max-width:430px;background:var(--bg-elevated);border-radius:20px 20px 0 0;padding:24px 20px var(--safe-bottom);max-height:85vh;overflow-y:auto;animation:modalUp .35s ease}
+@keyframes modalUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-handle{width:36px;height:4px;border-radius:4px;background:rgba(255,255,255,0.1);margin:0 auto 20px}
+.modal-title{font-size:20px;font-weight:700;font-family:var(--font-display);color:var(--text);margin-bottom:4px;text-align:center}
 
-/* FILTERS */
-.filters{display:flex;gap:8px;overflow-x:auto;margin-bottom:20px;padding-bottom:4px}
-.filter-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;text-transform:capitalize;font-family:var(--font-body);transition:all .2s}
-.filter-btn.active{border-color:var(--accent);background:rgba(201,168,76,0.08);color:var(--accent)}
+/* ============ NOTIFICATIONS ============ */
+.notif-item{display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
+.nicon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 
-/* AULA LIST ITEM */
-.aula-item{background:var(--bg-card);border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid var(--border);cursor:pointer;position:relative;overflow:hidden;transition:background .2s}
-.aula-item:active{background:var(--bg-card-hover)}
-.aula-accent{position:absolute;top:0;left:0;bottom:0;width:3px}
-.aula-body{padding-left:8px}
+/* ============ PRICING ============ */
+.price-card{border-radius:var(--radius);padding:20px;border:1px solid var(--border);margin-bottom:12px;position:relative;overflow:hidden;background:var(--bg-card);transition:all .2s}
+.price-card:active{transform:scale(0.98)}
+.price-card.feat{border-color:var(--accent);background:linear-gradient(160deg,rgba(201,168,76,0.08),var(--bg-card))}
+.price-card.feat::before{content:'MAIS POPULAR';position:absolute;top:12px;right:-28px;background:var(--accent);color:var(--bg);font-size:8px;font-weight:700;letter-spacing:.08em;padding:3px 32px;transform:rotate(45deg)}
+.price-amount{font-size:32px;font-weight:800;font-family:var(--font-display);color:var(--text);line-height:1}
+.price-features{list-style:none;margin-top:14px}
+.price-features li{font-size:12px;color:var(--text-muted);padding:5px 0;display:flex;align-items:center;gap:8px}
+.price-features li::before{content:'✦';color:var(--accent);font-size:8px}
 
-/* TRAIL ITEMS */
-.trail-item{display:flex;gap:14px;align-items:flex-start;position:relative}
-.trail-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+/* ============ TOAST ============ */
+.toast{position:fixed;top:max(20px,env(safe-area-inset-top,20px));left:50%;transform:translateX(-50%);background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:12px 20px;z-index:200;display:none;font-size:13px;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,0.5);max-width:calc(100% - 40px);text-align:center}
+.toast.show{display:block;animation:toastIn .35s ease}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(-12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 
-/* TRAIL DETAIL */
-.trail-back{background:none;border:none;color:var(--accent);font-size:18px;cursor:pointer;padding:0}
-.module-header{font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px;padding:8px 12px;border-radius:10px;border-left:3px solid var(--purple);background:rgba(123,79,196,0.06)}
-.lesson-item{display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .2s}
+/* ============ ANIMATIONS ============ */
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.08)}}
+.pulse{animation:pulse 1.2s ease-in-out infinite}
+
+/* ============ POST / COMMUNITY ============ */
+.post{background:var(--bg-card);border-radius:var(--radius);padding:16px;margin-bottom:12px;border:1px solid var(--border)}
+.post-avatar{width:36px;height:36px;border-radius:50%;background:var(--deep-purple);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.post-img{width:100%;border-radius:var(--radius-xs);margin-bottom:12px;aspect-ratio:16/9;background:linear-gradient(135deg,var(--deep-purple),var(--bg-card));display:flex;align-items:center;justify-content:center;font-size:32px}
+.pa{font-size:11px;color:var(--text-dim);cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:color .2s;padding:4px 0}
+.pa:active{color:var(--accent)}
+
+/* ============ MISC ============ */
+.menu-item{display:flex;justify-content:space-between;align-items:center;padding:15px 4px;border-bottom:1px solid rgba(255,255,255,0.03);cursor:pointer;transition:opacity .15s}
+.menu-item:active{opacity:.6}
+
+.profile-avatar-lg{width:88px;height:88px;border-radius:50%;margin:0 auto 14px;background:linear-gradient(135deg,var(--purple),var(--accent));display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:800;color:var(--bg);box-shadow:0 0 40px var(--accent-glow);position:relative}
+.profile-avatar-lg::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid rgba(201,168,76,0.15);animation:spin 12s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.streak-card{background:linear-gradient(135deg,var(--deep-purple),var(--bg-card));border-radius:var(--radius);padding:18px 20px;margin-bottom:18px;border:1px solid var(--border);position:relative;overflow:hidden}
+.wc{width:30px;height:30px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;transition:all .3s}
+
+.oracle-card{aspect-ratio:2.5/4;border-radius:var(--radius-sm);cursor:pointer;background:linear-gradient(160deg,rgba(45,27,105,0.8),rgba(123,79,196,0.12));border:1px solid rgba(123,79,196,0.15);display:flex;align-items:center;justify-content:center;transition:all .25s}
+.oracle-card:active{transform:scale(0.93);border-color:var(--accent)}
+
+.module-header{font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px;padding:10px 14px;border-radius:var(--radius-xs);border-left:3px solid var(--purple);background:rgba(123,79,196,0.06);display:flex;align-items:center;justify-content:space-between}
+.lesson-item{display:flex;align-items:center;gap:12px;padding:13px 12px;border-bottom:1px solid rgba(255,255,255,0.03);cursor:pointer;transition:background .15s}
 .lesson-item:active{background:rgba(255,255,255,0.02)}
-.lesson-check{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
-.lesson-done{background:var(--accent);color:var(--bg)}
-.lesson-pending{background:rgba(255,255,255,0.04);border:1.5px solid var(--border);color:var(--text-dim)}
-.lesson-play{font-size:14px;color:var(--text-dim)}
+.lcheck{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.lc-done{background:var(--accent);color:var(--bg)}
+.lc-pend{background:rgba(255,255,255,0.03);border:1.5px solid rgba(255,255,255,0.08);color:var(--text-dim)}
 
-/* ORACLE */
-.oracle-hero{text-align:center;padding:30px 20px;margin-bottom:24px;background:linear-gradient(160deg,var(--deep-purple),var(--bg-card));border-radius:20px;border:1px solid var(--border);position:relative;overflow:hidden}
-.oracle-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200px;height:200px;border-radius:50%;background:var(--purple-glow);filter:blur(60px)}
-.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.oracle-card{aspect-ratio:3/4;border-radius:16px;cursor:pointer;background:linear-gradient(160deg,var(--deep-purple),rgba(123,79,196,0.15));border:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:transform .2s,box-shadow .2s}
-.oracle-card:active{transform:scale(0.96)}
-.revealing-animation{text-align:center;padding:60px 20px}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.1)}}
-.pulse{animation:pulse 1s ease-in-out infinite}
-.revealed-card{background:linear-gradient(160deg,var(--deep-purple),var(--bg-card));border-radius:20px;padding:28px 24px;margin-bottom:20px;border:1px solid rgba(201,168,76,0.2);text-align:center;position:relative;overflow:hidden}
-.meaning-box{background:var(--bg-card);border-radius:16px;padding:18px;margin-bottom:14px;border:1px solid var(--border)}
-.advice-box{background:rgba(201,168,76,0.04);border-radius:16px;padding:18px;border:1px solid rgba(201,168,76,0.12);margin-bottom:20px}
-.oracle-reset{width:100%;padding:14px;border-radius:14px;border:1px solid var(--border);background:var(--bg-card);color:var(--accent);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-body);transition:background .2s}
-.oracle-reset:active{background:var(--bg-card-hover)}
+/* ============ CARD FLIP ============ */
+.card-flip{perspective:800px;margin-bottom:22px}
+.card-flip-inner{transition:transform .6s ease;transform-style:preserve-3d;position:relative;border-radius:var(--radius);cursor:pointer}
+.card-flip-inner.flipped{transform:rotateY(180deg)}
+.card-flip-front,.card-flip-back{backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--radius);border:1px solid var(--border);overflow:hidden}
+.card-flip-back{position:absolute;inset:0;transform:rotateY(180deg)}
 
-/* PROFILE */
-.profile-header{text-align:center;padding:24px 0 20px}
-.profile-avatar{width:80px;height:80px;border-radius:50%;margin:0 auto 14px;background:linear-gradient(135deg,var(--purple),var(--accent));display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:var(--bg);box-shadow:0 0 30px var(--accent-glow)}
-.profile-name{font-size:20px;font-weight:700;color:var(--text);font-family:var(--font-display)}
-.profile-badges{display:flex;justify-content:center;gap:8px;margin-top:8px}
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
-.stat-card{background:var(--bg-card);border-radius:14px;padding:16px;text-align:center;border:1px solid var(--border)}
-.stat-value{font-size:24px;font-weight:800;color:var(--accent);font-family:var(--font-display)}
-.stat-label{font-size:10px;color:var(--text-muted);margin-top:4px}
-.level-track{display:flex;justify-content:space-between;margin-top:14px}
-.level-node{text-align:center}
-.level-circle{width:32px;height:32px;border-radius:50%;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
-.level-reached{background:var(--accent);color:var(--bg)}
-.level-next{border:1.5px dashed rgba(201,168,76,0.3);color:var(--text-dim)}
-.level-locked{background:rgba(255,255,255,0.04);color:var(--text-dim)}
-.level-name{font-size:9px}
-.plan-card{background:linear-gradient(135deg,var(--deep-purple),var(--bg-card));border-radius:16px;padding:18px;border:1px solid rgba(201,168,76,0.2);margin-bottom:14px}
-.plan-upgrade{width:100%;margin-top:14px;padding:10px;border-radius:10px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);color:var(--accent);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font-body)}
-.menu-item{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer}
-.menu-item:active{opacity:.7}
+/* ============ LESSON / VIDEO MODAL ============ */
+.lesson-stage{aspect-ratio:16/9;background:radial-gradient(ellipse at center,rgba(123,79,196,0.25),var(--bg) 70%),var(--bg-card);border-radius:var(--radius-sm);position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:16px}
+.lesson-stage::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 30%,rgba(201,168,76,0.12),transparent 50%)}
+.lesson-play{width:64px;height:64px;border-radius:50%;background:var(--accent);color:var(--bg);font-size:24px;display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 0 32px var(--accent-glow);animation:lpulse 2s ease-in-out infinite}
+@keyframes lpulse{0%,100%{box-shadow:0 0 24px var(--accent-glow)}50%{box-shadow:0 0 40px var(--accent-glow),0 0 60px rgba(201,168,76,0.15)}}
+.lesson-progress{height:3px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;margin-top:10px}
+.lesson-progress i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s linear}
+
+/* ============ COMMENTS ============ */
+.comment{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.comment:last-child{border-bottom:none}
+.comment-av{width:32px;height:32px;border-radius:50%;background:var(--deep-purple);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.comment-body{flex:1;min-width:0}
+.comment-name{font-size:11px;font-weight:600;color:var(--text)}
+.comment-time{font-size:9px;color:var(--text-dim);margin-left:6px}
+.comment-text{font-size:12px;color:var(--text-muted);line-height:1.5;margin-top:3px}
+.comment-input{display:flex;gap:8px;align-items:center;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;margin-top:14px}
+.comment-input input{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:12px}
+.comment-input input::placeholder{color:var(--text-dim)}
+.comment-send{background:var(--accent);color:var(--bg);width:30px;height:30px;border-radius:50%;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* ============ ACHIEVEMENTS ============ */
+.ach-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.ach{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 8px;text-align:center;position:relative;overflow:hidden}
+.ach.locked{opacity:.4}
+.ach.unlocked{border-color:var(--border-strong);background:linear-gradient(160deg,var(--accent-dim),var(--bg-card))}
+.ach-icon{font-size:26px;margin-bottom:6px;filter:drop-shadow(0 0 8px var(--accent-glow))}
+.ach.locked .ach-icon{filter:grayscale(1)}
+.ach-name{font-size:9px;font-weight:600;color:var(--text);line-height:1.3}
+.ach-desc{font-size:8px;color:var(--text-dim);margin-top:3px;line-height:1.3}
+
+/* ============ TEXTAREA ============ */
+.ta{width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;color:var(--text);font-size:13px;font-family:var(--font-body);resize:none;outline:none;min-height:100px;line-height:1.5;transition:border-color .2s}
+.ta:focus{border-color:var(--accent)}
+
+/* ============ SETTINGS ROWS ============ */
+.set-row{display:flex;justify-content:space-between;align-items:center;padding:14px 4px;border-bottom:1px solid rgba(255,255,255,0.03)}
+.toggle{width:38px;height:22px;border-radius:22px;background:rgba(255,255,255,0.08);position:relative;transition:background .25s;cursor:pointer;flex-shrink:0}
+.toggle::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:var(--text-muted);transition:all .25s}
+.toggle.on{background:var(--accent)}
+.toggle.on::after{left:18px;background:var(--bg)}
+
+/* ============ LIMIT PILL ============ */
+.limit-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;background:var(--accent-dim);color:var(--accent);font-size:10px;font-weight:600}
+.limit-pill.exhausted{background:rgba(232,77,138,0.1);color:var(--rose)}
+
+/* ============ RESPONSIVE — DESKTOP ============ */
+@media(min-width:768px){
+  html,body{height:100%;overflow:hidden}
+  body{align-items:stretch;justify-content:stretch}
+
+  /* Shell ocupa tela toda, usa flex coluna */
+  .app-shell{
+    max-width:100%;
+    width:100%;
+    height:100vh;
+    overflow:visible;
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* Conteúdo: ocupa espaço livre entre header e nav */
+  .app-content{
+    position:relative;
+    inset:auto;
+    flex:1;
+    min-height:0;
+    overflow-y:auto;
+    overflow-x:hidden;
+    padding-bottom:0;
+  }
+
+  /* Screens com padding maior */
+  .screen{padding:0 48px 40px;max-width:960px}
+  .header{padding:28px 0 18px}
+
+  /* ---- NAV EMBAIXO — VERSÃO DESKTOP ---- */
+  .bottom-nav{
+    position:relative;
+    height:auto;
+    padding:10px 48px 14px;
+    justify-content:center;
+    gap:4px;
+    border-top:1px solid var(--border);
+    flex-shrink:0;
+  }
+  .nav-btn{
+    flex-direction:row;
+    gap:8px;
+    padding:10px 20px;
+    border-radius:var(--radius-sm);
+    min-width:110px;
+    justify-content:center;
+  }
+  .nav-btn:hover{background:var(--bg-card)}
+  .nav-btn .icon{font-size:17px}
+  .nav-btn .label{
+    font-size:12px;font-weight:600;
+    letter-spacing:.02em;text-transform:none;
+  }
+  .nav-btn.active{background:var(--accent-dim)}
+  .nav-btn.active::before{
+    top:auto;bottom:-1px;
+    width:36px;height:2px;
+    border-radius:2px 2px 0 0;
+  }
+
+  /* Carousel vira grid */
+  .carousel{display:grid;grid-template-columns:repeat(3,1fr);overflow-x:visible;padding:0;gap:12px}
+  .carousel-item{min-width:unset}
+
+  /* Modal centralizado */
+  .overlay{align-items:center;justify-content:center}
+  .modal{border-radius:20px;max-width:560px;max-height:82vh;animation:modalCenter .3s ease}
+  @keyframes modalCenter{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+
+  /* Audio player centralizado acima da nav */
+  .audio-player{left:50%;transform:translateX(-50%);bottom:80px;max-width:760px;width:calc(100% - 96px)}
+
+  /* Scrollbar sutil */
+  ::-webkit-scrollbar{width:4px;height:4px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:4px}
+}
+
+/* Listas dinâmicas em grid no desktop */
+@media(min-width:768px){
+  #aList{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  #aList .card{margin-bottom:0}
+  #tList{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  #tList .card{margin-bottom:0}
+  #tMods{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  #tMods .card{margin-bottom:0}
+  #medG{grid-template-columns:repeat(4,1fr)!important}
+  #oCards{grid-template-columns:repeat(5,1fr)!important}
+  #cFeed{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  #cFeed .post{margin-bottom:0}
+  #liveC{grid-template-columns:repeat(3,1fr)!important;overflow-x:visible!important}
+  #liveC .carousel-item{min-width:unset}
+}
+
+/* Tablet — grids menores */
+@media(min-width:768px) and (max-width:1024px){
+  .screen{padding:0 28px 28px}
+  .nav-btn{min-width:80px;padding:10px 12px}
+  .carousel{grid-template-columns:repeat(2,1fr)}
+  #oCards{grid-template-columns:repeat(4,1fr)!important}
+  #medG{grid-template-columns:repeat(2,1fr)!important}
+  #liveC{grid-template-columns:repeat(2,1fr)!important}
+}
 </style>
 </head>
 <body>
 
-<div class="particles" id="particles"></div>
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-logo" aria-hidden="true">✦</div>
+  <div class="splash-title">Cria Ti Na Luz</div>
+  <div class="splash-sub">Evolução espiritual ao seu alcance</div>
+  <div class="splash-bar"><i></i></div>
+</div>
 
-<div class="app-shell">
-  <div class="app-content" id="appContent">
+<!-- PARTICLES -->
+<div class="particles" id="particles" aria-hidden="true"></div>
 
-    <!-- ==================== HOME ==================== -->
-    <div class="screen active" id="screen-home">
-      <div class="header">
-        <div>
-          <div class="header-greeting">Axé, Eddy ☀️</div>
-          <div class="header-title">Sua Jornada ✦</div>
-        </div>
-        <div class="header-actions">
-          <div class="header-btn">🔔</div>
-          <div class="header-avatar">E</div>
-        </div>
-      </div>
+<!-- TOAST -->
+<div class="toast" id="toast" role="alert"></div>
 
-      <!-- Streak -->
-      <div class="streak-card">
-        <div class="streak-glow"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;position:relative">
-          <div>
-            <div class="streak-label">Streak Espiritual</div>
-            <div style="display:flex;align-items:baseline;gap:6px">
-              <span class="streak-number">12</span>
-              <span style="font-size:13px;color:var(--text-muted)">dias</span>
-            </div>
-          </div>
-          <div style="text-align:right">
-            <span class="badge badge-purple">Nível: Adepto</span>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:6px">1.240 pts</div>
-          </div>
-        </div>
-        <div class="week-dots">
-          <div class="week-dot"><div class="week-dot-label">S</div><div class="week-dot-circle dot-done">✓</div></div>
-          <div class="week-dot"><div class="week-dot-label">T</div><div class="week-dot-circle dot-done">✓</div></div>
-          <div class="week-dot"><div class="week-dot-label">Q</div><div class="week-dot-circle dot-done">✓</div></div>
-          <div class="week-dot"><div class="week-dot-label">Q</div><div class="week-dot-circle dot-done">✓</div></div>
-          <div class="week-dot"><div class="week-dot-label">S</div><div class="week-dot-circle dot-done">✓</div></div>
-          <div class="week-dot"><div class="week-dot-label">S</div><div class="week-dot-circle dot-today">◉</div></div>
-          <div class="week-dot"><div class="week-dot-label">D</div><div class="week-dot-circle dot-future">·</div></div>
-        </div>
-      </div>
-
-      <!-- Carta do Dia -->
-      <div style="margin-bottom:24px">
-        <div class="section-title"><span style="color:var(--accent)">☽</span> Carta do Dia</div>
-        <div class="tarot-card" id="homeCard" onclick="toggleHomeCard()">
-          <div class="tarot-unrevealed" id="homeCardHidden">
-            <div style="font-size:40px;margin-bottom:8px">🃏</div>
-            <div style="font-size:14px;color:var(--accent);font-weight:600;font-family:var(--font-display)">Toque para revelar sua carta</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Orientação espiritual para hoje</div>
-          </div>
-          <div class="tarot-revealed" id="homeCardShown" style="display:none">
-            <div class="glow"></div>
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;position:relative">
-              <div>
-                <div style="font-size:11px;color:var(--accent);font-weight:700;letter-spacing:.1em">XVII</div>
-                <div style="font-size:22px;font-weight:700;color:var(--text);font-family:var(--font-display)">A Estrela</div>
-              </div>
-              <div style="font-size:36px">⭐</div>
-            </div>
-            <div style="font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:12px">Esperança, inspiração e renovação espiritual. As energias cósmicas estão alinhadas ao seu favor hoje.</div>
-            <div class="tarot-advice">
-              <div style="font-size:10px;color:var(--accent);font-weight:700;letter-spacing:.08em;margin-bottom:4px">CONSELHO</div>
-              <div style="font-size:12px;color:var(--text);line-height:1.5">Confie no universo. Algo que você pediu está se manifestando agora. Mantenha fé.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Aulas ao Vivo -->
-      <div style="margin-bottom:24px">
-        <div class="section-title">
-          <span style="color:var(--rose)">◉</span> Aulas ao Vivo
-          <span class="section-more" onclick="switchTab('aulas')">Ver todas →</span>
-        </div>
-        <div class="carousel">
-          <div class="carousel-item">
-            <div class="card" style="margin-bottom:0">
-              <div class="card-accent-line" style="background:linear-gradient(90deg,var(--rose),transparent)"></div>
-              <div style="display:flex;justify-content:space-between;margin-bottom:10px">
-                <span class="badge badge-rose">AO VIVO</span>
-                <span style="font-size:10px;color:var(--text-muted)">👁 142</span>
-              </div>
-              <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.4">Desenvolvimento Mediúnico — Nível 2</div>
-              <div style="display:flex;justify-content:space-between;align-items:center">
-                <span style="font-size:11px;color:var(--text-muted)">Mãe Stella</span>
-                <span style="font-size:11px;color:var(--accent);font-weight:700">20:00</span>
-              </div>
-            </div>
-          </div>
-          <div class="carousel-item">
-            <div class="card" style="margin-bottom:0">
-              <div class="card-accent-line" style="background:linear-gradient(90deg,var(--teal),transparent)"></div>
-              <div style="margin-bottom:10px"><span class="badge badge-teal">HOJE</span></div>
-              <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.4">Meditação de Cura com Pretos Velhos</div>
-              <div style="display:flex;justify-content:space-between;align-items:center">
-                <span style="font-size:11px;color:var(--text-muted)">Pai João</span>
-                <span style="font-size:11px;color:var(--accent);font-weight:700">21:30</span>
-              </div>
-            </div>
-          </div>
-          <div class="carousel-item">
-            <div class="card" style="margin-bottom:0">
-              <div class="card-accent-line" style="background:linear-gradient(90deg,var(--purple),transparent)"></div>
-              <div style="margin-bottom:10px"><span class="badge badge-purple">AMANHÃ</span></div>
-              <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.4">Ritual de Limpeza — Ciclo Lunar</div>
-              <div style="display:flex;justify-content:space-between;align-items:center">
-                <span style="font-size:11px;color:var(--text-muted)">Yalorixá Renata</span>
-                <span style="font-size:11px;color:var(--accent);font-weight:700">19:00</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Meditações -->
-      <div style="margin-bottom:24px">
-        <div class="section-title"><span style="color:var(--teal)">◈</span> Meditações</div>
-        <div class="med-grid">
-          <div class="med-card">
-            <div class="med-icon" style="background:rgba(123,79,196,0.12)"><div class="med-dot" style="background:var(--purple)"></div></div>
-            <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">Cura com Pretos Velhos</div>
-            <div style="display:flex;justify-content:space-between"><span style="font-size:10px;color:var(--text-muted)">15min</span><span class="badge badge-purple">Cura</span></div>
-          </div>
-          <div class="med-card">
-            <div class="med-icon" style="background:rgba(201,168,76,0.12)"><div class="med-dot" style="background:var(--accent)"></div></div>
-            <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">Proteção de Ogum</div>
-            <div style="display:flex;justify-content:space-between"><span style="font-size:10px;color:var(--text-muted)">12min</span><span class="badge badge-accent">Proteção</span></div>
-          </div>
-          <div class="med-card">
-            <div class="med-icon" style="background:rgba(232,77,138,0.12)"><div class="med-dot" style="background:var(--rose)"></div></div>
-            <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">Energia de Oxum</div>
-            <div style="display:flex;justify-content:space-between"><span style="font-size:10px;color:var(--text-muted)">20min</span><span class="badge badge-rose">Amor</span></div>
-          </div>
-          <div class="med-card">
-            <div class="med-icon" style="background:rgba(46,196,182,0.12)"><div class="med-dot" style="background:var(--teal)"></div></div>
-            <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">Foco com Xangô</div>
-            <div style="display:flex;justify-content:space-between"><span style="font-size:10px;color:var(--text-muted)">10min</span><span class="badge badge-teal">Foco</span></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Comunidade -->
-      <div>
-        <div class="section-title"><span style="color:var(--purple)">◎</span> Comunidade</div>
-        <div class="post">
-          <div class="post-header">
-            <div class="post-avatar">🌙</div>
-            <div style="flex:1">
-              <div style="font-size:12px;font-weight:600;color:var(--text)">Marina S. <span class="badge badge-purple">Adepta</span></div>
-              <div style="font-size:10px;color:var(--text-dim)">2h atrás</div>
-            </div>
-          </div>
-          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;margin-bottom:10px">Acabei de completar o módulo 2 da trilha Despertar Espiritual! Sentindo uma energia incrível depois do banho de ervas 🌿</div>
-          <div class="post-actions"><span>❤️ 47</span><span>💬 Comentar</span><span>🔗 Compartilhar</span></div>
-        </div>
-        <div class="post">
-          <div class="post-header">
-            <div class="post-avatar">⭐</div>
-            <div style="flex:1">
-              <div style="font-size:12px;font-weight:600;color:var(--text)">Carlos R. <span class="badge badge-accent">Mestre</span></div>
-              <div style="font-size:10px;color:var(--text-dim)">4h atrás</div>
-            </div>
-          </div>
-          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;margin-bottom:10px">Desafio 21 dias de meditação — Dia 15! Nunca imaginei que conseguiria manter o streak. Obrigado comunidade! 🙏</div>
-          <div class="post-actions"><span>❤️ 83</span><span>💬 Comentar</span><span>🔗 Compartilhar</span></div>
-        </div>
+<!-- AUDIO PLAYER -->
+<div class="audio-player" id="audioPlayer" role="region" aria-label="Reprodutor de meditação">
+  <div style="display:flex;align-items:center;gap:12px">
+    <div style="width:44px;height:44px;border-radius:10px;background:rgba(123,79,196,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🎵</div>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="playerTitle">—</div>
+      <div style="font-size:10px;color:var(--text-muted);margin-top:2px" id="playerSub">—</div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <button onclick="togglePlay()" id="playBtn" aria-label="Play/Pause" style="width:38px;height:38px;border-radius:50%;background:var(--accent);color:var(--bg);font-size:16px;display:flex;align-items:center;justify-content:center;transition:transform .15s">▶</button>
+      <button onclick="closePlayer()" aria-label="Fechar player" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.06);color:var(--text-muted);font-size:12px;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;margin-top:10px">
+    <span style="font-size:9px;color:var(--text-dim);min-width:32px;text-align:right" id="pCur">0:00</span>
+    <div id="pBarWrap" style="flex:1;height:16px;display:flex;align-items:center;cursor:pointer">
+      <div style="width:100%;height:3px;background:rgba(255,255,255,0.08);border-radius:3px;position:relative">
+        <div style="height:100%;border-radius:3px;background:var(--accent);position:absolute;top:0;left:0;transition:width .3s" id="pBar"></div>
       </div>
     </div>
-
-    <!-- ==================== AULAS ==================== -->
-    <div class="screen" id="screen-aulas">
-      <div class="header">
-        <div>
-          <div class="header-title">Aulas</div>
-          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Evolua no seu tempo, com orientação sagrada</div>
-        </div>
-      </div>
-      <div class="filters">
-        <button class="filter-btn active" onclick="setFilter(this)">todas</button>
-        <button class="filter-btn" onclick="setFilter(this)">ao vivo</button>
-        <button class="filter-btn" onclick="setFilter(this)">mediúnica</button>
-        <button class="filter-btn" onclick="setFilter(this)">ritual</button>
-        <button class="filter-btn" onclick="setFilter(this)">meditação</button>
-      </div>
-
-      <div class="aula-item"><div class="aula-accent" style="background:var(--rose)"></div><div class="aula-body"><div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><span class="badge badge-rose">AO VIVO</span><span style="font-size:10px;color:var(--rose)">● 142 assistindo</span></div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3">Desenvolvimento Mediúnico — Nível 2</div><div style="font-size:11px;color:var(--text-muted);line-height:1.4;margin-bottom:8px">Técnicas avançadas de percepção e incorporação consciente</div><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;color:var(--text-muted)">Mãe Stella</span><span style="font-size:11px;color:var(--accent);font-weight:600">20:00 hoje</span></div></div></div>
-
-      <div class="aula-item"><div class="aula-accent" style="background:var(--purple)"></div><div class="aula-body"><div style="margin-bottom:6px"><span class="badge badge-purple">RITUAL</span></div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3">Ritual de Limpeza — Lua Minguante</div><div style="font-size:11px;color:var(--text-muted);line-height:1.4;margin-bottom:8px">Banho de descarrego e defumação com ervas sagradas</div><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;color:var(--text-muted)">Yalorixá Renata</span><span style="font-size:11px;color:var(--accent);font-weight:600">19:00 amanhã</span></div></div></div>
-
-      <div class="aula-item"><div class="aula-accent" style="background:var(--teal)"></div><div class="aula-body"><div style="margin-bottom:6px"><span class="badge badge-teal">MEDITAÇÃO</span></div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3">Meditação: Frequência de Cura 528Hz</div><div style="font-size:11px;color:var(--text-muted);line-height:1.4;margin-bottom:8px">Harmonização dos chakras com frequência do amor</div><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;color:var(--text-muted)">Pai João</span><span style="font-size:11px;color:var(--accent);font-weight:600">06:30 diário</span></div></div></div>
-
-      <div class="aula-item"><div class="aula-accent" style="background:var(--accent)"></div><div class="aula-body"><div style="margin-bottom:6px"><span class="badge badge-accent">REPLAY</span></div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3">Passe Magnético — Teoria e Prática</div><div style="font-size:11px;color:var(--text-muted);line-height:1.4;margin-bottom:8px">Aprenda a aplicar passes de cura à distância</div><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;color:var(--text-muted)">Mãe Stella</span><span style="font-size:11px;color:var(--accent);font-weight:600">Gravado</span></div></div></div>
-
-      <div class="aula-item"><div class="aula-accent" style="background:var(--accent)"></div><div class="aula-body"><div style="margin-bottom:6px"><span class="badge badge-accent">SEMANAL</span></div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3">Jogo de Búzios: Interpretação Básica</div><div style="font-size:11px;color:var(--text-muted);line-height:1.4;margin-bottom:8px">Entenda as caídas e mensagens dos Orixás</div><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;color:var(--text-muted)">Babalorixá Marcos</span><span style="font-size:11px;color:var(--accent);font-weight:600">Sáb 15:00</span></div></div></div>
-
-      <div class="aula-item"><div class="aula-accent" style="background:var(--blue)"></div><div class="aula-body"><div style="margin-bottom:6px"><span class="badge badge-blue">ESPECIAL</span></div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3">Workshop: Ervas Sagradas na Umbanda</div><div style="font-size:11px;color:var(--text-muted);line-height:1.4;margin-bottom:8px">Propriedades espirituais e uso correto das ervas</div><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;color:var(--text-muted)">Yalorixá Renata</span><span style="font-size:11px;color:var(--accent);font-weight:600">Dom 10:00</span></div></div></div>
-    </div>
-
-    <!-- ==================== TRILHAS ==================== -->
-    <div class="screen" id="screen-trilhas">
-      <div class="header">
-        <div>
-          <div class="header-title">Trilhas de Evolução</div>
-          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Jornadas completas por objetivo de vida</div>
-        </div>
-      </div>
-      <div id="trailList">
-        <!-- filled by JS -->
-      </div>
-    </div>
-
-    <!-- TRAIL DETAIL (hidden by default) -->
-    <div class="screen" id="screen-trail-detail">
-      <div class="header" style="display:flex;align-items:center;gap:12px">
-        <button class="trail-back" onclick="backToTrails()">←</button>
-        <div>
-          <div class="header-title" style="font-size:20px">🕯️ Despertar Espiritual</div>
-          <div style="font-size:11px;color:var(--text-muted)">8 módulos · 32 aulas · ~12h de conteúdo</div>
-        </div>
-      </div>
-      <div style="margin-bottom:20px">
-        <div class="progress-bar" style="height:6px"><div class="progress-fill" style="width:65%;background:linear-gradient(90deg,var(--purple),var(--purple));box-shadow:0 0 12px rgba(123,79,196,0.3)"></div></div>
-        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;text-align:right">65% completo</div>
-      </div>
-
-      <!-- Module 1 -->
-      <div style="margin-bottom:20px">
-        <div class="module-header">Módulo 1 — Fundamentos da Umbanda</div>
-        <div class="lesson-item"><div class="lesson-check lesson-done">✓</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text-muted);line-height:1.3">O que é Umbanda: história e fundamentos</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">18min</div></div><span class="lesson-play">▶</span></div>
-        <div class="lesson-item"><div class="lesson-check lesson-done">✓</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text-muted);line-height:1.3">As 7 Linhas da Umbanda</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">22min</div></div><span class="lesson-play">▶</span></div>
-        <div class="lesson-item"><div class="lesson-check lesson-done">✓</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text-muted);line-height:1.3">Orixás: quem são e como atuam</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">25min</div></div><span class="lesson-play">▶</span></div>
-        <div class="lesson-item"><div class="lesson-check lesson-done">✓</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text-muted);line-height:1.3">Exercício: Identificando seu Orixá de cabeça</div><div style="display:flex;gap:8px;margin-top:4px"><span style="font-size:10px;color:var(--text-dim)">15min</span><span class="badge badge-teal">exercício</span></div></div><span class="lesson-play">▶</span></div>
-      </div>
-
-      <!-- Module 2 -->
-      <div style="margin-bottom:20px">
-        <div class="module-header">Módulo 2 — Mediunidade Consciente</div>
-        <div class="lesson-item"><div class="lesson-check lesson-done">✓</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text-muted);line-height:1.3">Tipos de mediunidade na Umbanda</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">20min</div></div><span class="lesson-play">▶</span></div>
-        <div class="lesson-item"><div class="lesson-check lesson-done">✓</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text-muted);line-height:1.3">Sinais de desenvolvimento mediúnico</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">18min</div></div><span class="lesson-play">▶</span></div>
-        <div class="lesson-item"><div class="lesson-check lesson-pending">3</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.3">Ritual: Banho de ervas para abertura</div><div style="display:flex;gap:8px;margin-top:4px"><span style="font-size:10px;color:var(--text-dim)">12min</span><span class="badge badge-rose">ritual</span></div></div><span class="lesson-play">▶</span></div>
-        <div class="lesson-item"><div class="lesson-check lesson-pending">4</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.3">Meditação: Conexão com seu mentor espiritual</div><div style="display:flex;gap:8px;margin-top:4px"><span style="font-size:10px;color:var(--text-dim)">15min</span><span class="badge badge-purple">meditação</span></div></div><span class="lesson-play">▶</span></div>
-      </div>
-
-      <!-- Module 3 -->
-      <div style="margin-bottom:20px">
-        <div class="module-header">Módulo 3 — Incorporação e Passes</div>
-        <div class="lesson-item"><div class="lesson-check lesson-pending">1</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.3">Entendendo a incorporação consciente</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">24min</div></div><span class="lesson-play">▶</span></div>
-        <div class="lesson-item"><div class="lesson-check lesson-pending">2</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.3">Passes magnéticos: teoria e prática</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">20min</div></div><span class="lesson-play">▶</span></div>
-        <div class="lesson-item"><div class="lesson-check lesson-pending">3</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.3">Exercício: Passe à distância guiado</div><div style="display:flex;gap:8px;margin-top:4px"><span style="font-size:10px;color:var(--text-dim)">18min</span><span class="badge badge-teal">exercício</span></div></div><span class="lesson-play">▶</span></div>
-        <div class="lesson-item"><div class="lesson-check lesson-pending">4</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.3">Ritual: Defumação de proteção pessoal</div><div style="display:flex;gap:8px;margin-top:4px"><span style="font-size:10px;color:var(--text-dim)">10min</span><span class="badge badge-rose">ritual</span></div></div><span class="lesson-play">▶</span></div>
-      </div>
-
-      <!-- Module 4 -->
-      <div style="margin-bottom:20px">
-        <div class="module-header">Módulo 4 — Entidades e Guias Espirituais</div>
-        <div class="lesson-item"><div class="lesson-check lesson-pending">1</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.3">Caboclos: energia e mensagem</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">22min</div></div><span class="lesson-play">▶</span></div>
-        <div class="lesson-item"><div class="lesson-check lesson-pending">2</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.3">Pretos Velhos: sabedoria ancestral</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">20min</div></div><span class="lesson-play">▶</span></div>
-        <div class="lesson-item"><div class="lesson-check lesson-pending">3</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.3">Crianças (Erês): pureza e cura</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">18min</div></div><span class="lesson-play">▶</span></div>
-        <div class="lesson-item"><div class="lesson-check lesson-pending">4</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.3">Exus e Pombagiras: proteção e justiça</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">25min</div></div><span class="lesson-play">▶</span></div>
-      </div>
-    </div>
-
-    <!-- ==================== ORÁCULO ==================== -->
-    <div class="screen" id="screen-oraculo">
-      <div class="header">
-        <div>
-          <div class="header-title">Oráculo Sagrado</div>
-          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Receba orientação dos guias espirituais</div>
-        </div>
-      </div>
-
-      <div id="oracleChoose">
-        <div class="oracle-hero">
-          <div class="oracle-glow"></div>
-          <div style="position:relative">
-            <div style="font-size:36px;margin-bottom:12px">☽ ✦ ☾</div>
-            <div style="font-size:16px;font-weight:700;color:var(--text);font-family:var(--font-display);margin-bottom:8px">Escolha uma carta</div>
-            <div style="font-size:12px;color:var(--text-muted)">Concentre-se na sua pergunta e selecione</div>
-          </div>
-        </div>
-        <div class="card-grid">
-          <div class="oracle-card" onclick="revealOracle(0)"><div style="text-align:center"><div style="font-size:32px;margin-bottom:8px">✦</div><div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.15em">Carta 1</div></div></div>
-          <div class="oracle-card" onclick="revealOracle(1)"><div style="text-align:center"><div style="font-size:32px;margin-bottom:8px">✦</div><div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.15em">Carta 2</div></div></div>
-          <div class="oracle-card" onclick="revealOracle(2)"><div style="text-align:center"><div style="font-size:32px;margin-bottom:8px">✦</div><div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.15em">Carta 3</div></div></div>
-          <div class="oracle-card" onclick="revealOracle(3)"><div style="text-align:center"><div style="font-size:32px;margin-bottom:8px">✦</div><div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.15em">Carta 4</div></div></div>
-        </div>
-      </div>
-
-      <div id="oracleRevealing" style="display:none">
-        <div class="revealing-animation">
-          <div style="font-size:48px" class="pulse">✦</div>
-          <div style="font-size:16px;color:var(--accent);font-family:var(--font-display);font-weight:600;margin-top:20px">Consultando os guias...</div>
-          <div style="font-size:12px;color:var(--text-muted);margin-top:8px">As energias estão se alinhando</div>
-        </div>
-      </div>
-
-      <div id="oracleRevealed" style="display:none">
-        <div class="revealed-card">
-          <div class="glow"></div>
-          <div style="position:relative">
-            <div style="font-size:12px;color:var(--accent);font-weight:700;letter-spacing:.15em;margin-bottom:8px" id="revealedNumber"></div>
-            <div style="font-size:32px;font-weight:800;color:var(--text);font-family:var(--font-display);margin-bottom:4px" id="revealedName"></div>
-            <div style="font-size:48px;margin:16px 0">⭐</div>
-          </div>
-        </div>
-        <div class="meaning-box">
-          <div style="font-size:10px;color:var(--purple);font-weight:700;letter-spacing:.1em;margin-bottom:8px;text-transform:uppercase">SIGNIFICADO</div>
-          <div style="font-size:13px;color:var(--text-muted);line-height:1.6" id="revealedMeaning"></div>
-        </div>
-        <div class="advice-box">
-          <div style="font-size:10px;color:var(--accent);font-weight:700;letter-spacing:.1em;margin-bottom:8px;text-transform:uppercase">CONSELHO ESPIRITUAL</div>
-          <div style="font-size:13px;color:var(--text);line-height:1.6" id="revealedAdvice"></div>
-        </div>
-        <button class="oracle-reset" onclick="resetOracle()">Nova consulta ☽</button>
-      </div>
-    </div>
-
-    <!-- ==================== PERFIL ==================== -->
-    <div class="screen" id="screen-perfil">
-      <div class="profile-header">
-        <div class="profile-avatar">E</div>
-        <div class="profile-name">Eddy</div>
-        <div class="profile-badges">
-          <span class="badge badge-purple">Nível: Adepto</span>
-          <span class="badge badge-accent">PRO</span>
-        </div>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:8px">Membro desde Março 2026 · 12 dias de streak 🔥</div>
-      </div>
-
-      <div class="stats-grid">
-        <div class="stat-card"><div class="stat-value">47</div><div class="stat-label">Aulas assistidas</div></div>
-        <div class="stat-card"><div class="stat-value">32h</div><div class="stat-label">Horas de prática</div></div>
-        <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Trilhas ativas</div></div>
-        <div class="stat-card"><div class="stat-value">2</div><div class="stat-label">Desafios completos</div></div>
-      </div>
-
-      <!-- Evolução -->
-      <div class="card">
-        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:14px">Evolução Espiritual</div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-          <span style="font-size:11px;color:var(--text-muted)">Adepto → Mestre</span>
-          <span style="font-size:11px;color:var(--accent);font-weight:700">1.240 / 2.000 pts</span>
-        </div>
-        <div class="progress-bar" style="height:6px"><div class="progress-fill" style="width:62%;background:var(--accent);box-shadow:0 0 12px rgba(201,168,76,0.3)"></div></div>
-        <div class="level-track">
-          <div class="level-node"><div class="level-circle level-reached">✓</div><div class="level-name" style="color:var(--accent)">Iniciante</div></div>
-          <div class="level-node"><div class="level-circle level-reached">✓</div><div class="level-name" style="color:var(--accent)">Adepto</div></div>
-          <div class="level-node"><div class="level-circle level-next">◎</div><div class="level-name" style="color:var(--text-dim)">Mestre</div></div>
-          <div class="level-node"><div class="level-circle level-locked">◇</div><div class="level-name" style="color:var(--text-dim)">Guia</div></div>
-        </div>
-      </div>
-
-      <!-- Desafios -->
-      <div class="card">
-        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:14px">Desafios Ativos</div>
-        <div style="margin-bottom:14px">
-          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-            <span style="font-size:12px;color:var(--text)">21 Dias de Meditação</span>
-            <span style="font-size:11px;color:var(--teal);font-weight:600">Dia 12/21</span>
-          </div>
-          <div class="progress-bar"><div class="progress-fill" style="width:57%;background:var(--teal);box-shadow:0 0 12px rgba(46,196,182,0.3)"></div></div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-            <span style="font-size:12px;color:var(--text)">7 Dias de Gratidão</span>
-            <span style="font-size:11px;color:var(--rose);font-weight:600">Dia 6/7</span>
-          </div>
-          <div class="progress-bar"><div class="progress-fill" style="width:85%;background:var(--rose);box-shadow:0 0 12px rgba(232,77,138,0.3)"></div></div>
-        </div>
-      </div>
-
-      <!-- Plano -->
-      <div class="plan-card">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div>
-            <div style="font-size:13px;font-weight:700;color:var(--accent)">Plano PRO</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:2px">R$ 39,90/mês · Renovação em 15 dias</div>
-          </div>
-          <span class="badge badge-accent">ATIVO</span>
-        </div>
-        <button class="plan-upgrade">Upgrade para VIP — R$ 79,90/mês</button>
-      </div>
-
-      <!-- Menu -->
-      <div class="menu-item"><span style="font-size:13px;color:var(--text)">Objetivos espirituais</span><span style="font-size:14px;color:var(--text-dim)">›</span></div>
-      <div class="menu-item"><span style="font-size:13px;color:var(--text)">Histórico de atividades</span><span style="font-size:14px;color:var(--text-dim)">›</span></div>
-      <div class="menu-item"><span style="font-size:13px;color:var(--text)">Configurações</span><span style="font-size:14px;color:var(--text-dim)">›</span></div>
-      <div class="menu-item"><span style="font-size:13px;color:var(--text)">Ajuda & suporte</span><span style="font-size:14px;color:var(--text-dim)">›</span></div>
-    </div>
-
-  </div><!-- /app-content -->
-
-  <!-- Bottom Navigation -->
-  <div class="bottom-nav">
-    <button class="nav-btn active" data-tab="home" onclick="switchTab('home')"><span class="icon">✦</span><span class="label">Home</span></button>
-    <button class="nav-btn" data-tab="aulas" onclick="switchTab('aulas')"><span class="icon">◉</span><span class="label">Aulas</span></button>
-    <button class="nav-btn" data-tab="trilhas" onclick="switchTab('trilhas')"><span class="icon">◈</span><span class="label">Trilhas</span></button>
-    <button class="nav-btn" data-tab="oraculo" onclick="switchTab('oraculo')"><span class="icon">☽</span><span class="label">Oráculo</span></button>
-    <button class="nav-btn" data-tab="perfil" onclick="switchTab('perfil')"><span class="icon">◎</span><span class="label">Perfil</span></button>
+    <span style="font-size:9px;color:var(--text-dim);min-width:32px" id="pTot">15:00</span>
   </div>
 </div>
 
-<script>
-// ========== DATA ==========
-const TAROT = [
-  { name:"A Estrela", number:"XVII", meaning:"Esperança, inspiração e renovação espiritual. As energias cósmicas estão alinhadas ao seu favor hoje.", advice:"Confie no universo. Algo que você pediu está se manifestando agora. Mantenha fé." },
-  { name:"A Lua", number:"XVIII", meaning:"Intuição profunda e mistérios revelados. Seu inconsciente está mais ativo que o normal.", advice:"Preste atenção aos sonhos esta noite. Uma mensagem importante virá por eles." },
-  { name:"O Sol", number:"XIX", meaning:"Vitalidade, sucesso e clareza. Um dia de grande energia positiva e realizações.", advice:"Aproveite para iniciar projetos. A luz solar carrega sua intenção com força." },
-  { name:"O Mundo", number:"XXI", meaning:"Completude, realização e ciclo cumprido. Você está pronto para um novo nível.", advice:"Celebre suas conquistas. Você evoluiu mais do que imagina." },
-];
+<!-- NOTIFICATIONS MODAL -->
+<div class="overlay" id="notifOv" onclick="closeOverlay(this,event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Notificações</div>
+    <div style="font-size:12px;color:var(--text-muted);text-align:center;margin-bottom:16px">Suas atualizações espirituais</div>
+    <div class="notif-item" style="border-radius:var(--radius-xs);padding:14px;background:rgba(232,77,138,0.04)">
+      <div class="nicon" style="background:rgba(232,77,138,0.12)">◉</div>
+      <div><div style="font-size:12px;color:var(--text-muted);line-height:1.5"><strong style="color:var(--text)">Aula ao vivo em 30min!</strong> Desenvolvimento Mediúnico Nível 2 com Mãe Stella</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">Agora</div></div>
+    </div>
+    <div class="notif-item"><div class="nicon" style="background:rgba(201,168,76,0.12)">☽</div><div><div style="font-size:12px;color:var(--text-muted);line-height:1.5"><strong style="color:var(--text)">Sua carta do dia</strong> está disponível.</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">Hoje, 06:00</div></div></div>
+    <div class="notif-item"><div class="nicon" style="background:rgba(46,196,182,0.12)">🔥</div><div><div style="font-size:12px;color:var(--text-muted);line-height:1.5"><strong style="color:var(--text)">12 dias de streak!</strong> Parabéns pela disciplina espiritual.</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">Hoje</div></div></div>
+    <div class="notif-item"><div class="nicon" style="background:rgba(123,79,196,0.12)">💜</div><div><div style="font-size:12px;color:var(--text-muted);line-height:1.5"><strong style="color:var(--text)">Marina S.</strong> curtiu seu comentário.</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">Ontem</div></div></div>
+    <div class="notif-item"><div class="nicon" style="background:rgba(201,168,76,0.12)">✦</div><div><div style="font-size:12px;color:var(--text-muted);line-height:1.5"><strong style="color:var(--text)">Nova trilha:</strong> Relacionamentos Sagrados</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">2 dias</div></div></div>
+  </div>
+</div>
 
-const TRAILS = [
-  { title:"Despertar Espiritual", icon:"🕯️", modules:8, progress:65, color:"#7B4FC4", desc:"Fundamentos da Umbanda e mediunidade" },
-  { title:"Cura Emocional", icon:"💜", modules:6, progress:30, color:"#E84D8A", desc:"Liberte traumas e bloqueios emocionais" },
-  { title:"Prosperidade Sagrada", icon:"✨", modules:7, progress:0, color:"#C9A84C", desc:"Desbloqueie sua abundância financeira" },
-  { title:"Amor Próprio Divino", icon:"🌹", modules:5, progress:0, color:"#2EC4B6", desc:"Reconecte com seu valor sagrado" },
-  { title:"Proteção Espiritual", icon:"🛡️", modules:6, progress:45, color:"#4C6EF5", desc:"Blindagem e defesa energética" },
-  { title:"Relacionamentos Sagrados", icon:"💫", modules:5, progress:0, color:"#FF6B6B", desc:"Transforme seus vínculos afetivos" },
-];
+<!-- PRICING MODAL -->
+<div class="overlay" id="priceOv" onclick="closeOverlay(this,event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Escolha seu Plano</div>
+    <div style="font-size:13px;color:var(--text-muted);text-align:center;margin-bottom:20px;font-family:var(--font-display);font-style:italic">Invista na sua evolução espiritual</div>
+    <div class="price-card">
+      <div style="display:flex;justify-content:space-between"><div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">Gratuito</div><div class="price-amount">R$ 0</div></div><span class="badge bt">ATUAL</span></div>
+      <ul class="price-features"><li>Carta do dia</li><li>1 meditação por dia</li><li>Acesso à comunidade</li><li>1 aula preview por trilha</li></ul>
+    </div>
+    <div class="price-card feat">
+      <div><div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:4px">PRO</div><div class="price-amount">R$ 39<span style="font-size:12px;color:var(--text-muted);font-weight:400">,90/mês</span></div><div style="font-size:10px;color:var(--text-dim);margin-top:2px">ou R$ 349,90/ano (27% off)</div></div>
+      <ul class="price-features"><li>Todas as trilhas completas</li><li>Aulas ao vivo + replay</li><li>Meditações ilimitadas</li><li>Oráculo com interpretação IA</li><li>Gamificação e desafios</li></ul>
+      <button class="btn btn-p" style="margin-top:14px" onclick="toast('✦ PRO ativado! Axé!')">Assinar PRO</button>
+    </div>
+    <div class="price-card" style="border-color:var(--purple)">
+      <div style="display:flex;justify-content:space-between"><div><div style="font-size:13px;font-weight:700;color:var(--purple);margin-bottom:4px">VIP</div><div class="price-amount">R$ 79<span style="font-size:12px;color:var(--text-muted);font-weight:400">,90/mês</span></div></div><span class="badge bp">PREMIUM</span></div>
+      <ul class="price-features"><li>Tudo do PRO</li><li>Mentoria mensal ao vivo</li><li>Tarot personalizado por IA</li><li>Rituais avançados exclusivos</li><li>Badge VIP na comunidade</li></ul>
+      <button class="btn btn-s" style="margin-top:14px" onclick="toast('💜 VIP ativado! Bem-vindo ao círculo interno!')">Assinar VIP</button>
+    </div>
+  </div>
+</div>
 
-// ========== PARTICLES ==========
-(function initParticles(){
-  const c=document.getElementById('particles');
-  for(let i=0;i<15;i++){
-    const p=document.createElement('div');
-    p.className='particle';
-    const s=2+Math.random()*3;
-    const colors=['#C9A84C','#7B4FC4','#2EC4B6'];
-    Object.assign(p.style,{
-      width:s+'px',height:s+'px',
-      background:colors[i%3],
-      opacity:0.12+Math.random()*0.15,
-      left:Math.random()*100+'%',top:Math.random()*100+'%',
-      animationDuration:(8+Math.random()*12)+'s',
-      animationDelay:Math.random()*5+'s'
-    });
-    c.appendChild(p);
-  }
-})();
+<!-- LESSON / VIDEO MODAL -->
+<div class="overlay" id="lessonOv" onclick="closeOverlay(this,event)">
+  <div class="modal" onclick="event.stopPropagation()" style="max-height:92vh">
+    <div class="modal-handle"></div>
+    <div class="lesson-stage">
+      <button class="lesson-play" id="lessonPlay" onclick="toggleLesson()" aria-label="Reproduzir aula">▶</button>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px">
+      <div style="flex:1;min-width:0">
+        <span class="badge ba" id="lessonBadge">AULA</span>
+        <div style="font-size:17px;font-weight:700;color:var(--text);font-family:var(--font-display);margin-top:6px;line-height:1.25" id="lessonTitle">—</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px" id="lessonMeta">—</div>
+      </div>
+    </div>
+    <div class="lesson-progress"><i id="lessonBar"></i></div>
+    <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text-dim);margin-top:6px"><span id="lessonCur">0:00</span><span id="lessonTot">0:00</span></div>
+    <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-top:14px" id="lessonDesc">—</div>
+    <div style="display:flex;gap:10px;margin-top:18px">
+      <button class="btn btn-s" onclick="closeLesson()">Fechar</button>
+      <button class="btn btn-p" onclick="completeLesson()" id="lessonDoneBtn">Marcar como concluída ✓</button>
+    </div>
+  </div>
+</div>
 
-// ========== NAVIGATION ==========
-function switchTab(tab){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('screen-'+tab).classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(b=>{
-    b.classList.toggle('active',b.dataset.tab===tab);
-  });
-  document.getElementById('appContent').scrollTop=0;
-}
+<!-- COMMENTS MODAL -->
+<div class="overlay" id="commentsOv" onclick="closeOverlay(this,event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Comentários</div>
+    <div style="font-size:11px;color:var(--text-muted);text-align:center;margin-bottom:14px" id="commentsCount">0 comentários</div>
+    <div id="commentsList"></div>
+    <div class="comment-input">
+      <input type="text" id="commentInput" placeholder="Adicione um comentário..." onkeydown="if(event.key==='Enter')sendComment()" maxlength="280">
+      <button class="comment-send" onclick="sendComment()" aria-label="Enviar">➤</button>
+    </div>
+  </div>
+</div>
 
-// ========== HOME CARD ==========
-function toggleHomeCard(){
-  const h=document.getElementById('homeCardHidden');
-  const s=document.getElementById('homeCardShown');
-  if(h.style.display!=='none'){h.style.display='none';s.style.display='block';}
-  else{h.style.display='block';s.style.display='none';}
-}
+<!-- CREATE POST MODAL -->
+<div class="overlay" id="postOv" onclick="closeOverlay(this,event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Compartilhe sua experiência</div>
+    <div style="font-size:12px;color:var(--text-muted);text-align:center;margin-bottom:18px;font-family:var(--font-display);font-style:italic">Sua jornada inspira outros caminhantes</div>
+    <textarea class="ta" id="postText" placeholder="Conte sobre seu ritual, conquista, dúvida ou aprendizado..." maxlength="500"></textarea>
+    <div style="font-size:10px;color:var(--text-dim);text-align:right;margin-top:6px"><span id="postCount">0</span>/500</div>
+    <div style="display:flex;gap:10px;margin-top:14px">
+      <button class="btn btn-s" onclick="closeOv('postOv')">Cancelar</button>
+      <button class="btn btn-p" onclick="submitPost()">Publicar ✦</button>
+    </div>
+  </div>
+</div>
 
-// ========== FILTERS ==========
-function setFilter(btn){
-  btn.parentElement.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-}
+<!-- ACHIEVEMENTS MODAL -->
+<div class="overlay" id="achOv" onclick="closeOverlay(this,event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Conquistas</div>
+    <div style="font-size:12px;color:var(--text-muted);text-align:center;margin-bottom:18px"><span id="achUnlocked">0</span> de <span id="achTotal">0</span> desbloqueadas</div>
+    <div class="ach-grid" id="achGrid"></div>
+  </div>
+</div>
 
-// ========== TRAILS ==========
-(function renderTrails(){
-  const list=document.getElementById('trailList');
-  list.innerHTML=TRAILS.map((t,i)=>`
-    <div class="card" onclick="openTrail(${i})" style="position:relative;overflow:hidden">
-      <div style="position:absolute;top:-40px;right:-40px;width:100px;height:100px;border-radius:50%;background:${t.color}11;filter:blur(30px)"></div>
-      <div class="trail-item" style="position:relative">
-        <div class="trail-icon" style="background:${t.color}18">${t.icon}</div>
-        <div style="flex:1">
-          <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px">${t.title}</div>
-          <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;line-height:1.4">${t.desc}</div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-            <span style="font-size:10px;color:var(--text-dim)">${t.modules} módulos</span>
-            ${t.progress>0?`<span style="font-size:10px;color:${t.color};font-weight:700">${t.progress}%</span>`:''}
+<!-- SETTINGS MODAL -->
+<div class="overlay" id="setOv" onclick="closeOverlay(this,event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Configurações</div>
+    <div style="margin-top:14px">
+      <div class="set-row"><div><div style="font-size:13px;color:var(--text)">Notificações push</div><div style="font-size:10px;color:var(--text-dim);margin-top:2px">Aulas ao vivo e lembretes</div></div><div class="toggle on" data-key="notif" onclick="toggleSet(this)"></div></div>
+      <div class="set-row"><div><div style="font-size:13px;color:var(--text)">Lembrete diário</div><div style="font-size:10px;color:var(--text-dim);margin-top:2px">Sua carta do dia, todo dia 06:00</div></div><div class="toggle on" data-key="daily" onclick="toggleSet(this)"></div></div>
+      <div class="set-row"><div><div style="font-size:13px;color:var(--text)">Sons ambientes</div><div style="font-size:10px;color:var(--text-dim);margin-top:2px">Durante meditações</div></div><div class="toggle on" data-key="sound" onclick="toggleSet(this)"></div></div>
+      <div class="set-row"><div><div style="font-size:13px;color:var(--text)">Modo discreto</div><div style="font-size:10px;color:var(--text-dim);margin-top:2px">Ícone neutro na tela inicial</div></div><div class="toggle" data-key="discrete" onclick="toggleSet(this)"></div></div>
+      <div class="set-row" style="border:none;padding-top:18px"><button class="btn btn-s" onclick="resetData()">⚠ Resetar progresso</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- HISTORY MODAL -->
+<div class="overlay" id="histOv" onclick="closeOverlay(this,event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Histórico Espiritual</div>
+    <div style="font-size:12px;color:var(--text-muted);text-align:center;margin-bottom:18px;font-family:var(--font-display);font-style:italic">Seus rituais, aulas e cartas</div>
+    <div id="histList"></div>
+  </div>
+</div>
+
+<!-- ===== APP ===== -->
+<div class="app-shell">
+<div class="app-content" id="appContent">
+
+<!-- HOME -->
+<div class="screen active" id="s-home">
+  <div class="header">
+    <div><div style="font-size:12px;color:var(--text-muted);font-family:var(--font-display)">Axé, Eddy ☀️</div><div class="header-title">Sua Jornada ✦</div></div>
+    <div class="header-actions">
+      <button class="hbtn" onclick="openOv('notifOv')" aria-label="Notificações">🔔<div class="ndot"></div></button>
+      <button class="havatar" onclick="go('perfil')" aria-label="Perfil">E</button>
+    </div>
+  </div>
+
+  <div class="search-bar"><span style="font-size:14px;color:var(--text-dim)" aria-hidden="true">🔍</span><input placeholder="Buscar aulas, trilhas, meditações..." id="hSearch" oninput="doSearch(this.value)" aria-label="Buscar"></div>
+  <div id="searchRes" style="display:none"></div>
+
+  <div id="homeMain">
+    <!-- Streak -->
+    <div class="streak-card">
+      <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:var(--purple-glow);filter:blur(40px)" aria-hidden="true"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;position:relative">
+        <div>
+          <div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.12em;margin-bottom:4px">Streak Espiritual</div>
+          <div style="display:flex;align-items:baseline;gap:6px"><span style="font-size:40px;font-weight:800;color:var(--accent);font-family:var(--font-display);line-height:1">12</span><span style="font-size:13px;color:var(--text-muted)">dias 🔥</span></div>
+        </div>
+        <div style="text-align:right"><span class="badge bp">Nível: Adepto</span><div style="font-size:11px;color:var(--text-muted);margin-top:6px">1.240 pts</div></div>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:16px" id="weekDots"></div>
+    </div>
+
+    <!-- Mensagem do dia -->
+    <div style="background:linear-gradient(135deg,rgba(201,168,76,0.06),rgba(123,79,196,0.04));border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:18px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-20px;left:-20px;width:80px;height:80px;border-radius:50%;background:var(--accent-glow);filter:blur(30px)" aria-hidden="true"></div>
+      <div style="position:relative;font-family:var(--font-display);font-style:italic;font-size:14px;color:var(--text);line-height:1.6" id="dailyMsg">"A fé não é cega, é uma visão que enxerga além do que os olhos alcançam."</div>
+      <div style="position:relative;font-size:10px;color:var(--accent);margin-top:8px;font-weight:600" id="dailyMsgAuthor">— Mensagem do dia · Pretos Velhos</div>
+    </div>
+
+    <!-- Carta do Dia - com flip animation -->
+    <div class="card-flip">
+      <div class="section-title"><span style="color:var(--accent)">☽</span> Carta do Dia</div>
+      <div class="card-flip-inner" id="cardFlip" onclick="flipCard()">
+        <div class="card-flip-front" style="background:linear-gradient(160deg,var(--accent-dim),rgba(123,79,196,0.06));padding:28px 20px;text-align:center">
+          <div style="font-size:44px;margin-bottom:10px;filter:drop-shadow(0 0 12px var(--accent-glow))">🃏</div>
+          <div style="font-size:15px;color:var(--accent);font-weight:600;font-family:var(--font-display)">Toque para revelar sua carta</div>
+          <div style="font-size:11px;color:var(--text-dim);margin-top:6px">Orientação espiritual para hoje</div>
+        </div>
+        <div class="card-flip-back" style="background:linear-gradient(160deg,var(--deep-purple),var(--bg-card));padding:20px">
+          <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:var(--accent-glow);filter:blur(40px)" aria-hidden="true"></div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;position:relative">
+            <div><div style="font-size:11px;color:var(--accent);font-weight:700;letter-spacing:.12em">XVII</div><div style="font-size:24px;font-weight:700;color:var(--text);font-family:var(--font-display)">A Estrela</div></div>
+            <div style="font-size:40px;filter:drop-shadow(0 0 12px var(--accent-glow))">⭐</div>
           </div>
-          ${t.progress>0?`<div class="progress-bar"><div class="progress-fill" style="width:${t.progress}%;background:${t.color};box-shadow:0 0 12px ${t.color}44"></div></div>`
-          :`<div style="font-size:11px;color:var(--accent);font-weight:600">Começar trilha →</div>`}
+          <div style="font-size:13px;color:var(--text-muted);line-height:1.65">Esperança, inspiração e renovação espiritual. As energias cósmicas estão alinhadas ao seu favor.</div>
+          <div style="background:var(--accent-dim);border-radius:var(--radius-xs);padding:12px 14px;border-left:3px solid var(--accent);margin-top:14px">
+            <div style="font-size:10px;color:var(--accent);font-weight:700;letter-spacing:.08em;margin-bottom:4px">CONSELHO</div>
+            <div style="font-size:12px;color:var(--text);line-height:1.55">Confie no universo. Algo que você pediu está se manifestando agora.</div>
+          </div>
         </div>
       </div>
     </div>
-  `).join('');
-})();
 
-function openTrail(i){
+    <!-- Aulas ao vivo -->
+    <div style="margin-bottom:22px">
+      <div class="section-title"><span style="color:var(--rose)">◉</span> Aulas ao Vivo <span class="section-more" onclick="go('aulas')">Ver todas →</span></div>
+      <div class="carousel" id="liveC"></div>
+    </div>
+
+    <!-- Meditações -->
+    <div style="margin-bottom:22px">
+      <div class="section-title"><span style="color:var(--teal)">◈</span> Meditações</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="medG"></div>
+    </div>
+
+    <!-- Continue trilha -->
+    <div style="margin-bottom:22px">
+      <div class="section-title"><span style="color:var(--purple)">🕯️</span> Continue sua trilha</div>
+      <div class="card" onclick="openTrail()" style="border-color:rgba(123,79,196,0.2)">
+        <div style="display:flex;gap:14px;align-items:center">
+          <div style="width:52px;height:52px;border-radius:14px;background:rgba(123,79,196,0.12);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">🕯️</div>
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px">Despertar Espiritual</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">Próxima: Ritual — Banho de ervas</div>
+            <div class="pbar" style="height:5px"><div class="pfill" style="width:65%;background:var(--purple);box-shadow:0 0 12px rgba(123,79,196,0.3)"></div></div>
+            <div style="font-size:10px;color:var(--purple);margin-top:4px;font-weight:600">65% · Módulo 2 de 8</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comunidade preview -->
+    <div>
+      <div class="section-title"><span style="color:var(--purple)">◎</span> Comunidade <span class="section-more" onclick="go('social')">Ver mais →</span></div>
+      <div class="post">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><div class="post-avatar">🌙</div><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--text)">Marina S. <span class="badge bp" style="font-size:8px">Adepta</span></div><div style="font-size:10px;color:var(--text-dim)">2h atrás</div></div></div>
+        <div style="font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:12px">Acabei de completar o módulo 2 da trilha Despertar Espiritual! Energia incrível 🌿✨</div>
+        <div style="display:flex;gap:16px"><span class="pa" onclick="likePost(this,47)">🤍 47</span><span class="pa">💬 12</span><span class="pa">🔗</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AULAS -->
+<div class="screen" id="s-aulas">
+  <div class="header"><div><div class="header-title">Aulas</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px">Evolua com orientação sagrada</div></div></div>
+  <div class="search-bar"><span style="font-size:14px;color:var(--text-dim)">🔍</span><input placeholder="Buscar aulas..." aria-label="Buscar aulas"></div>
+  <div class="filters" id="aFilt"></div>
+  <div id="aList"></div>
+</div>
+
+<!-- TRILHAS -->
+<div class="screen" id="s-trilhas">
+  <div class="header"><div><div class="header-title">Trilhas de Evolução</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px">Jornadas por objetivo de vida</div></div></div>
+  <div id="tList"></div>
+</div>
+
+<!-- TRAIL DETAIL -->
+<div class="screen" id="s-trail">
+  <div class="header" style="gap:12px">
+    <button onclick="go('trilhas')" style="color:var(--accent);font-size:20px;padding:4px 8px" aria-label="Voltar">←</button>
+    <div style="flex:1"><div class="header-title" style="font-size:19px">🕯️ Despertar Espiritual</div><div style="font-size:11px;color:var(--text-muted)">8 módulos · 32 aulas · ~12h</div></div>
+  </div>
+  <div style="background:linear-gradient(135deg,var(--deep-purple),var(--bg-card));border-radius:var(--radius);padding:20px;margin-bottom:18px;border:1px solid var(--border);position:relative;overflow:hidden">
+    <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:var(--purple-glow);filter:blur(40px)" aria-hidden="true"></div>
+    <div style="position:relative">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><span class="badge bp">Em progresso</span><span style="font-size:11px;color:var(--accent);font-weight:700">65%</span></div>
+      <div class="pbar" style="height:6px"><div class="pfill" style="width:65%;background:linear-gradient(90deg,var(--purple),var(--accent));box-shadow:0 0 12px rgba(123,79,196,0.3)"></div></div>
+      <div style="display:flex;justify-content:space-between;margin-top:10px"><span style="font-size:10px;color:var(--text-dim)">21/32 aulas</span><span style="font-size:10px;color:var(--text-dim)">~4h restantes</span></div>
+    </div>
+  </div>
+  <div id="tMods"></div>
+</div>
+
+<!-- ORÁCULO -->
+<div class="screen" id="s-oraculo">
+  <div class="header"><div><div class="header-title">Oráculo Sagrado</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px">Orientação dos guias espirituais</div></div></div>
+  <div id="oChoose">
+    <div style="text-align:center;padding:32px 20px;margin-bottom:24px;background:linear-gradient(160deg,var(--deep-purple),var(--bg-card));border-radius:20px;border:1px solid var(--border);position:relative;overflow:hidden">
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200px;height:200px;border-radius:50%;background:var(--purple-glow);filter:blur(60px)" aria-hidden="true"></div>
+      <div style="position:relative"><div style="font-size:40px;margin-bottom:14px">☽ ✦ ☾</div><div style="font-size:18px;font-weight:700;color:var(--text);font-family:var(--font-display);margin-bottom:6px">Escolha uma carta</div><div style="font-size:12px;color:var(--text-muted)">Concentre-se e selecione</div></div>
+    </div>
+    <div class="filters" style="justify-content:center;margin-bottom:20px"><button class="fbtn active" onclick="sf(this)">Geral</button><button class="fbtn" onclick="sf(this)">Amor</button><button class="fbtn" onclick="sf(this)">Trabalho</button><button class="fbtn" onclick="sf(this)">Espiritual</button></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px" id="oCards"></div>
+    <div style="text-align:center;margin-top:20px"><span class="limit-pill" id="oLimit">Tiragens hoje: 0/3</span></div>
+  </div>
+  <div id="oRevealing" style="display:none"><div style="text-align:center;padding:80px 20px"><div style="font-size:56px" class="pulse">✦</div><div style="font-size:18px;color:var(--accent);font-family:var(--font-display);font-weight:600;margin-top:24px">Consultando os guias...</div><div style="font-size:12px;color:var(--text-muted);margin-top:10px">As energias estão se alinhando</div></div></div>
+  <div id="oRevealed" style="display:none">
+    <div style="background:linear-gradient(160deg,var(--deep-purple),var(--bg-card));border-radius:20px;padding:32px 24px;margin-bottom:18px;border:1px solid rgba(201,168,76,0.18);text-align:center;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:var(--accent-glow);filter:blur(40px)" aria-hidden="true"></div>
+      <div style="position:relative"><div style="font-size:12px;color:var(--accent);font-weight:700;letter-spacing:.15em;margin-bottom:8px" id="rNum"></div><div style="font-size:34px;font-weight:800;color:var(--text);font-family:var(--font-display)" id="rName"></div><div style="font-size:52px;margin:18px 0;filter:drop-shadow(0 0 16px var(--accent-glow))">⭐</div></div>
+    </div>
+    <div class="card card-static"><div style="font-size:10px;color:var(--purple);font-weight:700;letter-spacing:.1em;margin-bottom:8px;text-transform:uppercase">SIGNIFICADO</div><div style="font-size:13px;color:var(--text-muted);line-height:1.65" id="rMean"></div></div>
+    <div class="card card-static" style="background:var(--accent-dim);border-color:rgba(201,168,76,0.15)"><div style="font-size:10px;color:var(--accent);font-weight:700;letter-spacing:.1em;margin-bottom:8px;text-transform:uppercase">CONSELHO</div><div style="font-size:13px;color:var(--text);line-height:1.65" id="rAdv"></div></div>
+    <div class="card card-static"><div style="font-size:10px;color:var(--teal);font-weight:700;letter-spacing:.1em;margin-bottom:8px;text-transform:uppercase">RITUAL SUGERIDO</div><div style="font-size:13px;color:var(--text-muted);line-height:1.65" id="rRit"></div></div>
+    <button class="btn btn-s" onclick="resetO()">Nova consulta ☽</button>
+  </div>
+</div>
+
+<!-- SOCIAL -->
+<div class="screen" id="s-social">
+  <div class="header"><div><div class="header-title">Comunidade</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px">Compartilhe sua evolução</div></div></div>
+  <div style="display:flex;align-items:center;gap:12px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:16px;cursor:pointer;transition:border-color .2s" onclick="openCreatePost()" role="button" aria-label="Criar post">
+    <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--accent));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--bg);flex-shrink:0">E</div>
+    <div style="font-size:12px;color:var(--text-dim)">Compartilhe sua experiência...</div>
+  </div>
+  <div class="filters"><button class="fbtn active" onclick="sf(this)">Todos</button><button class="fbtn" onclick="sf(this)">Conquistas</button><button class="fbtn" onclick="sf(this)">Dúvidas</button><button class="fbtn" onclick="sf(this)">Relatos</button></div>
+  <div id="cFeed"></div>
+</div>
+
+<!-- PERFIL -->
+<div class="screen" id="s-perfil">
+  <div style="text-align:center;padding:20px 0 24px">
+    <div class="profile-avatar-lg">E</div>
+    <div style="font-size:22px;font-weight:700;color:var(--text);font-family:var(--font-display)">Eddy</div>
+    <div style="display:flex;justify-content:center;gap:8px;margin-top:8px"><span class="badge bp">Nível: Adepto</span><span class="badge ba">PRO</span></div>
+    <div style="font-size:11px;color:var(--text-muted);margin-top:8px">Membro desde Março 2026 · 12 dias 🔥</div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+    <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:16px;text-align:center;border:1px solid var(--border)"><div style="font-size:26px;font-weight:800;color:var(--accent);font-family:var(--font-display);line-height:1">47</div><div style="font-size:10px;color:var(--text-muted);margin-top:6px">Aulas assistidas</div></div>
+    <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:16px;text-align:center;border:1px solid var(--border)"><div style="font-size:26px;font-weight:800;color:var(--accent);font-family:var(--font-display);line-height:1">32h</div><div style="font-size:10px;color:var(--text-muted);margin-top:6px">Horas de prática</div></div>
+    <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:16px;text-align:center;border:1px solid var(--border)"><div style="font-size:26px;font-weight:800;color:var(--accent);font-family:var(--font-display);line-height:1">3</div><div style="font-size:10px;color:var(--text-muted);margin-top:6px">Trilhas ativas</div></div>
+    <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:16px;text-align:center;border:1px solid var(--border)"><div style="font-size:26px;font-weight:800;color:var(--accent);font-family:var(--font-display);line-height:1">2</div><div style="font-size:10px;color:var(--text-muted);margin-top:6px">Desafios feitos</div></div>
+  </div>
+
+  <div class="card card-static">
+    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:14px">Evolução Espiritual</div>
+    <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:11px;color:var(--text-muted)">Adepto → Mestre</span><span style="font-size:11px;color:var(--accent);font-weight:700">1.240 / 2.000</span></div>
+    <div class="pbar" style="height:6px"><div class="pfill" style="width:62%;background:var(--accent);box-shadow:0 0 12px var(--accent-glow)"></div></div>
+    <div style="display:flex;justify-content:space-between;margin-top:16px;position:relative">
+      <div style="position:absolute;top:17px;left:20px;right:20px;height:2px;background:rgba(255,255,255,0.04)" aria-hidden="true"></div>
+      <div style="text-align:center;position:relative"><div style="width:34px;height:34px;border-radius:50%;margin:0 auto 6px;background:var(--accent);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">✓</div><div style="font-size:9px;color:var(--accent)">Iniciante</div></div>
+      <div style="text-align:center;position:relative"><div style="width:34px;height:34px;border-radius:50%;margin:0 auto 6px;background:var(--accent);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">✓</div><div style="font-size:9px;color:var(--accent)">Adepto</div></div>
+      <div style="text-align:center;position:relative"><div style="width:34px;height:34px;border-radius:50%;margin:0 auto 6px;border:2px dashed rgba(201,168,76,0.3);color:var(--text-dim);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">◎</div><div style="font-size:9px;color:var(--text-dim)">Mestre</div></div>
+      <div style="text-align:center;position:relative"><div style="width:34px;height:34px;border-radius:50%;margin:0 auto 6px;background:rgba(255,255,255,0.03);color:var(--text-dim);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">◇</div><div style="font-size:9px;color:var(--text-dim)">Guia</div></div>
+    </div>
+  </div>
+
+  <div class="card card-static">
+    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:14px">Desafios Ativos</div>
+    <div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--text)">21 Dias de Meditação</span><span style="font-size:11px;color:var(--teal);font-weight:600">12/21</span></div><div class="pbar"><div class="pfill" style="width:57%;background:var(--teal)"></div></div></div>
+    <div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--text)">7 Dias de Gratidão</span><span style="font-size:11px;color:var(--rose);font-weight:600">6/7</span></div><div class="pbar"><div class="pfill" style="width:85%;background:var(--rose)"></div></div></div>
+  </div>
+
+  <div style="background:linear-gradient(135deg,var(--deep-purple),var(--bg-card));border-radius:var(--radius);padding:20px;border:1px solid rgba(201,168,76,0.18);margin-bottom:14px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:var(--accent-glow);filter:blur(40px)" aria-hidden="true"></div>
+    <div style="position:relative;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:14px;font-weight:700;color:var(--accent)">Plano PRO</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px">R$ 39,90/mês · Renovação em 15 dias</div></div><span class="badge ba">ATIVO</span></div>
+    <button class="btn btn-s" style="margin-top:14px" onclick="openOv('priceOv')">Upgrade para VIP — R$ 79,90/mês</button>
+  </div>
+
+  <div class="menu-item" onclick="openAch()"><span style="font-size:13px;color:var(--text)">🏆 Conquistas</span><span style="color:var(--text-dim)">›</span></div>
+  <div class="menu-item" onclick="openHist()"><span style="font-size:13px;color:var(--text)">📜 Histórico espiritual</span><span style="color:var(--text-dim)">›</span></div>
+  <div class="menu-item" onclick="openOv('setOv')"><span style="font-size:13px;color:var(--text)">⚙️ Configurações</span><span style="color:var(--text-dim)">›</span></div>
+  <div class="menu-item" onclick="openOv('priceOv')"><span style="font-size:13px;color:var(--accent)">✦ Gerenciar assinatura</span><span style="color:var(--text-dim)">›</span></div>
+</div>
+
+</div><!-- app-content -->
+
+<nav class="bottom-nav" role="navigation" aria-label="Navegação principal">
+  <button class="nav-btn active" data-tab="home" onclick="go('home')"><span class="icon">✦</span><span class="label">Home</span></button>
+  <button class="nav-btn" data-tab="aulas" onclick="go('aulas')"><span class="icon">◉</span><span class="label">Aulas</span></button>
+  <button class="nav-btn" data-tab="trilhas" onclick="go('trilhas')"><span class="icon">◈</span><span class="label">Trilhas</span></button>
+  <button class="nav-btn" data-tab="oraculo" onclick="go('oraculo')"><span class="icon">☽</span><span class="label">Oráculo</span></button>
+  <button class="nav-btn" data-tab="social" onclick="go('social')"><span class="icon">◎</span><span class="label">Social</span><div class="ndot"></div></button>
+  <button class="nav-btn" data-tab="perfil" onclick="go('perfil')"><span class="icon">⬡</span><span class="label">Perfil</span></button>
+</nav>
+</div>
+
+<script>
+// ============ DATA ============
+const TAROT=[
+  {name:"A Estrela",n:"XVII",m:"Esperança, inspiração e renovação espiritual. Energias cósmicas alinhadas ao seu favor.",a:"Confie no universo. Algo que pediu está se manifestando.",r:"Acenda uma vela branca e medite por 5 minutos pedindo clareza."},
+  {name:"A Lua",n:"XVIII",m:"Intuição profunda e mistérios revelados. Inconsciente mais ativo.",a:"Preste atenção aos sonhos. Uma mensagem importante virá por eles.",r:"Banho de alfazema antes de dormir para conexão onírica."},
+  {name:"O Sol",n:"XIX",m:"Vitalidade, sucesso e clareza. Grande energia positiva.",a:"Inicie projetos. A luz solar carrega sua intenção com força.",r:"Oração matinal ao ar livre com os pés na terra, pedindo energia a Oxalá."},
+  {name:"O Mundo",n:"XXI",m:"Completude e ciclo cumprido. Pronto para novo nível.",a:"Celebre conquistas. Você evoluiu mais do que imagina.",r:"Escreva 3 gratidões e queime com intenção de renovação."},
+  {name:"A Sacerdotisa",n:"II",m:"Sabedoria interior e conhecimento oculto se revelando.",a:"Confie na intuição hoje. Está mais afiada que o intelecto.",r:"Medite 10 min com ametista pedindo clareza ao guia espiritual."},
+  {name:"A Roda",n:"X",m:"Mudanças de ciclo e novas oportunidades. Destino favorável.",a:"Prepare-se para guinada positiva. Esteja aberto ao inesperado.",r:"Vela amarela para Oxum, pedindo prosperidade no novo ciclo."},
+];
+
+const LC=[
+  {t:"Desenvolvimento Mediúnico — Nível 2",te:"Mãe Stella",ti:"20:00 hoje",tag:"AO VIVO",c:"var(--rose)",b:"br",v:142,d:"Técnicas avançadas de percepção e incorporação consciente"},
+  {t:"Meditação de Cura com Pretos Velhos",te:"Pai João",ti:"21:30 hoje",tag:"HOJE",c:"var(--teal)",b:"bt",d:"Harmonização com a energia dos ancestrais"},
+  {t:"Ritual de Limpeza — Ciclo Lunar",te:"Yalorixá Renata",ti:"19:00 amanhã",tag:"AMANHÃ",c:"var(--purple)",b:"bp",d:"Banho de descarrego e defumação"},
+  {t:"Passe Magnético — Teoria e Prática",te:"Mãe Stella",ti:"Gravado",tag:"REPLAY",c:"var(--accent)",b:"ba",d:"Passes de cura à distância"},
+  {t:"Jogo de Búzios: Interpretação",te:"Babalorixá Marcos",ti:"Sáb 15:00",tag:"SEMANAL",c:"var(--accent)",b:"ba",d:"Caídas e mensagens dos Orixás"},
+  {t:"Workshop: Ervas Sagradas",te:"Yalorixá Renata",ti:"Dom 10:00",tag:"ESPECIAL",c:"var(--blue)",b:"bb",d:"Propriedades espirituais das ervas"},
+];
+
+const MED=[
+  {t:"Cura com Pretos Velhos",d:"15min",dur:900,cat:"Cura",c:"var(--purple)",bg:"rgba(123,79,196,0.12)"},
+  {t:"Proteção de Ogum",d:"12min",dur:720,cat:"Proteção",c:"var(--accent)",bg:"rgba(201,168,76,0.12)"},
+  {t:"Energia de Oxum",d:"20min",dur:1200,cat:"Amor",c:"var(--rose)",bg:"rgba(232,77,138,0.12)"},
+  {t:"Foco com Xangô",d:"10min",dur:600,cat:"Foco",c:"var(--teal)",bg:"rgba(46,196,182,0.12)"},
+];
+
+const TR=[
+  {t:"Despertar Espiritual",i:"🕯️",mod:8,p:65,c:"#7B4FC4",d:"Fundamentos da Umbanda e mediunidade"},
+  {t:"Cura Emocional",i:"💜",mod:6,p:30,c:"#E84D8A",d:"Liberte traumas e bloqueios emocionais"},
+  {t:"Prosperidade Sagrada",i:"✨",mod:7,p:0,c:"#C9A84C",d:"Desbloqueie abundância financeira"},
+  {t:"Amor Próprio Divino",i:"🌹",mod:5,p:0,c:"#2EC4B6",d:"Reconecte com seu valor sagrado"},
+  {t:"Proteção Espiritual",i:"🛡️",mod:6,p:45,c:"#4C6EF5",d:"Blindagem e defesa energética"},
+  {t:"Relacionamentos Sagrados",i:"💫",mod:5,p:0,c:"#FF6B6B",d:"Transforme vínculos afetivos"},
+];
+
+// Modules per trail (keyed by trail index)
+const MODS_BY_TRAIL={
+  0:[ // Despertar Espiritual
+    {t:"Módulo 1 — Fundamentos",ct:"4 aulas · 80min",ls:[{t:"O que é Umbanda: história e fundamentos",d:"18min",ok:1,desc:"Origem da Umbanda no Brasil, influências e princípios fundamentais que regem a religião."},{t:"As 7 Linhas da Umbanda",d:"22min",ok:1,desc:"Estudo das sete linhas e seus orixás regentes."},{t:"Orixás: quem são e como atuam",d:"25min",ok:1,desc:"Cada Orixá, suas energias e como se manifestam."},{t:"Exercício: Seu Orixá de cabeça",d:"15min",ok:1,tag:"exercício",tc:"bt",desc:"Práticas para descobrir seu Orixá regente."}]},
+    {t:"Módulo 2 — Mediunidade",ct:"4 aulas · 65min",ls:[{t:"Tipos de mediunidade",d:"20min",ok:1,desc:"Vidência, audiência, intuição, psicofonia, psicografia."},{t:"Sinais de desenvolvimento mediúnico",d:"18min",ok:1,desc:"Como reconhecer a abertura mediúnica."},{t:"Ritual: Banho de ervas",d:"12min",tag:"ritual",tc:"br",desc:"Receita e modo de preparo do banho de descarrego."},{t:"Meditação: Conexão com mentor",d:"15min",tag:"meditação",tc:"bp",desc:"Visualização guiada para conhecer seu mentor espiritual."}]},
+    {t:"Módulo 3 — Incorporação",ct:"4 aulas · 72min",ls:[{t:"Incorporação consciente",d:"24min",desc:"O que é, como se prepara o corpo e a mente."},{t:"Passes magnéticos",d:"20min",desc:"Técnica de cura à imposição das mãos."},{t:"Exercício: Passe à distância",d:"18min",tag:"exercício",tc:"bt",desc:"Prática de envio de energia curativa."},{t:"Ritual: Defumação pessoal",d:"10min",tag:"ritual",tc:"br",desc:"Ervas e sequência da defumação."}]},
+    {t:"Módulo 4 — Entidades",ct:"4 aulas · 85min",ls:[{t:"Caboclos: energia e mensagem",d:"22min",desc:"A força e a sabedoria dos caboclos."},{t:"Pretos Velhos: sabedoria ancestral",d:"20min",desc:"Ancestralidade, paciência e cura."},{t:"Crianças (Erês): pureza e cura",d:"18min",desc:"A linha das crianças na Umbanda."},{t:"Exus e Pombagiras: proteção",d:"25min",desc:"Os guardiões e desmanchadores de demandas."}]},
+  ],
+  1:[ // Cura Emocional
+    {t:"Módulo 1 — Reconhecer feridas",ct:"3 aulas · 55min",ls:[{t:"Identificando bloqueios emocionais",d:"20min",ok:1,desc:"Como mapear as feridas que carregamos."},{t:"O corpo guarda memórias",d:"18min",desc:"Conexão entre emoções e o corpo físico."},{t:"Ritual: Carta para o eu ferido",d:"17min",tag:"ritual",tc:"br",desc:"Escrita terapêutica de cura."}]},
+    {t:"Módulo 2 — Liberar",ct:"3 aulas · 50min",ls:[{t:"Perdão como ferramenta de cura",d:"18min",desc:"Perdoar não é esquecer, é libertar."},{t:"Meditação: Cordões energéticos",d:"15min",tag:"meditação",tc:"bp",desc:"Corte de vínculos tóxicos."},{t:"Banho de ervas para limpeza emocional",d:"17min",tag:"ritual",tc:"br",desc:"Receita do banho com arruda e alecrim."}]},
+  ],
+  2:[ // Prosperidade Sagrada
+    {t:"Módulo 1 — Mentalidade abundante",ct:"3 aulas · 60min",ls:[{t:"Crenças limitantes sobre dinheiro",d:"22min",desc:"O que bloqueia o fluxo financeiro."},{t:"A vibração da abundância",d:"18min",desc:"Como sintonizar com a prosperidade."},{t:"Exercício: Diário de gratidão financeira",d:"20min",tag:"exercício",tc:"bt",desc:"Prática diária de elevação vibracional."}]},
+  ],
+  3:[ // Amor Próprio Divino
+    {t:"Módulo 1 — Reconhecer seu valor",ct:"3 aulas · 48min",ls:[{t:"Você é templo sagrado",d:"15min",desc:"O corpo como expressão do divino."},{t:"Espelho: olhar com compaixão",d:"18min",desc:"Prática diária frente ao espelho."},{t:"Meditação: Acolhimento interior",d:"15min",tag:"meditação",tc:"bp",desc:"Visualização do abraço do eu superior."}]},
+  ],
+  4:[ // Proteção Espiritual
+    {t:"Módulo 1 — Blindagem básica",ct:"4 aulas · 70min",ls:[{t:"Por que precisamos de proteção",d:"18min",ok:1,desc:"Energias densas no cotidiano."},{t:"Visualização: Bolha de luz dourada",d:"15min",ok:1,tag:"meditação",tc:"bp",desc:"Técnica de blindagem rápida."},{t:"Ritual: Defumação da casa",d:"20min",tag:"ritual",tc:"br",desc:"Defumação completa do lar."},{t:"Amuletos e patuás",d:"17min",desc:"Como funcionam e como ativar."}]},
+    {t:"Módulo 2 — Defesa avançada",ct:"3 aulas · 55min",ls:[{t:"Identificando ataques energéticos",d:"20min",desc:"Sinais de demanda espiritual."},{t:"Banho de descarrego completo",d:"18min",tag:"ritual",tc:"br",desc:"Sequência completa de descarrego."},{t:"Oração de São Miguel",d:"17min",desc:"Proteção do arcanjo guerreiro."}]},
+  ],
+  5:[ // Relacionamentos Sagrados
+    {t:"Módulo 1 — Vínculos conscientes",ct:"3 aulas · 52min",ls:[{t:"Almas gêmeas, chamas gêmeas e contratos",d:"20min",desc:"Tipos de vínculos espirituais."},{t:"Curando relações ancestrais",d:"17min",desc:"Padrões herdados da família."},{t:"Ritual: Fitas coloridas para o amor",d:"15min",tag:"ritual",tc:"br",desc:"Trabalho com Oxum."}]},
+  ],
+};
+
+// Achievements
+const ACH=[
+  {i:"🔥",t:"Streak 7",d:"7 dias seguidos",cond:s=>s.streak>=7},
+  {i:"🌟",t:"Streak 30",d:"30 dias seguidos",cond:s=>s.streak>=30},
+  {i:"🎴",t:"Primeira Carta",d:"Primeira tiragem",cond:s=>s.oracleTotal>=1},
+  {i:"🃏",t:"Oráculo Devoto",d:"50 tiragens",cond:s=>s.oracleTotal>=50},
+  {i:"🧘",t:"Meditante",d:"10 meditações",cond:s=>s.medCount>=10},
+  {i:"🕯️",t:"Iniciado",d:"5 aulas concluídas",cond:s=>s.lessonsDone>=5},
+  {i:"📚",t:"Estudioso",d:"25 aulas concluídas",cond:s=>s.lessonsDone>=25},
+  {i:"💜",t:"Comunidade",d:"Primeiro post",cond:s=>s.posts>=1},
+  {i:"✦",t:"Adepto",d:"1000 pontos",cond:s=>s.points>=1000},
+];
+
+// Mock comments per post
+const POST_COMMENTS={
+  0:[{u:"Lia",av:"🌸",tx:"Que linda jornada! Que Oxum te ilumine ✨",ti:"1h"},{u:"Pedro",av:"⚡",tx:"Estou no módulo 1, me inspirou demais",ti:"45min"}],
+  1:[{u:"Sofia",av:"🌺",tx:"Disciplina é tudo! Axé 🙏",ti:"3h"}],
+  2:[{u:"Mateus",av:"🌿",tx:"Qual ervas você usou? Quero fazer aqui em casa",ti:"5h"},{u:"Marina S.",av:"🌙",tx:"Senti isso também depois do meu",ti:"4h"}],
+  3:[{u:"Mãe Stella",av:"👁️",tx:"Bem-vindo, filho. Vá com calma e fé.",ti:"7h"}],
+  4:[],
+};
+
+const COM=[
+  {u:"Marina S.",av:"🌙",lv:"Adepta",lb:"bp",tx:"Completei módulo 2 da Despertar Espiritual! Energia incrível depois do banho de ervas 🌿✨",lk:47,cm:12,ti:"2h"},
+  {u:"Carlos R.",av:"⭐",lv:"Mestre",lb:"ba",tx:"Desafio 21 dias de meditação — Dia 15! A disciplina espiritual transforma tudo 🙏🔥",lk:83,cm:24,ti:"4h"},
+  {u:"Ana L.",av:"🌸",lv:"Adepta",lb:"bp",tx:"Ritual de defumação de hoje foi transformador. A casa mudou de energia!",lk:126,cm:31,ti:"6h",img:"🕯️"},
+  {u:"João P.",av:"🌿",lv:"Iniciante",lb:"bt",tx:"Comecei a trilha Despertar Espiritual. Dicas para a primeira semana?",lk:29,cm:18,ti:"8h"},
+  {u:"Renata M.",av:"💫",lv:"VIP",lb:"ba",tx:"A mentoria com Mãe Stella foi inexplicável. Gratidão a essa comunidade 💜",lk:201,cm:47,ti:"1d"},
+];
+
+const MSGS=[
+  {q:'"A fé não é cega, é uma visão que enxerga além do que os olhos alcançam."',a:"— Pretos Velhos"},
+  {q:'"Quem tem fé no caminho não teme a escuridão."',a:"— Caboclo Sete Flechas"},
+  {q:'"A maior magia é a transformação de si mesmo."',a:"— Exu Tiriri"},
+  {q:'"Água mole em pedra dura, tanto bate até que fura."',a:"— Vovó Maria Conga"},
+];
+
+// ============ INIT ============
+// Splash
+setTimeout(()=>{const s=document.getElementById('splash');s.classList.add('hide');setTimeout(()=>s.remove(),700)},2200);
+
+// Particles
+!function(){const c=document.getElementById('particles'),cl=['#C9A84C','#7B4FC4','#2EC4B6','#E84D8A'];for(let i=0;i<16;i++){const p=document.createElement('div');p.className='particle';const sz=1.5+Math.random()*2.5;Object.assign(p.style,{width:sz+'px',height:sz+'px',background:cl[i%4],opacity:.08+Math.random()*.1,left:Math.random()*100+'%',top:Math.random()*100+'%',animation:`floatA ${10+Math.random()*14}s ${Math.random()*6}s ease-in-out infinite`});c.appendChild(p)}}();
+
+// Week dots
+!function(){const days=['S','T','Q','Q','S','S','D'],done=[1,1,1,1,1,0,0];const el=document.getElementById('weekDots');el.innerHTML=days.map((d,i)=>{let cls,inner;if(done[i]&&i<5){cls='background:var(--accent);color:var(--bg)';inner='✓'}else if(i===5){cls='background:rgba(201,168,76,0.12);color:var(--accent);border:2px solid var(--accent);box-shadow:0 0 12px var(--accent-glow)';inner='◉'}else{cls='background:rgba(255,255,255,0.03);color:var(--text-dim)';inner='·'}return`<div style="flex:1;text-align:center"><div style="font-size:9px;color:var(--text-dim);margin-bottom:5px">${d}</div><div class="wc" style="${cls}">${inner}</div></div>`}).join('')}();
+
+// Daily message rotation
+!function(){const msg=MSGS[Math.floor(Math.random()*MSGS.length)];document.getElementById('dailyMsg').textContent=msg.q;document.getElementById('dailyMsgAuthor').textContent='— Mensagem do dia · '+msg.a}();
+
+// ============ STATE / PERSISTENCE ============
+const LS_KEY='ctnl_state_v1';
+const defaultState={streak:12,points:1240,oracleToday:0,oracleDate:'',oracleTotal:8,medCount:3,lessonsDone:11,posts:0,doneLessons:{},settings:{notif:1,daily:1,sound:1,discrete:0},userPosts:[],history:[]};
+let state=loadState();
+function loadState(){try{const s=JSON.parse(localStorage.getItem(LS_KEY));return s?Object.assign({},defaultState,s):Object.assign({},defaultState)}catch(e){return Object.assign({},defaultState)}}
+function saveState(){try{localStorage.setItem(LS_KEY,JSON.stringify(state))}catch(e){}}
+function todayStr(){return new Date().toISOString().slice(0,10)}
+// Reset oracle daily counter on new day
+if(state.oracleDate!==todayStr()){state.oracleDate=todayStr();state.oracleToday=0;saveState()}
+
+// ============ NAVIGATION ============
+let activeTrail=0;
+function go(tab){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('screen-trail-detail').classList.add('active');
+  const el=document.getElementById('s-'+tab);
+  if(el)el.classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  document.getElementById('appContent').scrollTop=0;
+  // Clear search
+  const si=document.getElementById('hSearch');
+  if(si){si.value='';document.getElementById('searchRes').style.display='none';document.getElementById('homeMain').style.display='block'}
+}
+
+// ============ UTILITIES ============
+let toastTimer;
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.className='toast show';clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.className='toast',2500)}
+
+function sf(b){b.parentElement.querySelectorAll('.fbtn').forEach(x=>x.classList.remove('active'));b.classList.add('active')}
+
+function openOv(id){document.getElementById(id).classList.add('show')}
+function closeOv(id){document.getElementById(id).classList.remove('show')}
+function closeOverlay(el,e){if(e.target===el)el.classList.remove('show')}
+
+function likePost(el,count){
+  if(el.dataset.liked){return}
+  el.dataset.liked='1';
+  el.innerHTML='❤️ '+(count+1);
+  el.style.color='var(--rose)';
+}
+
+function esc(s){return String(s).replace(/'/g,"\\'").replace(/"/g,'&quot;')}
+
+// ============ CARD FLIP ============
+function flipCard(){document.getElementById('cardFlip').classList.toggle('flipped')}
+
+// ============ SEARCH ============
+function doSearch(v){
+  const r=document.getElementById('searchRes'),m=document.getElementById('homeMain');
+  if(!v.trim()){r.style.display='none';m.style.display='block';return}
+  m.style.display='none';r.style.display='block';
+  const q=v.toLowerCase();
+  const all=[
+    ...LC.map(c=>({title:c.t,sub:c.te+' · '+c.ti,ic:'◉',type:'aula'})),
+    ...MED.map((x,i)=>({title:x.t,sub:'Meditação · '+x.d,ic:'🎵',type:'med',idx:i})),
+    ...TR.map(x=>({title:x.t,sub:'Trilha · '+x.mod+' módulos',ic:x.i,type:'trilha'}))
+  ];
+  const f=all.filter(i=>i.title.toLowerCase().includes(q)||i.sub.toLowerCase().includes(q));
+  if(!f.length){r.innerHTML='<div style="text-align:center;padding:40px;color:var(--text-dim)"><div style="font-size:32px;margin-bottom:12px">🔍</div>Nenhum resultado para "'+esc(v)+'"</div>';return}
+  r.innerHTML=f.map(i=>{
+    let onclick='';
+    if(i.type==='med'){const med=MED[i.idx];onclick=`onclick="openMed(${i.idx})"`}
+    else if(i.type==='trilha')onclick='onclick="openTrail()"';
+    else if(i.type==='aula')onclick='onclick="go(\'aulas\')"';
+    return`<div class="card" style="padding:14px" ${onclick}><div style="display:flex;align-items:center;gap:12px"><div style="width:40px;height:40px;border-radius:10px;background:rgba(123,79,196,0.12);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">${i.ic}</div><div><div style="font-size:12px;font-weight:600;color:var(--text)">${i.title}</div><div style="font-size:10px;color:var(--text-muted);margin-top:2px">${i.sub}</div></div></div></div>`
+  }).join('');
+}
+
+// ============ RENDER ============
+document.getElementById('liveC').innerHTML=LC.slice(0,3).map(c=>`<div class="carousel-item"><div class="card" style="margin-bottom:0"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,${c.c},transparent)"></div><div style="display:flex;justify-content:space-between;margin-bottom:10px"><span class="badge ${c.b}">${c.tag}</span>${c.v?`<span style="font-size:10px;color:var(--rose)">● ${c.v}</span>`:''}</div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.4">${c.t}</div><div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--text-muted)">${c.te}</span><span style="font-size:11px;color:var(--accent);font-weight:700">${c.ti}</span></div></div></div>`).join('');
+
+document.getElementById('medG').innerHTML=MED.map((m,i)=>`<div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:14px;border:1px solid var(--border);cursor:pointer;transition:all .2s" onclick="openMed(${i})"><div style="width:36px;height:36px;border-radius:10px;background:${m.bg};display:flex;align-items:center;justify-content:center;margin-bottom:8px"><div style="width:10px;height:10px;border-radius:50%;background:${m.c}"></div></div><div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">${m.t}</div><div style="display:flex;justify-content:space-between"><span style="font-size:10px;color:var(--text-muted)">${m.d}</span><span class="badge ${m.cat==='Cura'?'bp':m.cat==='Proteção'?'ba':m.cat==='Amor'?'br':'bt'}" style="font-size:8px">${m.cat}</span></div></div>`).join('');
+
+// Tag each LC entry with a filter category
+LC.forEach(c=>{
+  const t=(c.t+' '+c.d).toLowerCase();
+  if(c.tag==='AO VIVO'||c.tag==='HOJE'||c.tag==='AMANHÃ')c.fcat='vivo';
+  else if(t.includes('medit'))c.fcat='meditação';
+  else if(t.includes('ritual')||t.includes('ervas'))c.fcat='ritual';
+  else if(t.includes('mediún')||t.includes('passe')||t.includes('búzio'))c.fcat='mediunica';
+  else c.fcat='outras';
+});
+
+const A_FILTERS=[{k:'todas',l:'Todas'},{k:'vivo',l:'Ao vivo'},{k:'mediunica',l:'Mediúnica'},{k:'ritual',l:'Ritual'},{k:'meditação',l:'Meditação'}];
+let aFilter='todas';
+document.getElementById('aFilt').innerHTML=A_FILTERS.map((f,i)=>`<button class="fbtn${i===0?' active':''}" data-fk="${f.k}" onclick="filterAulas(this)">${f.l}</button>`).join('');
+
+function filterAulas(b){
+  b.parentElement.querySelectorAll('.fbtn').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  aFilter=b.dataset.fk;
+  renderAList();
+}
+function renderAList(){
+  const list=aFilter==='todas'?LC:LC.filter(c=>c.fcat===aFilter);
+  const el=document.getElementById('aList');
+  if(!list.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--text-dim)"><div style="font-size:32px;margin-bottom:12px">🔍</div>Nada encontrado nesta categoria</div>';return}
+  el.innerHTML=list.map((c,realIdx)=>{const i=LC.indexOf(c);return`<div style="background:var(--bg-card);border-radius:var(--radius);padding:16px 16px 16px 20px;margin-bottom:12px;border:1px solid var(--border);cursor:pointer;position:relative;overflow:hidden;transition:all .2s" onclick="openLiveLesson(${i})"><div style="position:absolute;top:0;left:0;bottom:0;width:3px;background:${c.c}"></div><div style="padding-left:6px"><div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><span class="badge ${c.b}">${c.tag}</span>${c.v?`<span style="font-size:10px;color:var(--rose)">● ${c.v}</span>`:''}</div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3">${c.t}</div><div style="font-size:11px;color:var(--text-muted);line-height:1.4;margin-bottom:8px">${c.d}</div><div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--text-muted)">${c.te}</span><span style="font-size:11px;color:var(--accent);font-weight:600">${c.ti}</span></div></div></div>`}).join('');
+}
+renderAList();
+
+document.getElementById('tList').innerHTML=TR.map((t,i)=>`<div class="card" onclick="openTrail(${i})"><div style="position:absolute;top:-40px;right:-40px;width:100px;height:100px;border-radius:50%;background:${t.c}11;filter:blur(30px)" aria-hidden="true"></div><div style="display:flex;gap:14px;align-items:flex-start;position:relative"><div style="width:52px;height:52px;border-radius:14px;background:${t.c}18;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">${t.i}</div><div style="flex:1"><div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px">${t.t}</div><div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;line-height:1.4">${t.d}</div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:10px;color:var(--text-dim)">${t.mod} módulos</span>${t.p?`<span style="font-size:10px;color:${t.c};font-weight:700">${t.p}%</span>`:''}</div>${t.p?`<div class="pbar"><div class="pfill" style="width:${t.p}%;background:${t.c}"></div></div>`:`<div style="font-size:12px;color:var(--accent);font-weight:600">Começar →</div>`}</div></div></div>`).join('');
+
+function renderTrailMods(){
+  const mods=MODS_BY_TRAIL[activeTrail]||[];
+  const tr=TR[activeTrail];
+  // Update header
+  const hdr=document.querySelector('#s-trail .header-title');
+  if(hdr)hdr.textContent=tr.i+' '+tr.t;
+  const lessonsTotal=mods.reduce((s,m)=>s+m.ls.length,0);
+  const lessonsDone=mods.reduce((s,m)=>s+m.ls.filter((l,i)=>l.ok||state.doneLessons[activeTrail+'-'+mods.indexOf(m)+'-'+i]).length,0);
+  const pct=lessonsTotal?Math.round(lessonsDone/lessonsTotal*100):0;
+  const hdrSub=document.querySelector('#s-trail .header div div:nth-child(2)');
+  if(hdrSub)hdrSub.textContent=mods.length+' módulos · '+lessonsTotal+' aulas';
+  // Update progress card
+  const pc=document.querySelector('#s-trail .pbar .pfill');
+  if(pc)pc.style.width=pct+'%';
+  const pctLabel=document.querySelector('#s-trail .badge.bp');
+  const pctNum=document.querySelector('#s-trail [style*="font-weight:700"]');
+  document.querySelectorAll('#s-trail .pbar+div span').forEach((s,i)=>{
+    if(i===0)s.textContent=lessonsDone+'/'+lessonsTotal+' aulas';
+  });
+  document.getElementById('tMods').innerHTML=mods.map((m,mi)=>`<div style="margin-bottom:20px"><div class="module-header"><span>${m.t}</span><span style="font-size:10px;color:var(--text-dim);font-weight:500">${m.ct}</span></div>${m.ls.map((l,i)=>{const done=l.ok||state.doneLessons[activeTrail+'-'+mi+'-'+i];return`<div class="lesson-item" onclick="openTrailLesson(${mi},${i})"><div class="lcheck ${done?'lc-done':'lc-pend'}">${done?'✓':(i+1)}</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:${done?'var(--text-muted)':'var(--text)'};line-height:1.3">${l.t}</div><div style="display:flex;gap:8px;margin-top:4px"><span style="font-size:10px;color:var(--text-dim)">${l.d}</span>${l.tag?`<span class="badge ${l.tc}" style="font-size:8px">${l.tag}</span>`:''}</div></div><span style="font-size:14px;color:var(--text-dim)">▶</span></div>`}).join('')}</div>`).join('');
+}
+
+document.getElementById('oCards').innerHTML=TAROT.map((_,i)=>`<div class="oracle-card" onclick="revO(${i})"><div style="text-align:center"><div style="font-size:28px;margin-bottom:6px;filter:drop-shadow(0 0 8px var(--purple-glow))">✦</div><div style="font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.15em">${i+1}</div></div></div>`).join('');
+
+function renderFeed(){
+  const all=[...state.userPosts,...COM];
+  document.getElementById('cFeed').innerHTML=all.map((p,idx)=>`<div class="post"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><div class="post-avatar">${p.av}</div><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--text)">${p.u} <span class="badge ${p.lb}" style="font-size:8px">${p.lv}</span></div><div style="font-size:10px;color:var(--text-dim)">${p.ti}${p.ti.match(/^[0-9]/)?' atrás':''}</div></div></div>${p.img?`<div class="post-img">${p.img}</div>`:''}<div style="font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:12px">${p.tx}</div><div style="display:flex;gap:16px"><span class="pa" onclick="likePost(this,${p.lk})">🤍 ${p.lk}</span><span class="pa" onclick="openComments(${idx-state.userPosts.length})">💬 ${p.cm}</span><span class="pa" onclick="toast('🔗 Link copiado')">🔗</span></div></div>`).join('');
+}
+renderFeed();
+
+// ============ TRAIL ============
+function openTrail(idx){
+  if(typeof idx==='number')activeTrail=idx;
+  renderTrailMods();
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s-trail').classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab==='trilhas'));
   document.getElementById('appContent').scrollTop=0;
 }
-function backToTrails(){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('screen-trilhas').classList.add('active');
-  document.getElementById('appContent').scrollTop=0;
+
+// ============ LESSON MODAL ============
+let lessonInt=null,lessonProg=0,lessonDur=900,currentLesson=null;
+function openLessonModal(data){
+  currentLesson=data;
+  document.getElementById('lessonTitle').textContent=data.title;
+  document.getElementById('lessonMeta').textContent=data.meta;
+  document.getElementById('lessonDesc').textContent=data.desc||'Conteúdo guiado pelos mestres da Cria Ti Na Luz.';
+  document.getElementById('lessonBadge').textContent=data.badge||'AULA';
+  document.getElementById('lessonBadge').className='badge '+(data.bclass||'ba');
+  lessonProg=0;
+  lessonDur=data.dur||900;
+  const tot=Math.floor(lessonDur/60);
+  document.getElementById('lessonTot').textContent=tot+':00';
+  document.getElementById('lessonCur').textContent='0:00';
+  document.getElementById('lessonBar').style.width='0%';
+  document.getElementById('lessonPlay').textContent='▶';
+  if(lessonInt){clearInterval(lessonInt);lessonInt=null}
+  openOv('lessonOv');
+}
+function toggleLesson(){
+  const btn=document.getElementById('lessonPlay');
+  if(lessonInt){clearInterval(lessonInt);lessonInt=null;btn.textContent='▶';return}
+  btn.textContent='⏸';
+  lessonInt=setInterval(()=>{
+    lessonProg=Math.min(lessonProg+1,100);
+    document.getElementById('lessonBar').style.width=lessonProg+'%';
+    const sec=Math.round(lessonProg/100*lessonDur);
+    const mm=Math.floor(sec/60),ss=sec%60;
+    document.getElementById('lessonCur').textContent=mm+':'+(ss<10?'0':'')+ss;
+    if(lessonProg>=100){clearInterval(lessonInt);lessonInt=null;btn.textContent='▶';completeLesson()}
+  },150);
+}
+function completeLesson(){
+  if(!currentLesson)return;
+  if(currentLesson.kind==='trail'){
+    const k=currentLesson.tIdx+'-'+currentLesson.mIdx+'-'+currentLesson.lIdx;
+    if(!state.doneLessons[k]){
+      state.doneLessons[k]=1;
+      state.lessonsDone++;
+      state.points+=20;
+      state.history.unshift({d:todayStr(),t:'Aula concluída: '+currentLesson.title,i:'📚'});
+      saveState();
+      toast('✓ Aula concluída! +20 pts');
+      renderTrailMods();
+      checkAchievements();
+    }else toast('✓ Já estava concluída');
+  }else{
+    state.history.unshift({d:todayStr(),t:'Aula assistida: '+currentLesson.title,i:'◉'});
+    state.points+=10;
+    saveState();
+    toast('✓ Aula registrada! +10 pts');
+  }
+  closeOv('lessonOv');
+}
+function closeLesson(){
+  if(lessonInt){clearInterval(lessonInt);lessonInt=null}
+  closeOv('lessonOv');
+}
+function openLiveLesson(i){
+  const c=LC[i];
+  openLessonModal({kind:'live',title:c.t,meta:c.te+' · '+c.ti,desc:c.d,badge:c.tag,bclass:c.b,dur:1200});
+}
+function openTrailLesson(mIdx,lIdx){
+  const mods=MODS_BY_TRAIL[activeTrail]||[];
+  const m=mods[mIdx];if(!m)return;
+  const l=m.ls[lIdx];if(!l)return;
+  const mins=parseInt(l.d)||15;
+  openLessonModal({kind:'trail',tIdx:activeTrail,mIdx:mIdx,lIdx:lIdx,title:l.t,meta:m.t+' · '+l.d,desc:l.desc||'',badge:l.tag||'AULA',bclass:l.tc||'ba',dur:mins*60});
 }
 
-// ========== ORACLE ==========
-function revealOracle(idx){
-  document.getElementById('oracleChoose').style.display='none';
-  document.getElementById('oracleRevealing').style.display='block';
+// ============ ORACLE ============
+function dailyLimit(){return 3}
+function revO(i){
+  if(state.oracleToday>=dailyLimit()){
+    toast('☽ Limite diário atingido. Volte amanhã ou faça upgrade para PRO.');
+    return;
+  }
+  document.getElementById('oChoose').style.display='none';
+  document.getElementById('oRevealing').style.display='block';
+  document.getElementById('appContent').scrollTop=0;
   setTimeout(()=>{
-    const card=TAROT[idx];
-    document.getElementById('revealedNumber').textContent=card.number;
-    document.getElementById('revealedName').textContent=card.name;
-    document.getElementById('revealedMeaning').textContent=card.meaning;
-    document.getElementById('revealedAdvice').textContent=card.advice;
-    document.getElementById('oracleRevealing').style.display='none';
-    document.getElementById('oracleRevealed').style.display='block';
+    const c=TAROT[i];
+    document.getElementById('rNum').textContent=c.n;
+    document.getElementById('rName').textContent=c.name;
+    document.getElementById('rMean').textContent=c.m;
+    document.getElementById('rAdv').textContent=c.a;
+    document.getElementById('rRit').textContent=c.r;
+    document.getElementById('oRevealing').style.display='none';
+    document.getElementById('oRevealed').style.display='block';
+    document.getElementById('appContent').scrollTop=0;
+    state.oracleToday++;
+    state.oracleTotal++;
+    state.history.unshift({d:todayStr(),t:'Carta tirada: '+c.name,i:'☽'});
+    saveState();
+    updateOracleLimit();
+    checkAchievements();
   },1500);
 }
-function resetOracle(){
-  document.getElementById('oracleRevealed').style.display='none';
-  document.getElementById('oracleChoose').style.display='block';
+function resetO(){
+  document.getElementById('oRevealed').style.display='none';
+  document.getElementById('oChoose').style.display='block';
+  document.getElementById('appContent').scrollTop=0;
+  updateOracleLimit();
 }
+function updateOracleLimit(){
+  const el=document.getElementById('oLimit');
+  if(!el)return;
+  const left=Math.max(0,dailyLimit()-state.oracleToday);
+  el.textContent='Tiragens hoje: '+state.oracleToday+'/'+dailyLimit();
+  el.className='limit-pill'+(left===0?' exhausted':'');
+}
+
+// ============ COMMENTS ============
+let activeCommentPost=null;
+function openComments(idx){
+  if(idx<0||idx>=COM.length){toast('💬 Comentários disponíveis em breve para seus posts');return}
+  activeCommentPost=idx;
+  const list=POST_COMMENTS[idx]||[];
+  document.getElementById('commentsCount').textContent=list.length+' comentário'+(list.length===1?'':'s');
+  document.getElementById('commentsList').innerHTML=list.length?list.map(c=>`<div class="comment"><div class="comment-av">${c.av}</div><div class="comment-body"><span class="comment-name">${c.u}</span><span class="comment-time">${c.ti}</span><div class="comment-text">${c.tx}</div></div></div>`).join(''):'<div style="text-align:center;padding:30px;color:var(--text-dim);font-size:12px">Seja o primeiro a comentar ✦</div>';
+  document.getElementById('commentInput').value='';
+  openOv('commentsOv');
+}
+function sendComment(){
+  const input=document.getElementById('commentInput');
+  const v=input.value.trim();
+  if(!v||activeCommentPost===null)return;
+  if(!POST_COMMENTS[activeCommentPost])POST_COMMENTS[activeCommentPost]=[];
+  POST_COMMENTS[activeCommentPost].push({u:'Você',av:'E',tx:v,ti:'agora'});
+  COM[activeCommentPost].cm++;
+  input.value='';
+  openComments(activeCommentPost);
+  renderFeed();
+  toast('✦ Comentário publicado');
+}
+
+// ============ CREATE POST ============
+function openCreatePost(){
+  document.getElementById('postText').value='';
+  document.getElementById('postCount').textContent='0';
+  openOv('postOv');
+}
+document.addEventListener('input',function(e){
+  if(e.target&&e.target.id==='postText'){document.getElementById('postCount').textContent=e.target.value.length}
+});
+function submitPost(){
+  const v=document.getElementById('postText').value.trim();
+  if(!v){toast('Escreva algo para compartilhar');return}
+  state.userPosts.unshift({u:'Eddy',av:'E',lv:'PRO',lb:'ba',tx:v,lk:0,cm:0,ti:'agora'});
+  state.posts++;
+  state.points+=15;
+  state.history.unshift({d:todayStr(),t:'Publicação na comunidade',i:'💜'});
+  saveState();
+  closeOv('postOv');
+  renderFeed();
+  toast('✦ Publicado! +15 pts');
+  checkAchievements();
+}
+
+// ============ ACHIEVEMENTS ============
+function renderAch(){
+  const el=document.getElementById('achGrid');
+  if(!el)return;
+  const unlocked=ACH.filter(a=>a.cond(state)).length;
+  document.getElementById('achUnlocked').textContent=unlocked;
+  document.getElementById('achTotal').textContent=ACH.length;
+  el.innerHTML=ACH.map(a=>{const u=a.cond(state);return`<div class="ach ${u?'unlocked':'locked'}"><div class="ach-icon">${a.i}</div><div class="ach-name">${a.t}</div><div class="ach-desc">${a.d}</div></div>`}).join('');
+}
+function openAch(){renderAch();openOv('achOv')}
+let lastAchSet=new Set();
+function checkAchievements(){
+  const newSet=new Set(ACH.filter(a=>a.cond(state)).map(a=>a.t));
+  newSet.forEach(t=>{if(!lastAchSet.has(t)&&lastAchSet.size>0)toast('🏆 Conquista: '+t)});
+  lastAchSet=newSet;
+}
+
+// ============ SETTINGS ============
+function toggleSet(el){
+  el.classList.toggle('on');
+  const k=el.dataset.key;
+  state.settings[k]=el.classList.contains('on')?1:0;
+  saveState();
+  toast('Configuração salva');
+}
+function applySettingsUI(){
+  document.querySelectorAll('.toggle[data-key]').forEach(t=>{
+    if(state.settings[t.dataset.key])t.classList.add('on');
+    else t.classList.remove('on');
+  });
+}
+function resetData(){
+  if(!confirm('Resetar todo o progresso? Esta ação é irreversível.'))return;
+  localStorage.removeItem(LS_KEY);
+  state=Object.assign({},defaultState);
+  saveState();
+  applySettingsUI();
+  renderFeed();
+  renderTrailMods();
+  updateOracleLimit();
+  closeOv('setOv');
+  toast('🔄 Progresso resetado');
+}
+
+// ============ HISTORY ============
+function openHist(){
+  const list=state.history.slice(0,30);
+  document.getElementById('histList').innerHTML=list.length?list.map(h=>`<div style="display:flex;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04)"><div style="width:36px;height:36px;border-radius:10px;background:var(--accent-dim);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">${h.i}</div><div style="flex:1"><div style="font-size:12px;color:var(--text);line-height:1.4">${h.t}</div><div style="font-size:10px;color:var(--text-dim);margin-top:3px">${h.d}</div></div></div>`).join(''):'<div style="text-align:center;padding:40px;color:var(--text-dim);font-size:12px">Sua jornada começa agora ✦</div>';
+  openOv('histOv');
+}
+
+applySettingsUI();
+lastAchSet=new Set(ACH.filter(a=>a.cond(state)).map(a=>a.t));
+updateOracleLimit();
+
+// ============ AUDIO PLAYER ============
+let isP=false,pInt=null,pProg=0,pDur=900;
+
+function openMed(idx){
+  const m=MED[idx];
+  if(!m)return;
+  document.getElementById('playerTitle').textContent=m.t;
+  document.getElementById('playerSub').textContent='Meditação guiada · '+m.d;
+  const mins=parseInt(m.d);
+  pDur=m.dur||mins*60;
+  document.getElementById('pTot').textContent=mins+':00';
+  pProg=0;
+  document.getElementById('pBar').style.width='0%';
+  document.getElementById('pCur').textContent='0:00';
+  isP=false;
+  document.getElementById('playBtn').textContent='▶';
+  if(pInt)clearInterval(pInt);
+  document.getElementById('audioPlayer').classList.add('show');
+  toast('🎵 '+m.t+' — pronto para reproduzir');
+}
+
+function togglePlay(){
+  isP=!isP;
+  document.getElementById('playBtn').textContent=isP?'⏸':'▶';
+  if(isP){
+    pInt=setInterval(()=>{
+      pProg=Math.min(pProg+0.4,100);
+      document.getElementById('pBar').style.width=pProg+'%';
+      const sec=Math.round(pProg/100*pDur);
+      const mm=Math.floor(sec/60),ss=sec%60;
+      document.getElementById('pCur').textContent=mm+':'+(ss<10?'0':'')+ss;
+      if(pProg>=100){
+        clearInterval(pInt);pInt=null;isP=false;
+        document.getElementById('playBtn').textContent='▶';
+        state.medCount++;state.points+=15;
+        state.history.unshift({d:todayStr(),t:'Meditação concluída',i:'🧘'});
+        saveState();checkAchievements();
+        toast('✦ Meditação concluída! +15 pts de evolução');
+      }
+    },300);
+  }else{
+    if(pInt){clearInterval(pInt);pInt=null}
+  }
+}
+
+// Seek - using wrapper div for bigger tap target
+document.getElementById('pBarWrap').addEventListener('click',function(e){
+  const bar=this.querySelector('div');
+  const r=bar.getBoundingClientRect();
+  pProg=Math.max(0,Math.min(100,(e.clientX-r.left)/r.width*100));
+  document.getElementById('pBar').style.width=pProg+'%';
+  const sec=Math.round(pProg/100*pDur);
+  const mm=Math.floor(sec/60),ss=sec%60;
+  document.getElementById('pCur').textContent=mm+':'+(ss<10?'0':'')+ss;
+});
+
+function closePlayer(){
+  document.getElementById('audioPlayer').classList.remove('show');
+  if(pInt){clearInterval(pInt);pInt=null}
+  isP=false;
+}
+
+// ============ KEYBOARD SUPPORT ============
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){
+    document.querySelectorAll('.overlay.show').forEach(o=>o.classList.remove('show'));
+  }
+});
 </script>
 </body>
 </html>
