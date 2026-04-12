@@ -200,6 +200,17 @@ img{max-width:100%;display:block}
 .lesson-stage::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 30%,rgba(201,168,76,0.12),transparent 50%)}
 .lesson-play{width:64px;height:64px;border-radius:50%;background:var(--accent);color:var(--bg);font-size:24px;display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 0 32px var(--accent-glow);animation:lpulse 2s ease-in-out infinite}
 @keyframes lpulse{0%,100%{box-shadow:0 0 24px var(--accent-glow)}50%{box-shadow:0 0 40px var(--accent-glow),0 0 60px rgba(201,168,76,0.15)}}
+/* Botão tela cheia */
+.lesson-fs-btn{position:absolute;bottom:8px;right:8px;width:32px;height:32px;border-radius:8px;background:rgba(0,0,0,0.55);backdrop-filter:blur(8px);color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center;z-index:5;transition:all .2s;border:1px solid rgba(255,255,255,0.15)}
+.lesson-fs-btn:hover,.lesson-fs-btn:active{background:rgba(0,0,0,0.8);transform:scale(1.1)}
+/* Tela cheia nativa via fullscreen API */
+.lesson-stage:-webkit-full-screen{border-radius:0!important;width:100vw!important;height:100vh!important;aspect-ratio:unset!important}
+.lesson-stage:-moz-full-screen{border-radius:0!important;width:100vw!important;height:100vh!important;aspect-ratio:unset!important}
+.lesson-stage:fullscreen{border-radius:0!important;width:100vw!important;height:100vh!important;aspect-ratio:unset!important}
+/* Fallback iOS: pseudo-fullscreen */
+.lesson-stage.ios-fullscreen{position:fixed!important;inset:0!important;width:100%!important;height:100%!important;aspect-ratio:unset!important;z-index:9999!important;border-radius:0!important;margin:0!important;background:#000!important}
+.lesson-stage.ios-fullscreen .lesson-fs-btn{bottom:calc(env(safe-area-inset-bottom,0px)+12px);right:16px;width:40px;height:40px;font-size:18px}
+.lesson-stage.ios-fullscreen .lesson-play{width:80px;height:80px;font-size:30px}
 .lesson-progress{height:3px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;margin-top:10px}
 .lesson-progress i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s linear}
 
@@ -431,8 +442,9 @@ img{max-width:100%;display:block}
 <div class="overlay" id="lessonOv" onclick="closeOverlay(this,event)">
   <div class="modal" onclick="event.stopPropagation()" style="max-height:92vh">
     <div class="modal-handle"></div>
-    <div class="lesson-stage">
+    <div class="lesson-stage" id="lessonStage">
       <button class="lesson-play" id="lessonPlay" onclick="toggleLesson()" aria-label="Reproduzir aula">▶</button>
+      <button class="lesson-fs-btn" id="lessonFsBtn" onclick="toggleLessonFullscreen()" aria-label="Tela cheia" title="Tela cheia">⛶</button>
     </div>
     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px">
       <div style="flex:1;min-width:0">
@@ -1053,8 +1065,66 @@ function completeLesson(){
 }
 function closeLesson(){
   if(lessonInt){clearInterval(lessonInt);lessonInt=null}
+  exitLessonFullscreen();
   closeOv('lessonOv');
 }
+
+// ============ FULLSCREEN ============
+let iosFs=false;
+function toggleLessonFullscreen(){
+  const stage=document.getElementById('lessonStage');
+  const btn=document.getElementById('lessonFsBtn');
+  // Tenta Fullscreen API nativa (Android Chrome, Desktop)
+  if(document.fullscreenEnabled||document.webkitFullscreenEnabled){
+    if(!document.fullscreenElement&&!document.webkitFullscreenElement){
+      const req=stage.requestFullscreen||stage.webkitRequestFullscreen;
+      if(req){req.call(stage);btn.textContent='✕';btn.title='Sair da tela cheia';return;}
+    }else{
+      const ex=document.exitFullscreen||document.webkitExitFullscreen;
+      if(ex){ex.call(document);btn.textContent='⛶';btn.title='Tela cheia';return;}
+    }
+  }
+  // Fallback iOS Safari (sem suporte a Fullscreen API)
+  if(!iosFs){
+    iosFs=true;
+    stage.classList.add('ios-fullscreen');
+    document.body.style.overflow='hidden';
+    btn.textContent='✕';btn.title='Sair da tela cheia';
+    // Bloqueia orientação landscape se possível
+    if(screen.orientation&&screen.orientation.lock){screen.orientation.lock('landscape').catch(()=>{})}
+  }else{
+    exitLessonFullscreen();
+  }
+}
+function exitLessonFullscreen(){
+  const stage=document.getElementById('lessonStage');
+  const btn=document.getElementById('lessonFsBtn');
+  if(!stage)return;
+  if(iosFs){
+    iosFs=false;
+    stage.classList.remove('ios-fullscreen');
+    document.body.style.overflow='';
+    if(btn){btn.textContent='⛶';btn.title='Tela cheia';}
+    if(screen.orientation&&screen.orientation.unlock){screen.orientation.unlock();}
+  }
+  if(document.fullscreenElement||document.webkitFullscreenElement){
+    const ex=document.exitFullscreen||document.webkitExitFullscreen;
+    if(ex)ex.call(document);
+  }
+}
+// Sincroniza botão quando sai do fullscreen pelo botão do SO
+document.addEventListener('fullscreenchange',()=>{
+  const btn=document.getElementById('lessonFsBtn');
+  if(!btn)return;
+  if(!document.fullscreenElement){btn.textContent='⛶';btn.title='Tela cheia';}
+  else{btn.textContent='✕';btn.title='Sair da tela cheia';}
+});
+document.addEventListener('webkitfullscreenchange',()=>{
+  const btn=document.getElementById('lessonFsBtn');
+  if(!btn)return;
+  if(!document.webkitFullscreenElement){btn.textContent='⛶';btn.title='Tela cheia';}
+  else{btn.textContent='✕';btn.title='Sair da tela cheia';}
+});
 function openLiveLesson(i){
   const c=LC[i];
   openLessonModal({kind:'live',title:c.t,meta:c.te+' · '+c.ti,desc:c.d,badge:c.tag,bclass:c.b,dur:1200});
