@@ -26,7 +26,7 @@
   --border:rgba(200,105,42,0.12);--border-strong:rgba(200,105,42,0.30);
   --font-display:'Cormorant Garamond',Georgia,serif;
   --font-body:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
-  --radius:20px;--radius-sm:50px;--radius-xs:12px;
+  --radius:20px;--radius-sm:16px;--radius-xs:10px;
   --safe-bottom:max(12px,env(safe-area-inset-bottom));
   --nav-height:64px;
 }
@@ -755,6 +755,7 @@ img{max-width:100%;display:block}
   <div class="menu-item" onclick="openHist()"><span style="font-size:16px;color:var(--text)">📜 Histórico espiritual</span><span style="color:var(--text-dim)">›</span></div>
   <div class="menu-item" onclick="openOv('setOv')"><span style="font-size:16px;color:var(--text)">⚙️ Configurações</span><span style="color:var(--text-dim)">›</span></div>
   <div class="menu-item" onclick="openOv('priceOv')"><span style="font-size:16px;color:var(--accent)">✦ Gerenciar assinatura</span><span style="color:var(--text-dim)">›</span></div>
+  <div class="menu-item" onclick="openAdmin()" style="border-top:2px dashed var(--border);margin-top:8px"><span style="font-size:16px;color:var(--accent);font-weight:700">🛡️ Painel Admin</span><span style="color:var(--text-dim)">›</span></div>
 
   <!-- Apoie -->
   <div style="background:#fff;border-radius:var(--radius);box-shadow:0 2px 16px rgba(100,50,20,0.08);padding:20px;margin-top:20px;margin-bottom:14px">
@@ -781,6 +782,106 @@ img{max-width:100%;display:block}
   <button onclick="toast('Abrindo suporte… 💬')" style="width:100%;padding:15px;border-radius:50px;border:2px solid var(--accent);background:#fff;color:var(--accent);font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:24px">
     <span>💬</span> Falar com Suporte
   </button>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel" style="display:none;position:fixed;inset:0;z-index:500;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch">
+  <div style="max-width:430px;margin:0 auto;padding:0 20px 100px">
+    <!-- Header -->
+    <div style="display:flex;align-items:center;gap:12px;padding:max(20px,env(safe-area-inset-top,20px)) 0 16px">
+      <button onclick="closeAdmin()" style="width:38px;height:38px;border-radius:50%;border:1px solid var(--border);background:#fff;color:var(--accent);font-size:18px;display:flex;align-items:center;justify-content:center">←</button>
+      <div>
+        <div style="font-size:22px;font-weight:700;color:var(--text);font-family:var(--font-display)">🛡️ Painel Admin</div>
+        <div style="font-size:14px;color:var(--text-muted)">Cria Ti Na Luz Club</div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+      <div style="background:#fff;border-radius:var(--radius);padding:16px;box-shadow:0 2px 12px rgba(100,50,20,0.08)">
+        <div style="font-size:13px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Alunos</div>
+        <div style="font-size:32px;font-weight:800;color:var(--accent);font-family:var(--font-display);line-height:1">1.247</div>
+        <div style="font-size:13px;color:var(--green);margin-top:4px">▲ +23 esta semana</div>
+      </div>
+      <div style="background:#fff;border-radius:var(--radius);padding:16px;box-shadow:0 2px 12px rgba(100,50,20,0.08)">
+        <div style="font-size:13px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Receita/mês</div>
+        <div style="font-size:32px;font-weight:800;color:var(--text);font-family:var(--font-display);line-height:1">R$4,8k</div>
+        <div style="font-size:13px;color:var(--green);margin-top:4px">▲ +12% vs anterior</div>
+      </div>
+      <div style="background:#fff;border-radius:var(--radius);padding:16px;box-shadow:0 2px 12px rgba(100,50,20,0.08)">
+        <div style="font-size:13px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Aulas publicadas</div>
+        <div style="font-size:32px;font-weight:800;color:var(--text);font-family:var(--font-display);line-height:1">38</div>
+        <div style="font-size:13px;color:var(--text-dim);margin-top:4px">5 em rascunho</div>
+      </div>
+      <div style="background:#fff;border-radius:var(--radius);padding:16px;box-shadow:0 2px 12px rgba(100,50,20,0.08)">
+        <div style="font-size:13px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Ao vivo hoje</div>
+        <div style="font-size:32px;font-weight:800;color:var(--rose);font-family:var(--font-display);line-height:1">2</div>
+        <div style="font-size:13px;color:var(--text-dim);margin-top:4px">Próxima: 20h</div>
+      </div>
+    </div>
+
+    <!-- Ações rápidas -->
+    <div style="font-size:17px;font-weight:700;color:var(--text);font-family:var(--font-display);margin-bottom:12px">Ações Rápidas</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+      <button onclick="adminAction('aula')" style="background:linear-gradient(135deg,var(--accent),#E0884A);color:#fff;border:none;border-radius:var(--radius);padding:16px 12px;font-size:15px;font-weight:600;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:6px"><span style="font-size:22px">📹</span>Nova Aula</button>
+      <button onclick="adminAction('trilha')" style="background:linear-gradient(135deg,var(--amber),#ECA96A);color:#fff;border:none;border-radius:var(--radius);padding:16px 12px;font-size:15px;font-weight:600;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:6px"><span style="font-size:22px">🕯️</span>Nova Trilha</button>
+      <button onclick="adminAction('notif')" style="background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:16px 12px;font-size:15px;font-weight:600;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:6px;color:var(--text);box-shadow:0 2px 8px rgba(100,50,20,0.06)"><span style="font-size:22px">🔔</span>Notificação</button>
+      <button onclick="adminAction('live')" style="background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:16px 12px;font-size:15px;font-weight:600;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:6px;color:var(--text);box-shadow:0 2px 8px rgba(100,50,20,0.06)"><span style="font-size:22px">📡</span>Aula ao Vivo</button>
+    </div>
+
+    <!-- Gerenciar Aulas -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="font-size:17px;font-weight:700;color:var(--text);font-family:var(--font-display)">Aulas Recentes</div>
+      <span style="font-size:14px;color:var(--accent);cursor:pointer;font-weight:600">Ver todas</span>
+    </div>
+    <div style="background:#fff;border-radius:var(--radius);box-shadow:0 2px 12px rgba(100,50,20,0.08);overflow:hidden;margin-bottom:20px" id="adminAulasList">
+      <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid rgba(0,0,0,0.05)">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(200,105,42,0.10);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🕊️</div>
+        <div style="flex:1"><div style="font-size:15px;font-weight:600;color:var(--text)">Desenvolvimento Mediúnico</div><div style="font-size:13px;color:var(--text-muted)">247 visualizações · Publicada</div></div>
+        <div style="display:flex;gap:6px"><button onclick="adminAction('edit')" style="padding:6px 12px;border-radius:20px;border:1px solid var(--accent);background:#fff;color:var(--accent);font-size:13px;font-weight:600;cursor:pointer">Editar</button></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid rgba(0,0,0,0.05)">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(200,105,42,0.10);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🃏</div>
+        <div style="flex:1"><div style="font-size:15px;font-weight:600;color:var(--text)">Tarot — Arcanos Maiores</div><div style="font-size:13px;color:var(--text-muted)">189 visualizações · Publicada</div></div>
+        <div style="display:flex;gap:6px"><button onclick="adminAction('edit')" style="padding:6px 12px;border-radius:20px;border:1px solid var(--accent);background:#fff;color:var(--accent);font-size:13px;font-weight:600;cursor:pointer">Editar</button></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:14px 16px">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(212,135,58,0.10);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🌿</div>
+        <div style="flex:1"><div style="font-size:15px;font-weight:600;color:var(--text)">Banho de Ervas Sagradas</div><div style="font-size:13px;color:var(--amber);font-weight:600">Rascunho</div></div>
+        <div style="display:flex;gap:6px"><button onclick="adminAction('publish')" style="padding:6px 12px;border-radius:20px;border:none;background:var(--accent);color:#fff;font-size:13px;font-weight:600;cursor:pointer">Publicar</button></div>
+      </div>
+    </div>
+
+    <!-- Usuários Recentes -->
+    <div style="font-size:17px;font-weight:700;color:var(--text);font-family:var(--font-display);margin-bottom:12px">Alunos Recentes</div>
+    <div style="background:#fff;border-radius:var(--radius);box-shadow:0 2px 12px rgba(100,50,20,0.08);overflow:hidden;margin-bottom:20px">
+      <div style="display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid rgba(0,0,0,0.05)">
+        <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--amber));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px;flex-shrink:0">M</div>
+        <div style="flex:1"><div style="font-size:15px;font-weight:600;color:var(--text)">Marina S.</div><div style="font-size:13px;color:var(--text-muted)">PRO · Entrou há 2 dias</div></div>
+        <span class="badge ba">PRO</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid rgba(0,0,0,0.05)">
+        <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--teal),#2EC4B6);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px;flex-shrink:0">R</div>
+        <div style="flex:1"><div style="font-size:15px;font-weight:600;color:var(--text)">Rafael M.</div><div style="font-size:13px;color:var(--text-muted)">Gratuito · Entrou há 3 dias</div></div>
+        <span class="badge bt">FREE</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:13px 16px">
+        <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--rose),#D63384);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px;flex-shrink:0">A</div>
+        <div style="flex:1"><div style="font-size:15px;font-weight:600;color:var(--text)">Ana P.</div><div style="font-size:13px;color:var(--text-muted)">VIP · Entrou há 5 dias</div></div>
+        <span class="badge bp">VIP</span>
+      </div>
+    </div>
+
+    <!-- Configurações do App -->
+    <div style="font-size:17px;font-weight:700;color:var(--text);font-family:var(--font-display);margin-bottom:12px">Configurações do App</div>
+    <div style="background:#fff;border-radius:var(--radius);box-shadow:0 2px 12px rgba(100,50,20,0.08);overflow:hidden;margin-bottom:20px">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:15px 16px;border-bottom:1px solid rgba(0,0,0,0.05)"><span style="font-size:15px;color:var(--text)">🔴 Modo manutenção</span><div class="toggle" data-key="manut" onclick="toggleSet(this)"></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:15px 16px;border-bottom:1px solid rgba(0,0,0,0.05)"><span style="font-size:15px;color:var(--text)">📢 Banner de aviso</span><div class="toggle" data-key="banner" onclick="toggleSet(this)"></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:15px 16px"><span style="font-size:15px;color:var(--text)">✨ Novas funcionalidades</span><div class="toggle on" data-key="feat" onclick="toggleSet(this)"></div></div>
+    </div>
+
+    <button onclick="closeAdmin()" style="width:100%;padding:15px;border-radius:50px;border:2px solid rgba(0,0,0,0.10);background:#fff;color:var(--text-muted);font-size:15px;font-weight:600;cursor:pointer">Sair do Admin</button>
+  </div>
 </div>
 
 </div><!-- app-content -->
@@ -934,6 +1035,9 @@ function go(tab){
 // ============ UTILITIES ============
 let toastTimer;
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.className='toast show';clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.className='toast',2500)}
+function openAdmin(){const p=document.getElementById('adminPanel');p.style.display='block';p.scrollTop=0}
+function closeAdmin(){document.getElementById('adminPanel').style.display='none'}
+function adminAction(a){const msgs={aula:'Abrindo editor de nova aula… 📹',trilha:'Abrindo editor de nova trilha… 🕯️',notif:'Criando notificação push… 🔔',live:'Agendando aula ao vivo… 📡',edit:'Abrindo editor… ✏️',publish:'Aula publicada com sucesso! ✅'};toast(msgs[a]||'Ação realizada!')}
 function selectDonation(btn,val){btn.closest('.donation-grid')||btn.parentElement.querySelectorAll('button').forEach(b=>{b.style.background='#fff';b.style.color='var(--accent)'});btn.style.background='var(--accent)';btn.style.color='#fff';toast('R$'+val+' selecionado 💛')}
 
 function sf(b){b.parentElement.querySelectorAll('.fbtn').forEach(x=>x.classList.remove('active'));b.classList.add('active')}
