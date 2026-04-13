@@ -755,6 +755,32 @@ img{max-width:100%;display:block}
   <div class="menu-item" onclick="openHist()"><span style="font-size:16px;color:var(--text)">📜 Histórico espiritual</span><span style="color:var(--text-dim)">›</span></div>
   <div class="menu-item" onclick="openOv('setOv')"><span style="font-size:16px;color:var(--text)">⚙️ Configurações</span><span style="color:var(--text-dim)">›</span></div>
   <div class="menu-item" onclick="openOv('priceOv')"><span style="font-size:16px;color:var(--accent)">✦ Gerenciar assinatura</span><span style="color:var(--text-dim)">›</span></div>
+
+  <!-- Apoie -->
+  <div style="background:#fff;border-radius:var(--radius);box-shadow:0 2px 16px rgba(100,50,20,0.08);padding:20px;margin-top:20px;margin-bottom:14px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <span style="font-size:22px;color:var(--accent)">♡</span>
+      <span style="font-size:18px;font-weight:700;color:var(--text);font-family:var(--font-display)">Apoie o Cria ti na luz</span>
+    </div>
+    <div style="font-size:15px;color:var(--text-muted);margin-bottom:4px">Mais de 10 anos de história</div>
+    <div style="font-size:15px;color:var(--text-muted);margin-bottom:18px">Mais de 10 mil alunos impactados</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+      <button onclick="selectDonation(this,'20')" style="padding:12px 4px;border-radius:14px;border:2px solid var(--accent);background:#fff;color:var(--accent);font-size:15px;font-weight:600;cursor:pointer;transition:all .2s">R$20</button>
+      <button onclick="selectDonation(this,'50')" style="padding:12px 4px;border-radius:14px;border:2px solid var(--accent);background:#fff;color:var(--accent);font-size:15px;font-weight:600;cursor:pointer;transition:all .2s">R$50</button>
+      <button onclick="selectDonation(this,'100')" style="padding:12px 4px;border-radius:14px;border:2px solid var(--accent);background:#fff;color:var(--accent);font-size:15px;font-weight:600;cursor:pointer;transition:all .2s">R$100</button>
+      <button onclick="selectDonation(this,'200')" style="padding:12px 4px;border-radius:14px;border:2px solid var(--accent);background:#fff;color:var(--accent);font-size:15px;font-weight:600;cursor:pointer;transition:all .2s">R$200</button>
+    </div>
+    <button style="width:100%;padding:13px;border-radius:50px;border:2px solid var(--accent);background:#fff;color:var(--accent);font-size:15px;font-weight:600;cursor:pointer;margin-bottom:12px">Outro valor</button>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <button onclick="toast('Chave Pix copiada! 💛')" style="padding:14px;border-radius:50px;border:none;background:linear-gradient(135deg,var(--accent),#E0884A);color:#fff;font-size:15px;font-weight:700;cursor:pointer">Pix</button>
+      <button onclick="toast('Redirecionando ao PayPal…')" style="padding:14px;border-radius:50px;border:none;background:linear-gradient(135deg,#E0884A,#ECA96A);color:#fff;font-size:15px;font-weight:700;cursor:pointer">PayPal</button>
+    </div>
+  </div>
+
+  <!-- Suporte -->
+  <button onclick="toast('Abrindo suporte… 💬')" style="width:100%;padding:15px;border-radius:50px;border:2px solid var(--accent);background:#fff;color:var(--accent);font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:24px">
+    <span>💬</span> Falar com Suporte
+  </button>
 </div>
 
 </div><!-- app-content -->
@@ -908,6 +934,7 @@ function go(tab){
 // ============ UTILITIES ============
 let toastTimer;
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.className='toast show';clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.className='toast',2500)}
+function selectDonation(btn,val){btn.closest('.donation-grid')||btn.parentElement.querySelectorAll('button').forEach(b=>{b.style.background='#fff';b.style.color='var(--accent)'});btn.style.background='var(--accent)';btn.style.color='#fff';toast('R$'+val+' selecionado 💛')}
 
 function sf(b){b.parentElement.querySelectorAll('.fbtn').forEach(x=>x.classList.remove('active'));b.classList.add('active')}
 
