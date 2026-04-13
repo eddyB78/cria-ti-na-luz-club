@@ -714,7 +714,7 @@ img{max-width:100%;display:block}
 <!-- PERFIL -->
 <div class="screen" id="s-perfil">
   <div style="text-align:center;padding:20px 0 24px">
-    <div class="profile-avatar-lg">E</div>
+    <div class="profile-avatar-lg" onclick="adminTap()" id="profileAvatar" title="Toque 5x para acesso admin">E</div>
     <div style="font-size:22px;font-weight:700;color:var(--text);font-family:var(--font-display)">Eddy</div>
     <div style="display:flex;justify-content:center;gap:8px;margin-top:8px"><span class="badge bp">Nível: Adepto</span><span class="badge ba">PRO</span></div>
     <div style="font-size:14px;color:var(--text-muted);margin-top:8px">Membro desde Março 2026 · 12 dias 🔥</div>
@@ -755,7 +755,7 @@ img{max-width:100%;display:block}
   <div class="menu-item" onclick="openHist()"><span style="font-size:16px;color:var(--text)">📜 Histórico espiritual</span><span style="color:var(--text-dim)">›</span></div>
   <div class="menu-item" onclick="openOv('setOv')"><span style="font-size:16px;color:var(--text)">⚙️ Configurações</span><span style="color:var(--text-dim)">›</span></div>
   <div class="menu-item" onclick="openOv('priceOv')"><span style="font-size:16px;color:var(--accent)">✦ Gerenciar assinatura</span><span style="color:var(--text-dim)">›</span></div>
-  <div class="menu-item" onclick="openAdmin()" style="border-top:2px dashed var(--border);margin-top:8px"><span style="font-size:16px;color:var(--accent);font-weight:700">🛡️ Painel Admin</span><span style="color:var(--text-dim)">›</span></div>
+  <div id="adminMenuBtn" style="display:none;border-top:2px dashed var(--border);margin-top:8px" class="menu-item" onclick="openAdmin()"><span style="font-size:16px;color:var(--accent);font-weight:700">🛡️ Painel Admin</span><span style="color:var(--text-dim)">›</span></div>
 
   <!-- Apoie -->
   <div style="background:#fff;border-radius:var(--radius);box-shadow:0 2px 16px rgba(100,50,20,0.08);padding:20px;margin-top:20px;margin-bottom:14px">
@@ -782,6 +782,35 @@ img{max-width:100%;display:block}
   <button onclick="toast('Abrindo suporte… 💬')" style="width:100%;padding:15px;border-radius:50px;border:2px solid var(--accent);background:#fff;color:var(--accent);font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:24px">
     <span>💬</span> Falar com Suporte
   </button>
+</div>
+
+<!-- PIN MODAL -->
+<div id="pinModal" style="display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:24px;padding:32px 28px;width:calc(100% - 48px);max-width:340px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+    <div style="font-size:40px;margin-bottom:8px">🛡️</div>
+    <div style="font-size:20px;font-weight:700;color:var(--text);font-family:var(--font-display);margin-bottom:6px">Acesso Admin</div>
+    <div style="font-size:14px;color:var(--text-muted);margin-bottom:24px">Digite o PIN de administrador</div>
+    <div style="display:flex;justify-content:center;gap:10px;margin-bottom:20px" id="pinDots">
+      <div style="width:14px;height:14px;border-radius:50%;border:2px solid var(--border);background:#fff" id="pd0"></div>
+      <div style="width:14px;height:14px;border-radius:50%;border:2px solid var(--border);background:#fff" id="pd1"></div>
+      <div style="width:14px;height:14px;border-radius:50%;border:2px solid var(--border);background:#fff" id="pd2"></div>
+      <div style="width:14px;height:14px;border-radius:50%;border:2px solid var(--border);background:#fff" id="pd3"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px" id="pinPad">
+      <button onclick="pinKey('1')" style="padding:16px;border-radius:14px;border:1px solid var(--border);background:#fff;font-size:20px;font-weight:600;color:var(--text);cursor:pointer;transition:all .15s;box-shadow:0 1px 4px rgba(0,0,0,0.06)">1</button>
+      <button onclick="pinKey('2')" style="padding:16px;border-radius:14px;border:1px solid var(--border);background:#fff;font-size:20px;font-weight:600;color:var(--text);cursor:pointer;transition:all .15s;box-shadow:0 1px 4px rgba(0,0,0,0.06)">2</button>
+      <button onclick="pinKey('3')" style="padding:16px;border-radius:14px;border:1px solid var(--border);background:#fff;font-size:20px;font-weight:600;color:var(--text);cursor:pointer;transition:all .15s;box-shadow:0 1px 4px rgba(0,0,0,0.06)">3</button>
+      <button onclick="pinKey('4')" style="padding:16px;border-radius:14px;border:1px solid var(--border);background:#fff;font-size:20px;font-weight:600;color:var(--text);cursor:pointer;transition:all .15s;box-shadow:0 1px 4px rgba(0,0,0,0.06)">4</button>
+      <button onclick="pinKey('5')" style="padding:16px;border-radius:14px;border:1px solid var(--border);background:#fff;font-size:20px;font-weight:600;color:var(--text);cursor:pointer;transition:all .15s;box-shadow:0 1px 4px rgba(0,0,0,0.06)">5</button>
+      <button onclick="pinKey('6')" style="padding:16px;border-radius:14px;border:1px solid var(--border);background:#fff;font-size:20px;font-weight:600;color:var(--text);cursor:pointer;transition:all .15s;box-shadow:0 1px 4px rgba(0,0,0,0.06)">6</button>
+      <button onclick="pinKey('7')" style="padding:16px;border-radius:14px;border:1px solid var(--border);background:#fff;font-size:20px;font-weight:600;color:var(--text);cursor:pointer;transition:all .15s;box-shadow:0 1px 4px rgba(0,0,0,0.06)">7</button>
+      <button onclick="pinKey('8')" style="padding:16px;border-radius:14px;border:1px solid var(--border);background:#fff;font-size:20px;font-weight:600;color:var(--text);cursor:pointer;transition:all .15s;box-shadow:0 1px 4px rgba(0,0,0,0.06)">8</button>
+      <button onclick="pinKey('9')" style="padding:16px;border-radius:14px;border:1px solid var(--border);background:#fff;font-size:20px;font-weight:600;color:var(--text);cursor:pointer;transition:all .15s;box-shadow:0 1px 4px rgba(0,0,0,0.06)">9</button>
+      <button onclick="closePinModal()" style="padding:16px;border-radius:14px;border:1px solid var(--border);background:#fff;font-size:14px;font-weight:600;color:var(--text-muted);cursor:pointer">Cancelar</button>
+      <button onclick="pinKey('0')" style="padding:16px;border-radius:14px;border:1px solid var(--border);background:#fff;font-size:20px;font-weight:600;color:var(--text);cursor:pointer;transition:all .15s;box-shadow:0 1px 4px rgba(0,0,0,0.06)">0</button>
+      <button onclick="pinDel()" style="padding:16px;border-radius:14px;border:1px solid var(--border);background:#fff;font-size:20px;color:var(--text-muted);cursor:pointer">⌫</button>
+    </div>
+  </div>
 </div>
 
 <!-- ADMIN PANEL -->
@@ -880,7 +909,7 @@ img{max-width:100%;display:block}
       <div style="display:flex;justify-content:space-between;align-items:center;padding:15px 16px"><span style="font-size:15px;color:var(--text)">✨ Novas funcionalidades</span><div class="toggle on" data-key="feat" onclick="toggleSet(this)"></div></div>
     </div>
 
-    <button onclick="closeAdmin()" style="width:100%;padding:15px;border-radius:50px;border:2px solid rgba(0,0,0,0.10);background:#fff;color:var(--text-muted);font-size:15px;font-weight:600;cursor:pointer">Sair do Admin</button>
+    <button onclick="logoutAdmin()" style="width:100%;padding:15px;border-radius:50px;border:2px solid rgba(200,105,42,0.20);background:#fff;color:var(--rose);font-size:15px;font-weight:600;cursor:pointer">🔓 Sair do Admin</button>
   </div>
 </div>
 
@@ -1035,9 +1064,72 @@ function go(tab){
 // ============ UTILITIES ============
 let toastTimer;
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.className='toast show';clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.className='toast',2500)}
-function openAdmin(){const p=document.getElementById('adminPanel');p.style.display='block';p.scrollTop=0}
+// ============ ADMIN AUTH ============
+const ADMIN_PIN='1234'; // 🔑 Altere este PIN
+const ADMIN_KEY='criatinaluz_admin';
+let pinBuf='',adminTapCount=0,adminTapTimer=null;
+
+function adminTap(){
+  adminTapCount++;
+  clearTimeout(adminTapTimer);
+  adminTapTimer=setTimeout(()=>{adminTapCount=0},1500);
+  if(adminTapCount>=5){adminTapCount=0;showPinModal()}
+}
+function showPinModal(){
+  pinBuf='';updatePinDots();
+  const m=document.getElementById('pinModal');
+  m.style.display='flex';
+}
+function closePinModal(){
+  pinBuf='';updatePinDots();
+  document.getElementById('pinModal').style.display='none';
+}
+function pinKey(k){
+  if(pinBuf.length>=4)return;
+  pinBuf+=k;
+  updatePinDots();
+  if(pinBuf.length===4)setTimeout(checkPin,200);
+}
+function pinDel(){pinBuf=pinBuf.slice(0,-1);updatePinDots()}
+function updatePinDots(){
+  for(let i=0;i<4;i++){
+    const d=document.getElementById('pd'+i);
+    if(d){d.style.background=i<pinBuf.length?'var(--accent)':'#fff';d.style.borderColor=i<pinBuf.length?'var(--accent)':'var(--border)';}
+  }
+}
+function checkPin(){
+  if(pinBuf===ADMIN_PIN){
+    localStorage.setItem(ADMIN_KEY,'1');
+    closePinModal();
+    document.getElementById('adminMenuBtn').style.display='flex';
+    toast('Acesso admin liberado! 🛡️');
+  } else {
+    // Animação de erro
+    const dots=document.getElementById('pinDots');
+    dots.style.animation='none';
+    for(let i=0;i<4;i++){const d=document.getElementById('pd'+i);if(d){d.style.background='var(--rose)';d.style.borderColor='var(--rose)';}}
+    setTimeout(()=>{pinBuf='';updatePinDots();},600);
+    toast('PIN incorreto ❌');
+  }
+}
+function openAdmin(){
+  if(!localStorage.getItem(ADMIN_KEY)){toast('Acesso negado 🔒');return;}
+  const p=document.getElementById('adminPanel');p.style.display='block';p.scrollTop=0;
+}
 function closeAdmin(){document.getElementById('adminPanel').style.display='none'}
+function logoutAdmin(){
+  localStorage.removeItem(ADMIN_KEY);
+  document.getElementById('adminMenuBtn').style.display='none';
+  closeAdmin();
+  toast('Sessão admin encerrada');
+}
 function adminAction(a){const msgs={aula:'Abrindo editor de nova aula… 📹',trilha:'Abrindo editor de nova trilha… 🕯️',notif:'Criando notificação push… 🔔',live:'Agendando aula ao vivo… 📡',edit:'Abrindo editor… ✏️',publish:'Aula publicada com sucesso! ✅'};toast(msgs[a]||'Ação realizada!')}
+
+// Verifica sessão admin ao abrir o app
+if(localStorage.getItem(ADMIN_KEY)){
+  const btn=document.getElementById('adminMenuBtn');
+  if(btn)btn.style.display='flex';
+}
 function selectDonation(btn,val){btn.closest('.donation-grid')||btn.parentElement.querySelectorAll('button').forEach(b=>{b.style.background='#fff';b.style.color='var(--accent)'});btn.style.background='var(--accent)';btn.style.color='#fff';toast('R$'+val+' selecionado 💛')}
 
 function sf(b){b.parentElement.querySelectorAll('.fbtn').forEach(x=>x.classList.remove('active'));b.classList.add('active')}
