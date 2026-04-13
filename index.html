@@ -30,7 +30,7 @@
   --safe-bottom:max(12px,env(safe-area-inset-bottom));
   --nav-height:64px;
 }
-html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:16px;line-height:1.5}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:18px;line-height:1.5}
 body{display:flex;justify-content:center;align-items:stretch}
 input,button,textarea,select{font-family:var(--font-body);font-size:inherit}
 button{border:none;background:none;cursor:pointer}
@@ -64,7 +64,7 @@ img{max-width:100%;display:block}
 .bottom-nav{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-around;align-items:center;padding:8px 0 calc(env(safe-area-inset-bottom,0px) + 10px);background:rgba(255,250,244,0.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid var(--border);z-index:10}
 .nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 8px;transition:all .25s;position:relative;-webkit-touch-callout:none;user-select:none}
 .nav-btn .icon{font-size:20px;color:var(--text-dim);transition:all .25s;line-height:1}
-.nav-btn .label{font-size:10px;font-weight:600;color:var(--text-dim);letter-spacing:.05em;text-transform:uppercase;transition:color .25s;line-height:1;white-space:nowrap}
+.nav-btn .label{font-size:16px;font-weight:600;color:var(--text-dim);letter-spacing:.05em;text-transform:uppercase;transition:color .25s;line-height:1;white-space:nowrap}
 .nav-btn.active .icon{color:var(--accent);filter:drop-shadow(0 0 10px var(--accent-glow))}
 .nav-btn.active .label{color:var(--accent)}
 .nav-btn.active::before{content:'';position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:20px;height:2px;background:var(--accent);border-radius:0 0 2px 2px}
@@ -72,7 +72,7 @@ img{max-width:100%;display:block}
 .ndot{position:absolute;top:2px;right:4px;width:6px;height:6px;border-radius:50%;background:var(--rose);pointer-events:none}
 
 /* ============ SHARED COMPONENTS ============ */
-.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:15px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
 .ba{background:rgba(249,115,22,0.12);color:var(--accent)}
 .bp{background:rgba(251,191,36,0.12);color:var(--amber)}
 .br{background:rgba(232,77,138,0.12);color:var(--rose)}
@@ -89,7 +89,7 @@ img{max-width:100%;display:block}
 .card-static:active{background:var(--bg-card);transform:none}
 
 .section-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
-.section-more{font-size:13px;color:var(--accent);cursor:pointer;margin-left:auto;font-weight:500}
+.section-more{font-size:16px;color:var(--accent);cursor:pointer;margin-left:auto;font-weight:500}
 .section-more:active{opacity:.6}
 
 .btn{padding:13px 20px;border-radius:var(--radius-sm);font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;border:none}
@@ -121,7 +121,7 @@ img{max-width:100%;display:block}
 /* ============ FILTERS ============ */
 .filters{display:flex;gap:8px;overflow-x:auto;margin-bottom:18px;padding-bottom:4px}
 .filters::-webkit-scrollbar{display:none}
-.fbtn{padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:13px;font-weight:600;white-space:nowrap;transition:all .2s}
+.fbtn{padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:16px;font-weight:600;white-space:nowrap;transition:all .2s}
 .fbtn:active{transform:scale(0.95)}
 .fbtn.active{border-color:var(--accent);background:var(--accent-dim);color:var(--accent)}
 
@@ -146,14 +146,14 @@ img{max-width:100%;display:block}
 .price-card{border-radius:var(--radius);padding:20px;border:1px solid var(--border);margin-bottom:12px;position:relative;overflow:hidden;background:var(--bg-card);transition:all .2s}
 .price-card:active{transform:scale(0.98)}
 .price-card.feat{border-color:var(--accent);background:linear-gradient(160deg,rgba(249,115,22,0.10),var(--bg-card))}
-.price-card.feat::before{content:'MAIS POPULAR';position:absolute;top:12px;right:-28px;background:linear-gradient(135deg,var(--accent),var(--amber));color:#fff;font-size:8px;font-weight:700;letter-spacing:.08em;padding:3px 32px;transform:rotate(45deg)}
+.price-card.feat::before{content:'MAIS POPULAR';position:absolute;top:12px;right:-28px;background:linear-gradient(135deg,var(--accent),var(--amber));color:#fff;font-size:14px;font-weight:700;letter-spacing:.08em;padding:3px 32px;transform:rotate(45deg)}
 .price-amount{font-size:32px;font-weight:800;font-family:var(--font-display);color:var(--text);line-height:1}
 .price-features{list-style:none;margin-top:14px}
-.price-features li{font-size:12px;color:var(--text-muted);padding:5px 0;display:flex;align-items:center;gap:8px}
-.price-features li::before{content:'✦';color:var(--accent);font-size:8px}
+.price-features li{font-size:15px;color:var(--text-muted);padding:5px 0;display:flex;align-items:center;gap:8px}
+.price-features li::before{content:'✦';color:var(--accent);font-size:14px}
 
 /* ============ TOAST ============ */
-.toast{position:fixed;top:max(20px,env(safe-area-inset-top,20px));left:50%;transform:translateX(-50%);background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:12px 20px;z-index:200;display:none;font-size:13px;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,0.5);max-width:calc(100% - 40px);text-align:center}
+.toast{position:fixed;top:max(20px,env(safe-area-inset-top,20px));left:50%;transform:translateX(-50%);background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:12px 20px;z-index:200;display:none;font-size:16px;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,0.5);max-width:calc(100% - 40px);text-align:center}
 .toast.show{display:block;animation:toastIn .35s ease}
 @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(-12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 
@@ -165,7 +165,7 @@ img{max-width:100%;display:block}
 .post{background:var(--bg-card);border-radius:var(--radius);padding:16px;margin-bottom:12px;border:1px solid var(--border)}
 .post-avatar{width:36px;height:36px;border-radius:50%;background:var(--deep-warm);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .post-img{width:100%;border-radius:var(--radius-xs);margin-bottom:12px;aspect-ratio:16/9;background:linear-gradient(135deg,var(--deep-warm),var(--bg-card));display:flex;align-items:center;justify-content:center;font-size:32px}
-.pa{font-size:11px;color:var(--text-dim);cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:color .2s;padding:4px 0}
+.pa{font-size:14px;color:var(--text-dim);cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:color .2s;padding:4px 0}
 .pa:active{color:var(--accent)}
 
 /* ============ MISC ============ */
@@ -177,15 +177,15 @@ img{max-width:100%;display:block}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 .streak-card{background:linear-gradient(135deg,var(--deep-warm),var(--bg-card));border-radius:var(--radius);padding:18px 20px;margin-bottom:18px;border:1px solid var(--border);position:relative;overflow:hidden}
-.wc{width:30px;height:30px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;transition:all .3s}
+.wc{width:30px;height:30px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;transition:all .3s}
 
 .oracle-card{aspect-ratio:2.5/4;border-radius:var(--radius-sm);cursor:pointer;background:linear-gradient(160deg,rgba(42,21,0,0.9),rgba(249,115,22,0.10));border:1px solid rgba(249,115,22,0.18);display:flex;align-items:center;justify-content:center;transition:all .25s}
 .oracle-card:active{transform:scale(0.93);border-color:var(--accent);box-shadow:0 0 16px var(--accent-glow)}
 
-.module-header{font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px;padding:10px 14px;border-radius:var(--radius-xs);border-left:3px solid var(--accent);background:rgba(249,115,22,0.06);display:flex;align-items:center;justify-content:space-between}
+.module-header{font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px;padding:10px 14px;border-radius:var(--radius-xs);border-left:3px solid var(--accent);background:rgba(249,115,22,0.06);display:flex;align-items:center;justify-content:space-between}
 .lesson-item{display:flex;align-items:center;gap:12px;padding:13px 12px;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;transition:background .15s}
 .lesson-item:active{background:rgba(0,0,0,0.04)}
-.lcheck{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.lcheck{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
 .lc-done{background:var(--accent);color:var(--bg)}
 .lc-pend{background:rgba(0,0,0,0.05);border:1.5px solid rgba(0,0,0,0.10);color:var(--text-dim)}
 
@@ -220,13 +220,13 @@ img{max-width:100%;display:block}
 .comment:last-child{border-bottom:none}
 .comment-av{width:32px;height:32px;border-radius:50%;background:var(--deep-warm);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
 .comment-body{flex:1;min-width:0}
-.comment-name{font-size:11px;font-weight:600;color:var(--text)}
-.comment-time{font-size:9px;color:var(--text-dim);margin-left:6px}
-.comment-text{font-size:12px;color:var(--text-muted);line-height:1.5;margin-top:3px}
+.comment-name{font-size:14px;font-weight:600;color:var(--text)}
+.comment-time{font-size:15px;color:var(--text-dim);margin-left:6px}
+.comment-text{font-size:15px;color:var(--text-muted);line-height:1.5;margin-top:3px}
 .comment-input{display:flex;gap:8px;align-items:center;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;margin-top:14px}
-.comment-input input{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:12px}
+.comment-input input{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:15px}
 .comment-input input::placeholder{color:var(--text-dim)}
-.comment-send{background:var(--accent);color:var(--bg);width:30px;height:30px;border-radius:50%;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.comment-send{background:var(--accent);color:var(--bg);width:30px;height:30px;border-radius:50%;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 
 /* ============ ACHIEVEMENTS ============ */
 .ach-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
@@ -235,11 +235,11 @@ img{max-width:100%;display:block}
 .ach.unlocked{border-color:var(--border-strong);background:linear-gradient(160deg,var(--accent-dim),var(--bg-card))}
 .ach-icon{font-size:26px;margin-bottom:6px;filter:drop-shadow(0 0 8px var(--accent-glow))}
 .ach.locked .ach-icon{filter:grayscale(1)}
-.ach-name{font-size:9px;font-weight:600;color:var(--text);line-height:1.3}
-.ach-desc{font-size:8px;color:var(--text-dim);margin-top:3px;line-height:1.3}
+.ach-name{font-size:15px;font-weight:600;color:var(--text);line-height:1.3}
+.ach-desc{font-size:14px;color:var(--text-dim);margin-top:3px;line-height:1.3}
 
 /* ============ TEXTAREA ============ */
-.ta{width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;color:var(--text);font-size:13px;font-family:var(--font-body);resize:none;outline:none;min-height:100px;line-height:1.5;transition:border-color .2s}
+.ta{width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;color:var(--text);font-size:16px;font-family:var(--font-body);resize:none;outline:none;min-height:100px;line-height:1.5;transition:border-color .2s}
 .ta:focus{border-color:var(--accent)}
 
 /* ============ SETTINGS ROWS ============ */
@@ -250,7 +250,7 @@ img{max-width:100%;display:block}
 .toggle.on::after{left:18px;background:var(--bg)}
 
 /* ============ LIMIT PILL ============ */
-.limit-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;background:var(--accent-dim);color:var(--accent);font-size:10px;font-weight:600}
+.limit-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;background:var(--accent-dim);color:var(--accent);font-size:16px;font-weight:600}
 .limit-pill.exhausted{background:rgba(232,77,138,0.1);color:var(--rose)}
 
 /* ============ RESPONSIVE — DESKTOP ============ */
@@ -315,7 +315,7 @@ img{max-width:100%;display:block}
   .nav-btn:hover{background:var(--bg-card)}
   .nav-btn .icon{font-size:17px}
   .nav-btn .label{
-    font-size:12px;font-weight:600;
+    font-size:15px;font-weight:600;
     letter-spacing:.02em;text-transform:none;
   }
   .nav-btn.active{background:var(--accent-dim)}
@@ -391,22 +391,22 @@ img{max-width:100%;display:block}
   <div style="display:flex;align-items:center;gap:12px">
     <div style="width:44px;height:44px;border-radius:10px;background:rgba(249,115,22,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🎵</div>
     <div style="flex:1;min-width:0">
-      <div style="font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="playerTitle">—</div>
-      <div style="font-size:10px;color:var(--text-muted);margin-top:2px" id="playerSub">—</div>
+      <div style="font-size:15px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="playerTitle">—</div>
+      <div style="font-size:16px;color:var(--text-muted);margin-top:2px" id="playerSub">—</div>
     </div>
     <div style="display:flex;gap:10px;align-items:center">
       <button onclick="togglePlay()" id="playBtn" aria-label="Play/Pause" style="width:38px;height:38px;border-radius:50%;background:var(--accent);color:var(--bg);font-size:16px;display:flex;align-items:center;justify-content:center;transition:transform .15s">▶</button>
-      <button onclick="closePlayer()" aria-label="Fechar player" style="width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,0.08);color:var(--text-muted);font-size:12px;display:flex;align-items:center;justify-content:center">✕</button>
+      <button onclick="closePlayer()" aria-label="Fechar player" style="width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,0.08);color:var(--text-muted);font-size:15px;display:flex;align-items:center;justify-content:center">✕</button>
     </div>
   </div>
   <div style="display:flex;align-items:center;gap:8px;margin-top:10px">
-    <span style="font-size:9px;color:var(--text-dim);min-width:32px;text-align:right" id="pCur">0:00</span>
+    <span style="font-size:15px;color:var(--text-dim);min-width:32px;text-align:right" id="pCur">0:00</span>
     <div id="pBarWrap" style="flex:1;height:16px;display:flex;align-items:center;cursor:pointer">
       <div style="width:100%;height:3px;background:rgba(0,0,0,0.10);border-radius:3px;position:relative">
         <div style="height:100%;border-radius:3px;background:var(--accent);position:absolute;top:0;left:0;transition:width .3s" id="pBar"></div>
       </div>
     </div>
-    <span style="font-size:9px;color:var(--text-dim);min-width:32px" id="pTot">15:00</span>
+    <span style="font-size:15px;color:var(--text-dim);min-width:32px" id="pTot">15:00</span>
   </div>
 </div>
 
@@ -415,15 +415,15 @@ img{max-width:100%;display:block}
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
     <div class="modal-title">Notificações</div>
-    <div style="font-size:12px;color:var(--text-muted);text-align:center;margin-bottom:16px">Suas atualizações espirituais</div>
+    <div style="font-size:15px;color:var(--text-muted);text-align:center;margin-bottom:16px">Suas atualizações espirituais</div>
     <div class="notif-item" style="border-radius:var(--radius-xs);padding:14px;background:rgba(232,77,138,0.04)">
       <div class="nicon" style="background:rgba(232,77,138,0.12)">◉</div>
-      <div><div style="font-size:12px;color:var(--text-muted);line-height:1.5"><strong style="color:var(--text)">Aula ao vivo em 30min!</strong> Desenvolvimento Mediúnico Nível 2 com Mãe Stella</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">Agora</div></div>
+      <div><div style="font-size:15px;color:var(--text-muted);line-height:1.5"><strong style="color:var(--text)">Aula ao vivo em 30min!</strong> Desenvolvimento Mediúnico Nível 2 com Mãe Stella</div><div style="font-size:16px;color:var(--text-dim);margin-top:4px">Agora</div></div>
     </div>
-    <div class="notif-item"><div class="nicon" style="background:rgba(249,115,22,0.12)">☽</div><div><div style="font-size:12px;color:var(--text-muted);line-height:1.5"><strong style="color:var(--text)">Sua carta do dia</strong> está disponível.</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">Hoje, 06:00</div></div></div>
-    <div class="notif-item"><div class="nicon" style="background:rgba(46,196,182,0.12)">🔥</div><div><div style="font-size:12px;color:var(--text-muted);line-height:1.5"><strong style="color:var(--text)">12 dias de streak!</strong> Parabéns pela disciplina espiritual.</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">Hoje</div></div></div>
-    <div class="notif-item"><div class="nicon" style="background:rgba(249,115,22,0.12)">💜</div><div><div style="font-size:12px;color:var(--text-muted);line-height:1.5"><strong style="color:var(--text)">Marina S.</strong> curtiu seu comentário.</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">Ontem</div></div></div>
-    <div class="notif-item"><div class="nicon" style="background:rgba(249,115,22,0.12)">✦</div><div><div style="font-size:12px;color:var(--text-muted);line-height:1.5"><strong style="color:var(--text)">Nova trilha:</strong> Relacionamentos Sagrados</div><div style="font-size:10px;color:var(--text-dim);margin-top:4px">2 dias</div></div></div>
+    <div class="notif-item"><div class="nicon" style="background:rgba(249,115,22,0.12)">☽</div><div><div style="font-size:15px;color:var(--text-muted);line-height:1.5"><strong style="color:var(--text)">Sua carta do dia</strong> está disponível.</div><div style="font-size:16px;color:var(--text-dim);margin-top:4px">Hoje, 06:00</div></div></div>
+    <div class="notif-item"><div class="nicon" style="background:rgba(46,196,182,0.12)">🔥</div><div><div style="font-size:15px;color:var(--text-muted);line-height:1.5"><strong style="color:var(--text)">12 dias de streak!</strong> Parabéns pela disciplina espiritual.</div><div style="font-size:16px;color:var(--text-dim);margin-top:4px">Hoje</div></div></div>
+    <div class="notif-item"><div class="nicon" style="background:rgba(249,115,22,0.12)">💜</div><div><div style="font-size:15px;color:var(--text-muted);line-height:1.5"><strong style="color:var(--text)">Marina S.</strong> curtiu seu comentário.</div><div style="font-size:16px;color:var(--text-dim);margin-top:4px">Ontem</div></div></div>
+    <div class="notif-item"><div class="nicon" style="background:rgba(249,115,22,0.12)">✦</div><div><div style="font-size:15px;color:var(--text-muted);line-height:1.5"><strong style="color:var(--text)">Nova trilha:</strong> Relacionamentos Sagrados</div><div style="font-size:16px;color:var(--text-dim);margin-top:4px">2 dias</div></div></div>
   </div>
 </div>
 
@@ -432,18 +432,18 @@ img{max-width:100%;display:block}
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
     <div class="modal-title">Escolha seu Plano</div>
-    <div style="font-size:13px;color:var(--text-muted);text-align:center;margin-bottom:20px;font-family:var(--font-display);font-style:italic">Invista na sua evolução espiritual</div>
+    <div style="font-size:16px;color:var(--text-muted);text-align:center;margin-bottom:20px;font-family:var(--font-display);font-style:italic">Invista na sua evolução espiritual</div>
     <div class="price-card">
-      <div style="display:flex;justify-content:space-between"><div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">Gratuito</div><div class="price-amount">R$ 0</div></div><span class="badge bt">ATUAL</span></div>
+      <div style="display:flex;justify-content:space-between"><div><div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px">Gratuito</div><div class="price-amount">R$ 0</div></div><span class="badge bt">ATUAL</span></div>
       <ul class="price-features"><li>Carta do dia</li><li>1 meditação por dia</li><li>Acesso à comunidade</li><li>1 aula preview por trilha</li></ul>
     </div>
     <div class="price-card feat">
-      <div><div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:4px">PRO</div><div class="price-amount">R$ 39<span style="font-size:12px;color:var(--text-muted);font-weight:400">,90/mês</span></div><div style="font-size:10px;color:var(--text-dim);margin-top:2px">ou R$ 349,90/ano (27% off)</div></div>
+      <div><div style="font-size:16px;font-weight:700;color:var(--accent);margin-bottom:4px">PRO</div><div class="price-amount">R$ 39<span style="font-size:15px;color:var(--text-muted);font-weight:400">,90/mês</span></div><div style="font-size:16px;color:var(--text-dim);margin-top:2px">ou R$ 349,90/ano (27% off)</div></div>
       <ul class="price-features"><li>Todas as trilhas completas</li><li>Aulas ao vivo + replay</li><li>Meditações ilimitadas</li><li>Oráculo com interpretação IA</li><li>Gamificação e desafios</li></ul>
       <button class="btn btn-p" style="margin-top:14px" onclick="toast('✦ PRO ativado! Axé!')">Assinar PRO</button>
     </div>
     <div class="price-card" style="border-color:var(--amber)">
-      <div style="display:flex;justify-content:space-between"><div><div style="font-size:13px;font-weight:700;color:var(--amber);margin-bottom:4px">VIP</div><div class="price-amount">R$ 79<span style="font-size:12px;color:var(--text-muted);font-weight:400">,90/mês</span></div></div><span class="badge bp">PREMIUM</span></div>
+      <div style="display:flex;justify-content:space-between"><div><div style="font-size:16px;font-weight:700;color:var(--amber);margin-bottom:4px">VIP</div><div class="price-amount">R$ 79<span style="font-size:15px;color:var(--text-muted);font-weight:400">,90/mês</span></div></div><span class="badge bp">PREMIUM</span></div>
       <ul class="price-features"><li>Tudo do PRO</li><li>Mentoria mensal ao vivo</li><li>Tarot personalizado por IA</li><li>Rituais avançados exclusivos</li><li>Badge VIP na comunidade</li></ul>
       <button class="btn btn-s" style="margin-top:14px" onclick="toast('💜 VIP ativado! Bem-vindo ao círculo interno!')">Assinar VIP</button>
     </div>
@@ -462,12 +462,12 @@ img{max-width:100%;display:block}
       <div style="flex:1;min-width:0">
         <span class="badge ba" id="lessonBadge">AULA</span>
         <div style="font-size:17px;font-weight:700;color:var(--text);font-family:var(--font-display);margin-top:6px;line-height:1.25" id="lessonTitle">—</div>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:4px" id="lessonMeta">—</div>
+        <div style="font-size:14px;color:var(--text-muted);margin-top:4px" id="lessonMeta">—</div>
       </div>
     </div>
     <div class="lesson-progress"><i id="lessonBar"></i></div>
-    <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text-dim);margin-top:6px"><span id="lessonCur">0:00</span><span id="lessonTot">0:00</span></div>
-    <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-top:14px" id="lessonDesc">—</div>
+    <div style="display:flex;justify-content:space-between;font-size:15px;color:var(--text-dim);margin-top:6px"><span id="lessonCur">0:00</span><span id="lessonTot">0:00</span></div>
+    <div style="font-size:15px;color:var(--text-muted);line-height:1.6;margin-top:14px" id="lessonDesc">—</div>
     <div style="display:flex;gap:10px;margin-top:18px">
       <button class="btn btn-s" onclick="closeLesson()">Fechar</button>
       <button class="btn btn-p" onclick="completeLesson()" id="lessonDoneBtn">Marcar como concluída ✓</button>
@@ -480,7 +480,7 @@ img{max-width:100%;display:block}
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
     <div class="modal-title">Comentários</div>
-    <div style="font-size:11px;color:var(--text-muted);text-align:center;margin-bottom:14px" id="commentsCount">0 comentários</div>
+    <div style="font-size:14px;color:var(--text-muted);text-align:center;margin-bottom:14px" id="commentsCount">0 comentários</div>
     <div id="commentsList"></div>
     <div class="comment-input">
       <input type="text" id="commentInput" placeholder="Adicione um comentário..." onkeydown="if(event.key==='Enter')sendComment()" maxlength="280">
@@ -494,9 +494,9 @@ img{max-width:100%;display:block}
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
     <div class="modal-title">Compartilhe sua experiência</div>
-    <div style="font-size:12px;color:var(--text-muted);text-align:center;margin-bottom:18px;font-family:var(--font-display);font-style:italic">Sua jornada inspira outros caminhantes</div>
+    <div style="font-size:15px;color:var(--text-muted);text-align:center;margin-bottom:18px;font-family:var(--font-display);font-style:italic">Sua jornada inspira outros caminhantes</div>
     <textarea class="ta" id="postText" placeholder="Conte sobre seu ritual, conquista, dúvida ou aprendizado..." maxlength="500"></textarea>
-    <div style="font-size:10px;color:var(--text-dim);text-align:right;margin-top:6px"><span id="postCount">0</span>/500</div>
+    <div style="font-size:16px;color:var(--text-dim);text-align:right;margin-top:6px"><span id="postCount">0</span>/500</div>
     <div style="display:flex;gap:10px;margin-top:14px">
       <button class="btn btn-s" onclick="closeOv('postOv')">Cancelar</button>
       <button class="btn btn-p" onclick="submitPost()">Publicar ✦</button>
@@ -509,7 +509,7 @@ img{max-width:100%;display:block}
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
     <div class="modal-title">Conquistas</div>
-    <div style="font-size:12px;color:var(--text-muted);text-align:center;margin-bottom:18px"><span id="achUnlocked">0</span> de <span id="achTotal">0</span> desbloqueadas</div>
+    <div style="font-size:15px;color:var(--text-muted);text-align:center;margin-bottom:18px"><span id="achUnlocked">0</span> de <span id="achTotal">0</span> desbloqueadas</div>
     <div class="ach-grid" id="achGrid"></div>
   </div>
 </div>
@@ -520,10 +520,10 @@ img{max-width:100%;display:block}
     <div class="modal-handle"></div>
     <div class="modal-title">Configurações</div>
     <div style="margin-top:14px">
-      <div class="set-row"><div><div style="font-size:13px;color:var(--text)">Notificações push</div><div style="font-size:10px;color:var(--text-dim);margin-top:2px">Aulas ao vivo e lembretes</div></div><div class="toggle on" data-key="notif" onclick="toggleSet(this)"></div></div>
-      <div class="set-row"><div><div style="font-size:13px;color:var(--text)">Lembrete diário</div><div style="font-size:10px;color:var(--text-dim);margin-top:2px">Sua carta do dia, todo dia 06:00</div></div><div class="toggle on" data-key="daily" onclick="toggleSet(this)"></div></div>
-      <div class="set-row"><div><div style="font-size:13px;color:var(--text)">Sons ambientes</div><div style="font-size:10px;color:var(--text-dim);margin-top:2px">Durante meditações</div></div><div class="toggle on" data-key="sound" onclick="toggleSet(this)"></div></div>
-      <div class="set-row"><div><div style="font-size:13px;color:var(--text)">Modo discreto</div><div style="font-size:10px;color:var(--text-dim);margin-top:2px">Ícone neutro na tela inicial</div></div><div class="toggle" data-key="discrete" onclick="toggleSet(this)"></div></div>
+      <div class="set-row"><div><div style="font-size:16px;color:var(--text)">Notificações push</div><div style="font-size:16px;color:var(--text-dim);margin-top:2px">Aulas ao vivo e lembretes</div></div><div class="toggle on" data-key="notif" onclick="toggleSet(this)"></div></div>
+      <div class="set-row"><div><div style="font-size:16px;color:var(--text)">Lembrete diário</div><div style="font-size:16px;color:var(--text-dim);margin-top:2px">Sua carta do dia, todo dia 06:00</div></div><div class="toggle on" data-key="daily" onclick="toggleSet(this)"></div></div>
+      <div class="set-row"><div><div style="font-size:16px;color:var(--text)">Sons ambientes</div><div style="font-size:16px;color:var(--text-dim);margin-top:2px">Durante meditações</div></div><div class="toggle on" data-key="sound" onclick="toggleSet(this)"></div></div>
+      <div class="set-row"><div><div style="font-size:16px;color:var(--text)">Modo discreto</div><div style="font-size:16px;color:var(--text-dim);margin-top:2px">Ícone neutro na tela inicial</div></div><div class="toggle" data-key="discrete" onclick="toggleSet(this)"></div></div>
       <div class="set-row" style="border:none;padding-top:18px"><button class="btn btn-s" onclick="resetData()">⚠ Resetar progresso</button></div>
     </div>
   </div>
@@ -534,7 +534,7 @@ img{max-width:100%;display:block}
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
     <div class="modal-title">Histórico Espiritual</div>
-    <div style="font-size:12px;color:var(--text-muted);text-align:center;margin-bottom:18px;font-family:var(--font-display);font-style:italic">Seus rituais, aulas e cartas</div>
+    <div style="font-size:15px;color:var(--text-muted);text-align:center;margin-bottom:18px;font-family:var(--font-display);font-style:italic">Seus rituais, aulas e cartas</div>
     <div id="histList"></div>
   </div>
 </div>
@@ -546,7 +546,7 @@ img{max-width:100%;display:block}
 <!-- HOME -->
 <div class="screen active" id="s-home">
   <div class="header">
-    <div style="display:flex;align-items:center;gap:10px"><img src="logo.jpg" alt="Logo" style="width:36px;height:36px;border-radius:50%;object-fit:cover"><div><div style="font-size:12px;color:var(--text-muted);font-family:var(--font-display)">Axé, Eddy ☀️</div><div class="header-title">Sua Jornada ✦</div></div></div>
+    <div style="display:flex;align-items:center;gap:10px"><img src="logo.jpg" alt="Logo" style="width:36px;height:36px;border-radius:50%;object-fit:cover"><div><div style="font-size:15px;color:var(--text-muted);font-family:var(--font-display)">Axé, Eddy ☀️</div><div class="header-title">Sua Jornada ✦</div></div></div>
     <div class="header-actions">
       <button class="hbtn" onclick="openOv('notifOv')" aria-label="Notificações">🔔<div class="ndot"></div></button>
       <button class="havatar" onclick="go('perfil')" aria-label="Perfil">E</button>
@@ -562,10 +562,10 @@ img{max-width:100%;display:block}
       <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:var(--warm-glow);filter:blur(40px)" aria-hidden="true"></div>
       <div style="display:flex;justify-content:space-between;align-items:center;position:relative">
         <div>
-          <div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.12em;margin-bottom:4px">Streak Espiritual</div>
-          <div style="display:flex;align-items:baseline;gap:6px"><span style="font-size:40px;font-weight:800;color:var(--accent);font-family:var(--font-display);line-height:1">12</span><span style="font-size:13px;color:var(--text-muted)">dias 🔥</span></div>
+          <div style="font-size:16px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.12em;margin-bottom:4px">Streak Espiritual</div>
+          <div style="display:flex;align-items:baseline;gap:6px"><span style="font-size:40px;font-weight:800;color:var(--accent);font-family:var(--font-display);line-height:1">12</span><span style="font-size:16px;color:var(--text-muted)">dias 🔥</span></div>
         </div>
-        <div style="text-align:right"><span class="badge bp">Nível: Adepto</span><div style="font-size:11px;color:var(--text-muted);margin-top:6px">1.240 pts</div></div>
+        <div style="text-align:right"><span class="badge bp">Nível: Adepto</span><div style="font-size:14px;color:var(--text-muted);margin-top:6px">1.240 pts</div></div>
       </div>
       <div style="display:flex;gap:6px;margin-top:16px" id="weekDots"></div>
     </div>
@@ -574,7 +574,7 @@ img{max-width:100%;display:block}
     <div style="background:linear-gradient(135deg,rgba(249,115,22,0.06),rgba(249,115,22,0.04));border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:18px;position:relative;overflow:hidden">
       <div style="position:absolute;top:-20px;left:-20px;width:80px;height:80px;border-radius:50%;background:var(--accent-glow);filter:blur(30px)" aria-hidden="true"></div>
       <div style="position:relative;font-family:var(--font-display);font-style:italic;font-size:14px;color:var(--text);line-height:1.6" id="dailyMsg">"A fé não é cega, é uma visão que enxerga além do que os olhos alcançam."</div>
-      <div style="position:relative;font-size:10px;color:var(--accent);margin-top:8px;font-weight:600" id="dailyMsgAuthor">— Mensagem do dia · Pretos Velhos</div>
+      <div style="position:relative;font-size:16px;color:var(--accent);margin-top:8px;font-weight:600" id="dailyMsgAuthor">— Mensagem do dia · Pretos Velhos</div>
     </div>
 
     <!-- Carta do Dia - com flip animation -->
@@ -584,18 +584,18 @@ img{max-width:100%;display:block}
         <div class="card-flip-front" style="background:linear-gradient(160deg,var(--accent-dim),rgba(249,115,22,0.06));padding:28px 20px;text-align:center">
           <div style="font-size:44px;margin-bottom:10px;filter:drop-shadow(0 0 12px var(--accent-glow))">🃏</div>
           <div style="font-size:15px;color:var(--accent);font-weight:600;font-family:var(--font-display)">Toque para revelar sua carta</div>
-          <div style="font-size:11px;color:var(--text-dim);margin-top:6px">Orientação espiritual para hoje</div>
+          <div style="font-size:14px;color:var(--text-dim);margin-top:6px">Orientação espiritual para hoje</div>
         </div>
         <div class="card-flip-back" style="background:linear-gradient(160deg,var(--deep-warm),var(--bg-card));padding:20px">
           <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:var(--accent-glow);filter:blur(40px)" aria-hidden="true"></div>
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;position:relative">
-            <div><div style="font-size:11px;color:var(--accent);font-weight:700;letter-spacing:.12em">XVII</div><div style="font-size:24px;font-weight:700;color:var(--text);font-family:var(--font-display)">A Estrela</div></div>
+            <div><div style="font-size:14px;color:var(--accent);font-weight:700;letter-spacing:.12em">XVII</div><div style="font-size:24px;font-weight:700;color:var(--text);font-family:var(--font-display)">A Estrela</div></div>
             <div style="font-size:40px;filter:drop-shadow(0 0 12px var(--accent-glow))">⭐</div>
           </div>
-          <div style="font-size:13px;color:var(--text-muted);line-height:1.65">Esperança, inspiração e renovação espiritual. As energias cósmicas estão alinhadas ao seu favor.</div>
+          <div style="font-size:16px;color:var(--text-muted);line-height:1.65">Esperança, inspiração e renovação espiritual. As energias cósmicas estão alinhadas ao seu favor.</div>
           <div style="background:var(--accent-dim);border-radius:var(--radius-xs);padding:12px 14px;border-left:3px solid var(--accent);margin-top:14px">
-            <div style="font-size:10px;color:var(--accent);font-weight:700;letter-spacing:.08em;margin-bottom:4px">CONSELHO</div>
-            <div style="font-size:12px;color:var(--text);line-height:1.55">Confie no universo. Algo que você pediu está se manifestando agora.</div>
+            <div style="font-size:16px;color:var(--accent);font-weight:700;letter-spacing:.08em;margin-bottom:4px">CONSELHO</div>
+            <div style="font-size:15px;color:var(--text);line-height:1.55">Confie no universo. Algo que você pediu está se manifestando agora.</div>
           </div>
         </div>
       </div>
@@ -621,9 +621,9 @@ img{max-width:100%;display:block}
           <div style="width:52px;height:52px;border-radius:14px;background:rgba(249,115,22,0.12);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">🕯️</div>
           <div style="flex:1">
             <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px">Despertar Espiritual</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">Próxima: Ritual — Banho de ervas</div>
+            <div style="font-size:14px;color:var(--text-muted);margin-bottom:8px">Próxima: Ritual — Banho de ervas</div>
             <div class="pbar" style="height:5px"><div class="pfill" style="width:65%;background:var(--amber);box-shadow:0 0 12px rgba(249,115,22,0.3)"></div></div>
-            <div style="font-size:10px;color:var(--amber);margin-top:4px;font-weight:600">65% · Módulo 2 de 8</div>
+            <div style="font-size:16px;color:var(--amber);margin-top:4px;font-weight:600">65% · Módulo 2 de 8</div>
           </div>
         </div>
       </div>
@@ -633,8 +633,8 @@ img{max-width:100%;display:block}
     <div>
       <div class="section-title"><span style="color:var(--amber)">◎</span> Comunidade <span class="section-more" onclick="go('social')">Ver mais →</span></div>
       <div class="post">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><div class="post-avatar">🌙</div><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--text)">Marina S. <span class="badge bp" style="font-size:8px">Adepta</span></div><div style="font-size:10px;color:var(--text-dim)">2h atrás</div></div></div>
-        <div style="font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:12px">Acabei de completar o módulo 2 da trilha Despertar Espiritual! Energia incrível 🌿✨</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><div class="post-avatar">🌙</div><div style="flex:1"><div style="font-size:15px;font-weight:600;color:var(--text)">Marina S. <span class="badge bp" style="font-size:14px">Adepta</span></div><div style="font-size:16px;color:var(--text-dim)">2h atrás</div></div></div>
+        <div style="font-size:16px;color:var(--text-muted);line-height:1.6;margin-bottom:12px">Acabei de completar o módulo 2 da trilha Despertar Espiritual! Energia incrível 🌿✨</div>
         <div style="display:flex;gap:16px"><span class="pa" onclick="likePost(this,47)">🤍 47</span><span class="pa">💬 12</span><span class="pa">🔗</span></div>
       </div>
     </div>
@@ -643,7 +643,7 @@ img{max-width:100%;display:block}
 
 <!-- AULAS -->
 <div class="screen" id="s-aulas">
-  <div class="header"><div><div class="header-title">Aulas</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px">Evolua com orientação sagrada</div></div></div>
+  <div class="header"><div><div class="header-title">Aulas</div><div style="font-size:15px;color:var(--text-muted);margin-top:2px">Evolua com orientação sagrada</div></div></div>
   <div class="search-bar"><span style="font-size:14px;color:var(--text-dim)">🔍</span><input placeholder="Buscar aulas..." aria-label="Buscar aulas"></div>
   <div class="filters" id="aFilt"></div>
   <div id="aList"></div>
@@ -651,7 +651,7 @@ img{max-width:100%;display:block}
 
 <!-- TRILHAS -->
 <div class="screen" id="s-trilhas">
-  <div class="header"><div><div class="header-title">Trilhas de Evolução</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px">Jornadas por objetivo de vida</div></div></div>
+  <div class="header"><div><div class="header-title">Trilhas de Evolução</div><div style="font-size:15px;color:var(--text-muted);margin-top:2px">Jornadas por objetivo de vida</div></div></div>
   <div id="tList"></div>
 </div>
 
@@ -659,14 +659,14 @@ img{max-width:100%;display:block}
 <div class="screen" id="s-trail">
   <div class="header" style="gap:12px">
     <button onclick="go('trilhas')" style="color:var(--accent);font-size:20px;padding:4px 8px" aria-label="Voltar">←</button>
-    <div style="flex:1"><div class="header-title" style="font-size:19px">🕯️ Despertar Espiritual</div><div style="font-size:11px;color:var(--text-muted)">8 módulos · 32 aulas · ~12h</div></div>
+    <div style="flex:1"><div class="header-title" style="font-size:19px">🕯️ Despertar Espiritual</div><div style="font-size:14px;color:var(--text-muted)">8 módulos · 32 aulas · ~12h</div></div>
   </div>
   <div style="background:linear-gradient(135deg,var(--deep-warm),var(--bg-card));border-radius:var(--radius);padding:20px;margin-bottom:18px;border:1px solid var(--border);position:relative;overflow:hidden">
     <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:var(--warm-glow);filter:blur(40px)" aria-hidden="true"></div>
     <div style="position:relative">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><span class="badge bp">Em progresso</span><span style="font-size:11px;color:var(--accent);font-weight:700">65%</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><span class="badge bp">Em progresso</span><span style="font-size:14px;color:var(--accent);font-weight:700">65%</span></div>
       <div class="pbar" style="height:6px"><div class="pfill" style="width:65%;background:linear-gradient(90deg,var(--amber),var(--accent));box-shadow:0 0 12px rgba(249,115,22,0.3)"></div></div>
-      <div style="display:flex;justify-content:space-between;margin-top:10px"><span style="font-size:10px;color:var(--text-dim)">21/32 aulas</span><span style="font-size:10px;color:var(--text-dim)">~4h restantes</span></div>
+      <div style="display:flex;justify-content:space-between;margin-top:10px"><span style="font-size:16px;color:var(--text-dim)">21/32 aulas</span><span style="font-size:16px;color:var(--text-dim)">~4h restantes</span></div>
     </div>
   </div>
   <div id="tMods"></div>
@@ -674,38 +674,38 @@ img{max-width:100%;display:block}
 
 <!-- ORÁCULO -->
 <div class="screen" id="s-oraculo">
-  <div class="header"><div><div class="header-title">Oráculo Sagrado</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px">Orientação dos guias espirituais</div></div></div>
+  <div class="header"><div><div class="header-title">Oráculo Sagrado</div><div style="font-size:15px;color:var(--text-muted);margin-top:2px">Orientação dos guias espirituais</div></div></div>
   <div id="oChoose">
     <div style="text-align:center;padding:32px 20px;margin-bottom:24px;background:linear-gradient(160deg,var(--deep-warm),var(--bg-card));border-radius:20px;border:1px solid var(--border);position:relative;overflow:hidden">
       <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200px;height:200px;border-radius:50%;background:var(--warm-glow);filter:blur(60px)" aria-hidden="true"></div>
-      <div style="position:relative"><div style="font-size:40px;margin-bottom:14px">☽ ✦ ☾</div><div style="font-size:18px;font-weight:700;color:var(--text);font-family:var(--font-display);margin-bottom:6px">Escolha uma carta</div><div style="font-size:12px;color:var(--text-muted)">Concentre-se e selecione</div></div>
+      <div style="position:relative"><div style="font-size:40px;margin-bottom:14px">☽ ✦ ☾</div><div style="font-size:18px;font-weight:700;color:var(--text);font-family:var(--font-display);margin-bottom:6px">Escolha uma carta</div><div style="font-size:15px;color:var(--text-muted)">Concentre-se e selecione</div></div>
     </div>
     <div class="filters" style="justify-content:center;margin-bottom:20px"><button class="fbtn active" onclick="sf(this)">Geral</button><button class="fbtn" onclick="sf(this)">Amor</button><button class="fbtn" onclick="sf(this)">Trabalho</button><button class="fbtn" onclick="sf(this)">Espiritual</button></div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px" id="oCards"></div>
     <div style="text-align:center;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:12px">
       <span class="limit-pill" id="oLimit">Tiragens hoje: 0/3</span>
-      <button class="fbtn" onclick="embaralhar()" style="display:flex;align-items:center;gap:5px;font-size:10px">🔀 Embaralhar</button>
+      <button class="fbtn" onclick="embaralhar()" style="display:flex;align-items:center;gap:5px;font-size:16px">🔀 Embaralhar</button>
     </div>
   </div>
-  <div id="oRevealing" style="display:none"><div style="text-align:center;padding:80px 20px"><div style="font-size:56px" class="pulse">✦</div><div style="font-size:18px;color:var(--accent);font-family:var(--font-display);font-weight:600;margin-top:24px">Consultando os guias...</div><div style="font-size:12px;color:var(--text-muted);margin-top:10px">As energias estão se alinhando</div></div></div>
+  <div id="oRevealing" style="display:none"><div style="text-align:center;padding:80px 20px"><div style="font-size:56px" class="pulse">✦</div><div style="font-size:18px;color:var(--accent);font-family:var(--font-display);font-weight:600;margin-top:24px">Consultando os guias...</div><div style="font-size:15px;color:var(--text-muted);margin-top:10px">As energias estão se alinhando</div></div></div>
   <div id="oRevealed" style="display:none">
     <div style="background:linear-gradient(160deg,var(--deep-warm),var(--bg-card));border-radius:20px;padding:32px 24px;margin-bottom:18px;border:1px solid rgba(249,115,22,0.18);text-align:center;position:relative;overflow:hidden">
       <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:var(--accent-glow);filter:blur(40px)" aria-hidden="true"></div>
-      <div style="position:relative"><div style="font-size:12px;color:var(--accent);font-weight:700;letter-spacing:.15em;margin-bottom:8px" id="rNum"></div><div style="font-size:34px;font-weight:800;color:var(--text);font-family:var(--font-display)" id="rName"></div><div style="font-size:52px;margin:18px 0;filter:drop-shadow(0 0 16px var(--accent-glow))">⭐</div></div>
+      <div style="position:relative"><div style="font-size:15px;color:var(--accent);font-weight:700;letter-spacing:.15em;margin-bottom:8px" id="rNum"></div><div style="font-size:34px;font-weight:800;color:var(--text);font-family:var(--font-display)" id="rName"></div><div style="font-size:52px;margin:18px 0;filter:drop-shadow(0 0 16px var(--accent-glow))">⭐</div></div>
     </div>
-    <div class="card card-static"><div style="font-size:10px;color:var(--amber);font-weight:700;letter-spacing:.1em;margin-bottom:8px;text-transform:uppercase">SIGNIFICADO</div><div style="font-size:13px;color:var(--text-muted);line-height:1.65" id="rMean"></div></div>
-    <div class="card card-static" style="background:var(--accent-dim);border-color:rgba(249,115,22,0.15)"><div style="font-size:10px;color:var(--accent);font-weight:700;letter-spacing:.1em;margin-bottom:8px;text-transform:uppercase">CONSELHO</div><div style="font-size:13px;color:var(--text);line-height:1.65" id="rAdv"></div></div>
-    <div class="card card-static"><div style="font-size:10px;color:var(--teal);font-weight:700;letter-spacing:.1em;margin-bottom:8px;text-transform:uppercase">RITUAL SUGERIDO</div><div style="font-size:13px;color:var(--text-muted);line-height:1.65" id="rRit"></div></div>
+    <div class="card card-static"><div style="font-size:16px;color:var(--amber);font-weight:700;letter-spacing:.1em;margin-bottom:8px;text-transform:uppercase">SIGNIFICADO</div><div style="font-size:16px;color:var(--text-muted);line-height:1.65" id="rMean"></div></div>
+    <div class="card card-static" style="background:var(--accent-dim);border-color:rgba(249,115,22,0.15)"><div style="font-size:16px;color:var(--accent);font-weight:700;letter-spacing:.1em;margin-bottom:8px;text-transform:uppercase">CONSELHO</div><div style="font-size:16px;color:var(--text);line-height:1.65" id="rAdv"></div></div>
+    <div class="card card-static"><div style="font-size:16px;color:var(--teal);font-weight:700;letter-spacing:.1em;margin-bottom:8px;text-transform:uppercase">RITUAL SUGERIDO</div><div style="font-size:16px;color:var(--text-muted);line-height:1.65" id="rRit"></div></div>
     <button class="btn btn-s" onclick="resetO()">Nova consulta ☽</button>
   </div>
 </div>
 
 <!-- SOCIAL -->
 <div class="screen" id="s-social">
-  <div class="header"><div><div class="header-title">Comunidade</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px">Compartilhe sua evolução</div></div></div>
+  <div class="header"><div><div class="header-title">Comunidade</div><div style="font-size:15px;color:var(--text-muted);margin-top:2px">Compartilhe sua evolução</div></div></div>
   <div style="display:flex;align-items:center;gap:12px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:16px;cursor:pointer;transition:border-color .2s" onclick="openCreatePost()" role="button" aria-label="Criar post">
-    <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--accent));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--bg);flex-shrink:0">E</div>
-    <div style="font-size:12px;color:var(--text-dim)">Compartilhe sua experiência...</div>
+    <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--accent));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--bg);flex-shrink:0">E</div>
+    <div style="font-size:15px;color:var(--text-dim)">Compartilhe sua experiência...</div>
   </div>
   <div class="filters"><button class="fbtn active" onclick="sf(this)">Todos</button><button class="fbtn" onclick="sf(this)">Conquistas</button><button class="fbtn" onclick="sf(this)">Dúvidas</button><button class="fbtn" onclick="sf(this)">Relatos</button></div>
   <div id="cFeed"></div>
@@ -717,44 +717,44 @@ img{max-width:100%;display:block}
     <div class="profile-avatar-lg">E</div>
     <div style="font-size:22px;font-weight:700;color:var(--text);font-family:var(--font-display)">Eddy</div>
     <div style="display:flex;justify-content:center;gap:8px;margin-top:8px"><span class="badge bp">Nível: Adepto</span><span class="badge ba">PRO</span></div>
-    <div style="font-size:11px;color:var(--text-muted);margin-top:8px">Membro desde Março 2026 · 12 dias 🔥</div>
+    <div style="font-size:14px;color:var(--text-muted);margin-top:8px">Membro desde Março 2026 · 12 dias 🔥</div>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
-    <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:16px;text-align:center;border:1px solid var(--border)"><div style="font-size:26px;font-weight:800;color:var(--accent);font-family:var(--font-display);line-height:1">47</div><div style="font-size:10px;color:var(--text-muted);margin-top:6px">Aulas assistidas</div></div>
-    <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:16px;text-align:center;border:1px solid var(--border)"><div style="font-size:26px;font-weight:800;color:var(--accent);font-family:var(--font-display);line-height:1">32h</div><div style="font-size:10px;color:var(--text-muted);margin-top:6px">Horas de prática</div></div>
-    <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:16px;text-align:center;border:1px solid var(--border)"><div style="font-size:26px;font-weight:800;color:var(--accent);font-family:var(--font-display);line-height:1">3</div><div style="font-size:10px;color:var(--text-muted);margin-top:6px">Trilhas ativas</div></div>
-    <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:16px;text-align:center;border:1px solid var(--border)"><div style="font-size:26px;font-weight:800;color:var(--accent);font-family:var(--font-display);line-height:1">2</div><div style="font-size:10px;color:var(--text-muted);margin-top:6px">Desafios feitos</div></div>
+    <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:16px;text-align:center;border:1px solid var(--border)"><div style="font-size:26px;font-weight:800;color:var(--accent);font-family:var(--font-display);line-height:1">47</div><div style="font-size:16px;color:var(--text-muted);margin-top:6px">Aulas assistidas</div></div>
+    <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:16px;text-align:center;border:1px solid var(--border)"><div style="font-size:26px;font-weight:800;color:var(--accent);font-family:var(--font-display);line-height:1">32h</div><div style="font-size:16px;color:var(--text-muted);margin-top:6px">Horas de prática</div></div>
+    <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:16px;text-align:center;border:1px solid var(--border)"><div style="font-size:26px;font-weight:800;color:var(--accent);font-family:var(--font-display);line-height:1">3</div><div style="font-size:16px;color:var(--text-muted);margin-top:6px">Trilhas ativas</div></div>
+    <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:16px;text-align:center;border:1px solid var(--border)"><div style="font-size:26px;font-weight:800;color:var(--accent);font-family:var(--font-display);line-height:1">2</div><div style="font-size:16px;color:var(--text-muted);margin-top:6px">Desafios feitos</div></div>
   </div>
 
   <div class="card card-static">
-    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:14px">Evolução Espiritual</div>
-    <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:11px;color:var(--text-muted)">Adepto → Mestre</span><span style="font-size:11px;color:var(--accent);font-weight:700">1.240 / 2.000</span></div>
+    <div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:14px">Evolução Espiritual</div>
+    <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:14px;color:var(--text-muted)">Adepto → Mestre</span><span style="font-size:14px;color:var(--accent);font-weight:700">1.240 / 2.000</span></div>
     <div class="pbar" style="height:6px"><div class="pfill" style="width:62%;background:var(--accent);box-shadow:0 0 12px var(--accent-glow)"></div></div>
     <div style="display:flex;justify-content:space-between;margin-top:16px;position:relative">
       <div style="position:absolute;top:17px;left:20px;right:20px;height:2px;background:rgba(0,0,0,0.06)" aria-hidden="true"></div>
-      <div style="text-align:center;position:relative"><div style="width:34px;height:34px;border-radius:50%;margin:0 auto 6px;background:var(--accent);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">✓</div><div style="font-size:9px;color:var(--accent)">Iniciante</div></div>
-      <div style="text-align:center;position:relative"><div style="width:34px;height:34px;border-radius:50%;margin:0 auto 6px;background:var(--accent);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">✓</div><div style="font-size:9px;color:var(--accent)">Adepto</div></div>
-      <div style="text-align:center;position:relative"><div style="width:34px;height:34px;border-radius:50%;margin:0 auto 6px;border:2px dashed rgba(249,115,22,0.3);color:var(--text-dim);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">◎</div><div style="font-size:9px;color:var(--text-dim)">Mestre</div></div>
-      <div style="text-align:center;position:relative"><div style="width:34px;height:34px;border-radius:50%;margin:0 auto 6px;background:rgba(0,0,0,0.05);color:var(--text-dim);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">◇</div><div style="font-size:9px;color:var(--text-dim)">Guia</div></div>
+      <div style="text-align:center;position:relative"><div style="width:34px;height:34px;border-radius:50%;margin:0 auto 6px;background:var(--accent);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700">✓</div><div style="font-size:15px;color:var(--accent)">Iniciante</div></div>
+      <div style="text-align:center;position:relative"><div style="width:34px;height:34px;border-radius:50%;margin:0 auto 6px;background:var(--accent);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700">✓</div><div style="font-size:15px;color:var(--accent)">Adepto</div></div>
+      <div style="text-align:center;position:relative"><div style="width:34px;height:34px;border-radius:50%;margin:0 auto 6px;border:2px dashed rgba(249,115,22,0.3);color:var(--text-dim);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700">◎</div><div style="font-size:15px;color:var(--text-dim)">Mestre</div></div>
+      <div style="text-align:center;position:relative"><div style="width:34px;height:34px;border-radius:50%;margin:0 auto 6px;background:rgba(0,0,0,0.05);color:var(--text-dim);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700">◇</div><div style="font-size:15px;color:var(--text-dim)">Guia</div></div>
     </div>
   </div>
 
   <div class="card card-static">
-    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:14px">Desafios Ativos</div>
-    <div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--text)">21 Dias de Meditação</span><span style="font-size:11px;color:var(--teal);font-weight:600">12/21</span></div><div class="pbar"><div class="pfill" style="width:57%;background:var(--teal)"></div></div></div>
-    <div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--text)">7 Dias de Gratidão</span><span style="font-size:11px;color:var(--rose);font-weight:600">6/7</span></div><div class="pbar"><div class="pfill" style="width:85%;background:var(--rose)"></div></div></div>
+    <div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:14px">Desafios Ativos</div>
+    <div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:15px;color:var(--text)">21 Dias de Meditação</span><span style="font-size:14px;color:var(--teal);font-weight:600">12/21</span></div><div class="pbar"><div class="pfill" style="width:57%;background:var(--teal)"></div></div></div>
+    <div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:15px;color:var(--text)">7 Dias de Gratidão</span><span style="font-size:14px;color:var(--rose);font-weight:600">6/7</span></div><div class="pbar"><div class="pfill" style="width:85%;background:var(--rose)"></div></div></div>
   </div>
 
   <div style="background:linear-gradient(135deg,var(--deep-warm),var(--bg-card));border-radius:var(--radius);padding:20px;border:1px solid rgba(249,115,22,0.18);margin-bottom:14px;position:relative;overflow:hidden">
     <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:var(--accent-glow);filter:blur(40px)" aria-hidden="true"></div>
-    <div style="position:relative;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:14px;font-weight:700;color:var(--accent)">Plano PRO</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px">R$ 39,90/mês · Renovação em 15 dias</div></div><span class="badge ba">ATIVO</span></div>
+    <div style="position:relative;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:14px;font-weight:700;color:var(--accent)">Plano PRO</div><div style="font-size:14px;color:var(--text-muted);margin-top:2px">R$ 39,90/mês · Renovação em 15 dias</div></div><span class="badge ba">ATIVO</span></div>
     <button class="btn btn-s" style="margin-top:14px" onclick="openOv('priceOv')">Upgrade para VIP — R$ 79,90/mês</button>
   </div>
 
-  <div class="menu-item" onclick="openAch()"><span style="font-size:13px;color:var(--text)">🏆 Conquistas</span><span style="color:var(--text-dim)">›</span></div>
-  <div class="menu-item" onclick="openHist()"><span style="font-size:13px;color:var(--text)">📜 Histórico espiritual</span><span style="color:var(--text-dim)">›</span></div>
-  <div class="menu-item" onclick="openOv('setOv')"><span style="font-size:13px;color:var(--text)">⚙️ Configurações</span><span style="color:var(--text-dim)">›</span></div>
-  <div class="menu-item" onclick="openOv('priceOv')"><span style="font-size:13px;color:var(--accent)">✦ Gerenciar assinatura</span><span style="color:var(--text-dim)">›</span></div>
+  <div class="menu-item" onclick="openAch()"><span style="font-size:16px;color:var(--text)">🏆 Conquistas</span><span style="color:var(--text-dim)">›</span></div>
+  <div class="menu-item" onclick="openHist()"><span style="font-size:16px;color:var(--text)">📜 Histórico espiritual</span><span style="color:var(--text-dim)">›</span></div>
+  <div class="menu-item" onclick="openOv('setOv')"><span style="font-size:16px;color:var(--text)">⚙️ Configurações</span><span style="color:var(--text-dim)">›</span></div>
+  <div class="menu-item" onclick="openOv('priceOv')"><span style="font-size:16px;color:var(--accent)">✦ Gerenciar assinatura</span><span style="color:var(--text-dim)">›</span></div>
 </div>
 
 </div><!-- app-content -->
@@ -877,7 +877,7 @@ setTimeout(()=>{const s=document.getElementById('splash');s.classList.add('hide'
 !function(){const c=document.getElementById('particles'),cl=['#F97316','#7B4FC4','#2EC4B6','#E84D8A'];for(let i=0;i<16;i++){const p=document.createElement('div');p.className='particle';const sz=1.5+Math.random()*2.5;Object.assign(p.style,{width:sz+'px',height:sz+'px',background:cl[i%4],opacity:.08+Math.random()*.1,left:Math.random()*100+'%',top:Math.random()*100+'%',animation:`floatA ${10+Math.random()*14}s ${Math.random()*6}s ease-in-out infinite`});c.appendChild(p)}}();
 
 // Week dots
-!function(){const days=['S','T','Q','Q','S','S','D'],done=[1,1,1,1,1,0,0];const el=document.getElementById('weekDots');el.innerHTML=days.map((d,i)=>{let cls,inner;if(done[i]&&i<5){cls='background:var(--accent);color:var(--bg)';inner='✓'}else if(i===5){cls='background:rgba(249,115,22,0.12);color:var(--accent);border:2px solid var(--accent);box-shadow:0 0 12px var(--accent-glow)';inner='◉'}else{cls='background:rgba(0,0,0,0.05);color:var(--text-dim)';inner='·'}return`<div style="flex:1;text-align:center"><div style="font-size:9px;color:var(--text-dim);margin-bottom:5px">${d}</div><div class="wc" style="${cls}">${inner}</div></div>`}).join('')}();
+!function(){const days=['S','T','Q','Q','S','S','D'],done=[1,1,1,1,1,0,0];const el=document.getElementById('weekDots');el.innerHTML=days.map((d,i)=>{let cls,inner;if(done[i]&&i<5){cls='background:var(--accent);color:var(--bg)';inner='✓'}else if(i===5){cls='background:rgba(249,115,22,0.12);color:var(--accent);border:2px solid var(--accent);box-shadow:0 0 12px var(--accent-glow)';inner='◉'}else{cls='background:rgba(0,0,0,0.05);color:var(--text-dim)';inner='·'}return`<div style="flex:1;text-align:center"><div style="font-size:15px;color:var(--text-dim);margin-bottom:5px">${d}</div><div class="wc" style="${cls}">${inner}</div></div>`}).join('')}();
 
 // Daily message rotation
 !function(){const msg=MSGS[Math.floor(Math.random()*MSGS.length)];document.getElementById('dailyMsg').textContent=msg.q;document.getElementById('dailyMsgAuthor').textContent='— Mensagem do dia · '+msg.a}();
@@ -945,14 +945,14 @@ function doSearch(v){
     if(i.type==='med'){const med=MED[i.idx];onclick=`onclick="openMed(${i.idx})"`}
     else if(i.type==='trilha')onclick='onclick="openTrail()"';
     else if(i.type==='aula')onclick='onclick="go(\'aulas\')"';
-    return`<div class="card" style="padding:14px" ${onclick}><div style="display:flex;align-items:center;gap:12px"><div style="width:40px;height:40px;border-radius:10px;background:rgba(249,115,22,0.12);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">${i.ic}</div><div><div style="font-size:12px;font-weight:600;color:var(--text)">${i.title}</div><div style="font-size:10px;color:var(--text-muted);margin-top:2px">${i.sub}</div></div></div></div>`
+    return`<div class="card" style="padding:14px" ${onclick}><div style="display:flex;align-items:center;gap:12px"><div style="width:40px;height:40px;border-radius:10px;background:rgba(249,115,22,0.12);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">${i.ic}</div><div><div style="font-size:15px;font-weight:600;color:var(--text)">${i.title}</div><div style="font-size:16px;color:var(--text-muted);margin-top:2px">${i.sub}</div></div></div></div>`
   }).join('');
 }
 
 // ============ RENDER ============
-document.getElementById('liveC').innerHTML=LC.slice(0,3).map(c=>`<div class="carousel-item"><div class="card" style="margin-bottom:0"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,${c.c},transparent)"></div><div style="display:flex;justify-content:space-between;margin-bottom:10px"><span class="badge ${c.b}">${c.tag}</span>${c.v?`<span style="font-size:10px;color:var(--rose)">● ${c.v}</span>`:''}</div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.4">${c.t}</div><div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--text-muted)">${c.te}</span><span style="font-size:11px;color:var(--accent);font-weight:700">${c.ti}</span></div></div></div>`).join('');
+document.getElementById('liveC').innerHTML=LC.slice(0,3).map(c=>`<div class="carousel-item"><div class="card" style="margin-bottom:0"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,${c.c},transparent)"></div><div style="display:flex;justify-content:space-between;margin-bottom:10px"><span class="badge ${c.b}">${c.tag}</span>${c.v?`<span style="font-size:16px;color:var(--rose)">● ${c.v}</span>`:''}</div><div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.4">${c.t}</div><div style="display:flex;justify-content:space-between"><span style="font-size:14px;color:var(--text-muted)">${c.te}</span><span style="font-size:14px;color:var(--accent);font-weight:700">${c.ti}</span></div></div></div>`).join('');
 
-document.getElementById('medG').innerHTML=MED.map((m,i)=>`<div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:14px;border:1px solid var(--border);cursor:pointer;transition:all .2s" onclick="openMed(${i})"><div style="width:36px;height:36px;border-radius:10px;background:${m.bg};display:flex;align-items:center;justify-content:center;margin-bottom:8px"><div style="width:10px;height:10px;border-radius:50%;background:${m.c}"></div></div><div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">${m.t}</div><div style="display:flex;justify-content:space-between"><span style="font-size:10px;color:var(--text-muted)">${m.d}</span><span class="badge ${m.cat==='Cura'?'bp':m.cat==='Proteção'?'ba':m.cat==='Amor'?'br':'bt'}" style="font-size:8px">${m.cat}</span></div></div>`).join('');
+document.getElementById('medG').innerHTML=MED.map((m,i)=>`<div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:14px;border:1px solid var(--border);cursor:pointer;transition:all .2s" onclick="openMed(${i})"><div style="width:36px;height:36px;border-radius:10px;background:${m.bg};display:flex;align-items:center;justify-content:center;margin-bottom:8px"><div style="width:10px;height:10px;border-radius:50%;background:${m.c}"></div></div><div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px">${m.t}</div><div style="display:flex;justify-content:space-between"><span style="font-size:16px;color:var(--text-muted)">${m.d}</span><span class="badge ${m.cat==='Cura'?'bp':m.cat==='Proteção'?'ba':m.cat==='Amor'?'br':'bt'}" style="font-size:14px">${m.cat}</span></div></div>`).join('');
 
 // Tag each LC entry with a filter category
 LC.forEach(c=>{
@@ -978,11 +978,11 @@ function renderAList(){
   const list=aFilter==='todas'?LC:LC.filter(c=>c.fcat===aFilter);
   const el=document.getElementById('aList');
   if(!list.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--text-dim)"><div style="font-size:32px;margin-bottom:12px">🔍</div>Nada encontrado nesta categoria</div>';return}
-  el.innerHTML=list.map((c,realIdx)=>{const i=LC.indexOf(c);return`<div style="background:var(--bg-card);border-radius:var(--radius);padding:16px 16px 16px 20px;margin-bottom:12px;border:1px solid var(--border);cursor:pointer;position:relative;overflow:hidden;transition:all .2s" onclick="openLiveLesson(${i})"><div style="position:absolute;top:0;left:0;bottom:0;width:3px;background:${c.c}"></div><div style="padding-left:6px"><div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><span class="badge ${c.b}">${c.tag}</span>${c.v?`<span style="font-size:10px;color:var(--rose)">● ${c.v}</span>`:''}</div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3">${c.t}</div><div style="font-size:11px;color:var(--text-muted);line-height:1.4;margin-bottom:8px">${c.d}</div><div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--text-muted)">${c.te}</span><span style="font-size:11px;color:var(--accent);font-weight:600">${c.ti}</span></div></div></div>`}).join('');
+  el.innerHTML=list.map((c,realIdx)=>{const i=LC.indexOf(c);return`<div style="background:var(--bg-card);border-radius:var(--radius);padding:16px 16px 16px 20px;margin-bottom:12px;border:1px solid var(--border);cursor:pointer;position:relative;overflow:hidden;transition:all .2s" onclick="openLiveLesson(${i})"><div style="position:absolute;top:0;left:0;bottom:0;width:3px;background:${c.c}"></div><div style="padding-left:6px"><div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><span class="badge ${c.b}">${c.tag}</span>${c.v?`<span style="font-size:16px;color:var(--rose)">● ${c.v}</span>`:''}</div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3">${c.t}</div><div style="font-size:14px;color:var(--text-muted);line-height:1.4;margin-bottom:8px">${c.d}</div><div style="display:flex;justify-content:space-between"><span style="font-size:14px;color:var(--text-muted)">${c.te}</span><span style="font-size:14px;color:var(--accent);font-weight:600">${c.ti}</span></div></div></div>`}).join('');
 }
 renderAList();
 
-document.getElementById('tList').innerHTML=TR.map((t,i)=>`<div class="card" onclick="openTrail(${i})"><div style="position:absolute;top:-40px;right:-40px;width:100px;height:100px;border-radius:50%;background:${t.c}11;filter:blur(30px)" aria-hidden="true"></div><div style="display:flex;gap:14px;align-items:flex-start;position:relative"><div style="width:52px;height:52px;border-radius:14px;background:${t.c}18;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">${t.i}</div><div style="flex:1"><div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px">${t.t}</div><div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;line-height:1.4">${t.d}</div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:10px;color:var(--text-dim)">${t.mod} módulos</span>${t.p?`<span style="font-size:10px;color:${t.c};font-weight:700">${t.p}%</span>`:''}</div>${t.p?`<div class="pbar"><div class="pfill" style="width:${t.p}%;background:${t.c}"></div></div>`:`<div style="font-size:12px;color:var(--accent);font-weight:600">Começar →</div>`}</div></div></div>`).join('');
+document.getElementById('tList').innerHTML=TR.map((t,i)=>`<div class="card" onclick="openTrail(${i})"><div style="position:absolute;top:-40px;right:-40px;width:100px;height:100px;border-radius:50%;background:${t.c}11;filter:blur(30px)" aria-hidden="true"></div><div style="display:flex;gap:14px;align-items:flex-start;position:relative"><div style="width:52px;height:52px;border-radius:14px;background:${t.c}18;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">${t.i}</div><div style="flex:1"><div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px">${t.t}</div><div style="font-size:14px;color:var(--text-muted);margin-bottom:8px;line-height:1.4">${t.d}</div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:16px;color:var(--text-dim)">${t.mod} módulos</span>${t.p?`<span style="font-size:16px;color:${t.c};font-weight:700">${t.p}%</span>`:''}</div>${t.p?`<div class="pbar"><div class="pfill" style="width:${t.p}%;background:${t.c}"></div></div>`:`<div style="font-size:15px;color:var(--accent);font-weight:600">Começar →</div>`}</div></div></div>`).join('');
 
 function renderTrailMods(){
   const mods=MODS_BY_TRAIL[activeTrail]||[];
@@ -1003,7 +1003,7 @@ function renderTrailMods(){
   document.querySelectorAll('#s-trail .pbar+div span').forEach((s,i)=>{
     if(i===0)s.textContent=lessonsDone+'/'+lessonsTotal+' aulas';
   });
-  document.getElementById('tMods').innerHTML=mods.map((m,mi)=>`<div style="margin-bottom:20px"><div class="module-header"><span>${m.t}</span><span style="font-size:10px;color:var(--text-dim);font-weight:500">${m.ct}</span></div>${m.ls.map((l,i)=>{const done=l.ok||state.doneLessons[activeTrail+'-'+mi+'-'+i];return`<div class="lesson-item" onclick="openTrailLesson(${mi},${i})"><div class="lcheck ${done?'lc-done':'lc-pend'}">${done?'✓':(i+1)}</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:${done?'var(--text-muted)':'var(--text)'};line-height:1.3">${l.t}</div><div style="display:flex;gap:8px;margin-top:4px"><span style="font-size:10px;color:var(--text-dim)">${l.d}</span>${l.tag?`<span class="badge ${l.tc}" style="font-size:8px">${l.tag}</span>`:''}</div></div><span style="font-size:14px;color:var(--text-dim)">▶</span></div>`}).join('')}</div>`).join('');
+  document.getElementById('tMods').innerHTML=mods.map((m,mi)=>`<div style="margin-bottom:20px"><div class="module-header"><span>${m.t}</span><span style="font-size:16px;color:var(--text-dim);font-weight:500">${m.ct}</span></div>${m.ls.map((l,i)=>{const done=l.ok||state.doneLessons[activeTrail+'-'+mi+'-'+i];return`<div class="lesson-item" onclick="openTrailLesson(${mi},${i})"><div class="lcheck ${done?'lc-done':'lc-pend'}">${done?'✓':(i+1)}</div><div style="flex:1"><div style="font-size:15px;font-weight:500;color:${done?'var(--text-muted)':'var(--text)'};line-height:1.3">${l.t}</div><div style="display:flex;gap:8px;margin-top:4px"><span style="font-size:16px;color:var(--text-dim)">${l.d}</span>${l.tag?`<span class="badge ${l.tc}" style="font-size:14px">${l.tag}</span>`:''}</div></div><span style="font-size:14px;color:var(--text-dim)">▶</span></div>`}).join('')}</div>`).join('');
 }
 
 // ---- Embaralha cartas do Tarot (Fisher-Yates) ----
@@ -1017,13 +1017,13 @@ function shuffleTarot(){
 function renderOCards(){
   shuffleTarot();
   const symbols=['✦','◈','☽','◉','✧','⬡','✦','◇','◎','✴','☆','◈','✦','☽','◉','✧','⬡','◎','◇','✴','☆','✦'];
-  document.getElementById('oCards').innerHTML=shuffledTarot.map((realIdx,pos)=>`<div class="oracle-card" onclick="revO(${realIdx})" title="Carta ${pos+1}"><div style="text-align:center"><div style="font-size:28px;margin-bottom:6px;filter:drop-shadow(0 0 8px var(--warm-glow))">${symbols[pos]||'✦'}</div><div style="font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.15em">${pos+1}</div></div></div>`).join('');
+  document.getElementById('oCards').innerHTML=shuffledTarot.map((realIdx,pos)=>`<div class="oracle-card" onclick="revO(${realIdx})" title="Carta ${pos+1}"><div style="text-align:center"><div style="font-size:28px;margin-bottom:6px;filter:drop-shadow(0 0 8px var(--warm-glow))">${symbols[pos]||'✦'}</div><div style="font-size:15px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.15em">${pos+1}</div></div></div>`).join('');
 }
 renderOCards();
 
 function renderFeed(){
   const all=[...state.userPosts,...COM];
-  document.getElementById('cFeed').innerHTML=all.map((p,idx)=>`<div class="post"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><div class="post-avatar">${p.av}</div><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--text)">${p.u} <span class="badge ${p.lb}" style="font-size:8px">${p.lv}</span></div><div style="font-size:10px;color:var(--text-dim)">${p.ti}${p.ti.match(/^[0-9]/)?' atrás':''}</div></div></div>${p.img?`<div class="post-img">${p.img}</div>`:''}<div style="font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:12px">${p.tx}</div><div style="display:flex;gap:16px"><span class="pa" onclick="likePost(this,${p.lk})">🤍 ${p.lk}</span><span class="pa" onclick="openComments(${idx-state.userPosts.length})">💬 ${p.cm}</span><span class="pa" onclick="toast('🔗 Link copiado')">🔗</span></div></div>`).join('');
+  document.getElementById('cFeed').innerHTML=all.map((p,idx)=>`<div class="post"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><div class="post-avatar">${p.av}</div><div style="flex:1"><div style="font-size:15px;font-weight:600;color:var(--text)">${p.u} <span class="badge ${p.lb}" style="font-size:14px">${p.lv}</span></div><div style="font-size:16px;color:var(--text-dim)">${p.ti}${p.ti.match(/^[0-9]/)?' atrás':''}</div></div></div>${p.img?`<div class="post-img">${p.img}</div>`:''}<div style="font-size:16px;color:var(--text-muted);line-height:1.6;margin-bottom:12px">${p.tx}</div><div style="display:flex;gap:16px"><span class="pa" onclick="likePost(this,${p.lk})">🤍 ${p.lk}</span><span class="pa" onclick="openComments(${idx-state.userPosts.length})">💬 ${p.cm}</span><span class="pa" onclick="toast('🔗 Link copiado')">🔗</span></div></div>`).join('');
 }
 renderFeed();
 
@@ -1239,7 +1239,7 @@ function openComments(idx){
   activeCommentPost=idx;
   const list=POST_COMMENTS[idx]||[];
   document.getElementById('commentsCount').textContent=list.length+' comentário'+(list.length===1?'':'s');
-  document.getElementById('commentsList').innerHTML=list.length?list.map(c=>`<div class="comment"><div class="comment-av">${c.av}</div><div class="comment-body"><span class="comment-name">${c.u}</span><span class="comment-time">${c.ti}</span><div class="comment-text">${c.tx}</div></div></div>`).join(''):'<div style="text-align:center;padding:30px;color:var(--text-dim);font-size:12px">Seja o primeiro a comentar ✦</div>';
+  document.getElementById('commentsList').innerHTML=list.length?list.map(c=>`<div class="comment"><div class="comment-av">${c.av}</div><div class="comment-body"><span class="comment-name">${c.u}</span><span class="comment-time">${c.ti}</span><div class="comment-text">${c.tx}</div></div></div>`).join(''):'<div style="text-align:center;padding:30px;color:var(--text-dim);font-size:15px">Seja o primeiro a comentar ✦</div>';
   document.getElementById('commentInput').value='';
   openOv('commentsOv');
 }
@@ -1326,7 +1326,7 @@ function resetData(){
 // ============ HISTORY ============
 function openHist(){
   const list=state.history.slice(0,30);
-  document.getElementById('histList').innerHTML=list.length?list.map(h=>`<div style="display:flex;gap:12px;padding:12px 0;border-bottom:1px solid rgba(0,0,0,0.06)"><div style="width:36px;height:36px;border-radius:10px;background:var(--accent-dim);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">${h.i}</div><div style="flex:1"><div style="font-size:12px;color:var(--text);line-height:1.4">${h.t}</div><div style="font-size:10px;color:var(--text-dim);margin-top:3px">${h.d}</div></div></div>`).join(''):'<div style="text-align:center;padding:40px;color:var(--text-dim);font-size:12px">Sua jornada começa agora ✦</div>';
+  document.getElementById('histList').innerHTML=list.length?list.map(h=>`<div style="display:flex;gap:12px;padding:12px 0;border-bottom:1px solid rgba(0,0,0,0.06)"><div style="width:36px;height:36px;border-radius:10px;background:var(--accent-dim);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">${h.i}</div><div style="flex:1"><div style="font-size:15px;color:var(--text);line-height:1.4">${h.t}</div><div style="font-size:16px;color:var(--text-dim);margin-top:3px">${h.d}</div></div></div>`).join(''):'<div style="text-align:center;padding:40px;color:var(--text-dim);font-size:15px">Sua jornada começa agora ✦</div>';
   openOv('histOv');
 }
 
