@@ -1225,6 +1225,8 @@ function openAdminForm(type, idx){
         <option value="Paz">🟢 Paz</option>
         <option value="Abundância">💛 Abundância</option>
       </select></div>
+      <div class="af-group"><label class="af-label">Link do áudio/vídeo</label><input class="af-input" id="af_media" placeholder="https://youtube.com/watch?v=... ou link de áudio MP3"></div>
+      <div style="font-size:13px;color:var(--text-dim);margin-top:-8px;margin-bottom:14px;padding:0 2px">YouTube, SoundCloud, Spotify, link direto de MP3, etc.</div>
       <div class="af-group"><label class="af-label">Descrição (opcional)</label><textarea class="af-input" id="af_desc" rows="3" placeholder="Breve descrição da meditação..."></textarea></div>
       <button class="af-btn" onclick="adminSaveMeditacao()">🧘 Adicionar Meditação</button>`;
   } else if(type==='tarot'){
@@ -1473,7 +1475,9 @@ function adminSaveMeditacao(){
   const catBg={Cura:'rgba(249,115,22,0.12)',Proteção:'rgba(200,105,42,0.12)',Amor:'rgba(214,51,132,0.12)',Foco:'rgba(14,158,147,0.12)',Paz:'rgba(30,158,114,0.12)',Abundância:'rgba(245,158,11,0.12)'};
   // Duração em segundos (aproximado)
   const durNum=parseInt(d)||15;
-  MED.push({t,d,dur:durNum*60,cat,c:catColors[cat]||'var(--accent)',bg:catBg[cat]||'rgba(200,105,42,0.12)'});
+  const media=document.getElementById('af_media')?document.getElementById('af_media').value.trim():'';
+  const desc=document.getElementById('af_desc')?document.getElementById('af_desc').value.trim():'';
+  MED.push({t,d,dur:durNum*60,cat,c:catColors[cat]||'var(--accent)',bg:catBg[cat]||'rgba(200,105,42,0.12)',media,desc});
   // Re-render grid de meditações na Home
   const medEl=document.getElementById('medG');
   if(medEl) medEl.innerHTML=MED.map((m,i)=>`<div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:14px;border:1px solid var(--border);cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(100,50,20,0.06)" onclick="openMed(${i})"><div style="width:36px;height:36px;border-radius:10px;background:${m.bg};display:flex;align-items:center;justify-content:center;margin-bottom:8px"><div style="width:10px;height:10px;border-radius:50%;background:${m.c}"></div></div><div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px">${m.t}</div><div style="display:flex;justify-content:space-between"><span style="font-size:14px;color:var(--text-muted)">${m.d}</span><span class="badge ${m.cat==='Cura'?'bp':m.cat==='Proteção'?'ba':m.cat==='Amor'?'br':'bt'}" style="font-size:13px">${m.cat}</span></div></div>`).join('');
@@ -1949,6 +1953,35 @@ let isP=false,pInt=null,pProg=0,pDur=900;
 function openMed(idx){
   const m=MED[idx];
   if(!m)return;
+  // Se tem link externo (YouTube, Spotify, MP3), abre direto
+  if(m.media){
+    // Verifica se é MP3 direto para usar o player nativo
+    if(m.media.match(/\.(mp3|ogg|wav|m4a)(\?.*)?$/i)){
+      document.getElementById('playerTitle').textContent=m.t;
+      document.getElementById('playerSub').textContent='Meditação guiada · '+m.d;
+      const mins=parseInt(m.d);
+      pDur=m.dur||mins*60;
+      document.getElementById('pTot').textContent=mins+':00';
+      pProg=0;
+      document.getElementById('pBar').style.width='0%';
+      document.getElementById('pCur').textContent='0:00';
+      isP=false;
+      document.getElementById('playBtn').textContent='▶';
+      if(pInt)clearInterval(pInt);
+      // Configura o audio element
+      let audio=document.getElementById('medAudio');
+      if(!audio){audio=document.createElement('audio');audio.id='medAudio';audio.style.display='none';document.body.appendChild(audio);}
+      audio.src=m.media;
+      document.getElementById('audioPlayer').classList.add('show');
+      toast('🎵 '+m.t+' — toque ▶ para iniciar');
+    } else {
+      // YouTube, Spotify, SoundCloud — abre em nova aba
+      window.open(m.media,'_blank');
+      toast('🎵 Abrindo '+m.t+'…');
+    }
+    return;
+  }
+  // Sem mídia — player simulado
   document.getElementById('playerTitle').textContent=m.t;
   document.getElementById('playerSub').textContent='Meditação guiada · '+m.d;
   const mins=parseInt(m.d);
@@ -1965,25 +1998,51 @@ function openMed(idx){
 }
 
 function togglePlay(){
+  const audio=document.getElementById('medAudio');
   isP=!isP;
   document.getElementById('playBtn').textContent=isP?'⏸':'▶';
   if(isP){
-    pInt=setInterval(()=>{
-      pProg=Math.min(pProg+0.4,100);
-      document.getElementById('pBar').style.width=pProg+'%';
-      const sec=Math.round(pProg/100*pDur);
-      const mm=Math.floor(sec/60),ss=sec%60;
-      document.getElementById('pCur').textContent=mm+':'+(ss<10?'0':'')+ss;
-      if(pProg>=100){
-        clearInterval(pInt);pInt=null;isP=false;
-        document.getElementById('playBtn').textContent='▶';
+    // Se tem áudio real, usa ele
+    if(audio&&audio.src){
+      audio.play().catch(()=>{});
+      audio.ontimeupdate=function(){
+        if(!audio.duration)return;
+        pProg=(audio.currentTime/audio.duration)*100;
+        document.getElementById('pBar').style.width=pProg+'%';
+        const sec=Math.floor(audio.currentTime);
+        const mm=Math.floor(sec/60),ss=sec%60;
+        document.getElementById('pCur').textContent=mm+':'+(ss<10?'0':'')+ss;
+        const tot=Math.floor(audio.duration);
+        const tm=Math.floor(tot/60),ts=tot%60;
+        document.getElementById('pTot').textContent=tm+':'+(ts<10?'0':'')+ts;
+      };
+      audio.onended=function(){
+        isP=false;document.getElementById('playBtn').textContent='▶';
         state.medCount++;state.points+=15;
         state.history.unshift({d:todayStr(),t:'Meditação concluída',i:'🧘'});
         saveState();checkAchievements();
         toast('✦ Meditação concluída! +15 pts de evolução');
-      }
-    },300);
+      };
+    } else {
+      // Player simulado (sem mídia)
+      pInt=setInterval(()=>{
+        pProg=Math.min(pProg+0.4,100);
+        document.getElementById('pBar').style.width=pProg+'%';
+        const sec=Math.round(pProg/100*pDur);
+        const mm=Math.floor(sec/60),ss=sec%60;
+        document.getElementById('pCur').textContent=mm+':'+(ss<10?'0':'')+ss;
+        if(pProg>=100){
+          clearInterval(pInt);pInt=null;isP=false;
+          document.getElementById('playBtn').textContent='▶';
+          state.medCount++;state.points+=15;
+          state.history.unshift({d:todayStr(),t:'Meditação concluída',i:'🧘'});
+          saveState();checkAchievements();
+          toast('✦ Meditação concluída! +15 pts de evolução');
+        }
+      },300);
+    }
   }else{
+    if(audio&&audio.src&&!audio.paused)audio.pause();
     if(pInt){clearInterval(pInt);pInt=null}
   }
 }
