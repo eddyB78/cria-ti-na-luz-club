@@ -872,6 +872,8 @@ img{max-width:100%;display:block}
       <button onclick="adminAction('trilha')" style="background:linear-gradient(135deg,var(--amber),#ECA96A);color:#fff;border:none;border-radius:var(--radius);padding:16px 12px;font-size:15px;font-weight:600;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:6px"><span style="font-size:22px">🕯️</span>Nova Trilha</button>
       <button onclick="adminAction('notif')" style="background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:16px 12px;font-size:15px;font-weight:600;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:6px;color:var(--text);box-shadow:0 2px 8px rgba(100,50,20,0.06)"><span style="font-size:22px">🔔</span>Notificação</button>
       <button onclick="adminAction('live')" style="background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:16px 12px;font-size:15px;font-weight:600;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:6px;color:var(--text);box-shadow:0 2px 8px rgba(100,50,20,0.06)"><span style="font-size:22px">📡</span>Aula ao Vivo</button>
+      <button onclick="adminAction('meditacao')" style="background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:16px 12px;font-size:15px;font-weight:600;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:6px;color:var(--text);box-shadow:0 2px 8px rgba(100,50,20,0.06)"><span style="font-size:22px">🧘</span>Nova Meditação</button>
+      <button onclick="adminAction('tarot')" style="background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:16px 12px;font-size:15px;font-weight:600;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:6px;color:var(--text);box-shadow:0 2px 8px rgba(100,50,20,0.06)"><span style="font-size:22px">🃏</span>Nova Carta Tarot</button>
     </div>
 
     <!-- Gerenciar Aulas -->
@@ -1131,6 +1133,8 @@ function adminAction(a,idx){
   else if(a==='trilha') openAdminForm('trilha');
   else if(a==='notif') openAdminForm('notif');
   else if(a==='live') openAdminForm('live');
+  else if(a==='meditacao') openAdminForm('meditacao');
+  else if(a==='tarot') openAdminForm('tarot');
   else if(a==='edit') openAdminForm('editaula',idx);
   else if(a==='publish'){adminPublish(idx);}
 }
@@ -1151,8 +1155,11 @@ function openAdminForm(type, idx){
       <div class="af-group"><label class="af-label">Título da aula *</label><input class="af-input" id="af_titulo" placeholder="Ex: Meditação com Pretos Velhos"></div>
       <div class="af-group"><label class="af-label">Professor / Guia *</label><input class="af-input" id="af_professor" placeholder="Ex: Mãe Stella"></div>
       <div class="af-group"><label class="af-label">Descrição</label><textarea class="af-input" id="af_desc" rows="3" placeholder="Breve descrição da aula..."></textarea></div>
+      <div class="af-group"><label class="af-label">Duração</label><input class="af-input" id="af_dur" placeholder="Ex: 25min"></div>
       <div class="af-group"><label class="af-label">Horário</label><input class="af-input" id="af_horario" placeholder="Ex: 20:00 hoje, Sáb 15:00, Gravado"></div>
       <div class="af-group"><label class="af-label">Tipo</label><select class="af-input" id="af_tipo"><option value="REPLAY">Gravada (Replay)</option><option value="AO VIVO">Ao Vivo</option><option value="HOJE">Hoje</option><option value="AMANHÃ">Amanhã</option><option value="SEMANAL">Semanal</option><option value="ESPECIAL">Especial</option></select></div>
+      <div class="af-group"><label class="af-label">Adicionar a uma trilha (opcional)</label><select class="af-input" id="af_trilha" onchange="adminTrilhaChange(this)"><option value="">— Não vincular a trilha —</option>${TR.map((t,i)=>`<option value="${i}">${t.i} ${t.t}</option>`).join('')}</select></div>
+      <div class="af-group" id="af_modGroup" style="display:none"><label class="af-label">Módulo da trilha</label><select class="af-input" id="af_modulo"></select></div>
       <button class="af-btn" onclick="adminSaveAula()">✅ Publicar Aula</button>`;
   } else if(type==='live'){
     body.innerHTML=`
@@ -1187,24 +1194,81 @@ function openAdminForm(type, idx){
       <div class="af-group"><label class="af-label">Tipo</label><select class="af-input" id="af_tipo"><option${aula.tag==='REPLAY'?' selected':''}>REPLAY</option><option${aula.tag==='AO VIVO'?' selected':''}>AO VIVO</option><option${aula.tag==='HOJE'?' selected':''}>HOJE</option><option${aula.tag==='AMANHÃ'?' selected':''}>AMANHÃ</option><option${aula.tag==='SEMANAL'?' selected':''}>SEMANAL</option><option${aula.tag==='ESPECIAL'?' selected':''}>ESPECIAL</option></select></div>
       <button class="af-btn" onclick="adminUpdateAula(${idx})">💾 Salvar Alterações</button>
       <button onclick="adminDeleteAula(${idx})" style="width:100%;padding:13px;border-radius:50px;border:2px solid var(--rose);background:#fff;color:var(--rose);font-size:15px;font-weight:600;cursor:pointer;margin-top:8px">🗑️ Excluir Aula</button>`;
+  } else if(type==='meditacao'){
+    body.innerHTML=`
+      <div class="af-group"><label class="af-label">Título da meditação *</label><input class="af-input" id="af_titulo" placeholder="Ex: Cura com Oxalá"></div>
+      <div class="af-group"><label class="af-label">Duração *</label><input class="af-input" id="af_dur" placeholder="Ex: 15min"></div>
+      <div class="af-group"><label class="af-label">Categoria</label><select class="af-input" id="af_cat">
+        <option value="Cura">🟠 Cura</option>
+        <option value="Proteção">🟤 Proteção</option>
+        <option value="Amor">🩷 Amor</option>
+        <option value="Foco">🩵 Foco</option>
+        <option value="Paz">🟢 Paz</option>
+        <option value="Abundância">💛 Abundância</option>
+      </select></div>
+      <div class="af-group"><label class="af-label">Descrição (opcional)</label><textarea class="af-input" id="af_desc" rows="3" placeholder="Breve descrição da meditação..."></textarea></div>
+      <button class="af-btn" onclick="adminSaveMeditacao()">🧘 Adicionar Meditação</button>`;
+  } else if(type==='tarot'){
+    body.innerHTML=`
+      <div class="af-group"><label class="af-label">Nome da carta *</label><input class="af-input" id="af_titulo" placeholder="Ex: O Mago"></div>
+      <div class="af-group"><label class="af-label">Número romano</label><input class="af-input" id="af_num" placeholder="Ex: I"></div>
+      <div class="af-group"><label class="af-label">Emoji / Símbolo</label><input class="af-input" id="af_emoji" placeholder="Ex: 🌟" maxlength="4"></div>
+      <div class="af-group"><label class="af-label">Mensagem principal *</label><textarea class="af-input" id="af_desc" rows="3" placeholder="Significado da carta..."></textarea></div>
+      <div class="af-group"><label class="af-label">Conselho</label><textarea class="af-input" id="af_conselho" rows="2" placeholder="O que fazer com essa energia..."></textarea></div>
+      <div class="af-group"><label class="af-label">Ritual sugerido</label><textarea class="af-input" id="af_ritual" rows="2" placeholder="Prática espiritual relacionada..."></textarea></div>
+      <button class="af-btn" onclick="adminSaveTarot()">🃏 Adicionar Carta</button>`;
   }
   modal.style.display='block';modal.scrollTop=0;
 }
 
 function closeAdminForm(){document.getElementById('adminFormModal').style.display='none';}
 
+function adminTrilhaChange(sel){
+  const idx=sel.value;
+  const grp=document.getElementById('af_modGroup');
+  const modSel=document.getElementById('af_modulo');
+  if(!idx){grp.style.display='none';return;}
+  const mods=MODS_BY_TRAIL[idx]||[];
+  if(mods.length===0){
+    // Trilha sem módulos definidos — cria módulo 1 automaticamente
+    modSel.innerHTML=`<option value="novo">+ Criar Módulo 1 automaticamente</option>`;
+  } else {
+    modSel.innerHTML=mods.map((m,i)=>`<option value="${i}">${m.t}</option>`).join('')
+      +`<option value="novo">+ Adicionar novo módulo</option>`;
+  }
+  grp.style.display='block';
+}
+
 function adminSaveAula(){
   const t=document.getElementById('af_titulo').value.trim();
   const te=document.getElementById('af_professor').value.trim();
   if(!t||!te){toast('Preencha título e professor ❌');return;}
   const ti=document.getElementById('af_horario').value||'Gravado';
+  const dur=document.getElementById('af_dur').value||'20min';
   const tag=document.getElementById('af_tipo').value;
   const d=document.getElementById('af_desc').value;
   const tagColors={REPLAY:'var(--accent)','AO VIVO':'var(--rose)',HOJE:'var(--teal)',AMANHÃ:'var(--amber)',SEMANAL:'var(--accent)',ESPECIAL:'var(--blue)'};
   const tagBadge={REPLAY:'ba','AO VIVO':'br',HOJE:'bt',AMANHÃ:'bp',SEMANAL:'ba',ESPECIAL:'bb'};
   LC.unshift({t,te,ti,tag,c:tagColors[tag]||'var(--accent)',b:tagBadge[tag]||'ba',d,v:0});
+  // Vincular à trilha se selecionado
+  const trilhaIdx=document.getElementById('af_trilha')?document.getElementById('af_trilha').value:'';
+  if(trilhaIdx!==''){
+    const modIdx=document.getElementById('af_modulo').value;
+    const novaAula={t,d:dur,ok:0,desc:d||'Aula adicionada pelo admin.'};
+    if(!MODS_BY_TRAIL[trilhaIdx])MODS_BY_TRAIL[trilhaIdx]=[];
+    if(modIdx==='novo'){
+      const numMod=MODS_BY_TRAIL[trilhaIdx].length+1;
+      MODS_BY_TRAIL[trilhaIdx].push({t:`Módulo ${numMod} — Novo`,ct:`1 aula · ${dur}`,ls:[novaAula]});
+    } else {
+      const mod=MODS_BY_TRAIL[trilhaIdx][modIdx];
+      if(mod){mod.ls.push(novaAula);mod.ct=`${mod.ls.length} aulas`;}
+    }
+    toast(`Aula publicada e adicionada à trilha "${TR[trilhaIdx].t}"! ✅`);
+  } else {
+    toast('Aula publicada com sucesso! ✅');
+  }
   renderAList();renderAdminAulas();
-  closeAdminForm();toast('Aula publicada com sucesso! ✅');
+  closeAdminForm();
 }
 
 function adminSaveLive(){
@@ -1269,9 +1333,38 @@ function adminDeleteAula(idx){
 }
 
 function adminPublish(idx){
-  // Move draft to published (just changes the visual in admin list)
   renderAdminAulas();
   toast('Aula publicada com sucesso! ✅');
+}
+
+function adminSaveMeditacao(){
+  const t=document.getElementById('af_titulo').value.trim();
+  const d=document.getElementById('af_dur').value.trim();
+  if(!t||!d){toast('Preencha título e duração ❌');return;}
+  const cat=document.getElementById('af_cat').value;
+  const catColors={Cura:'var(--amber)',Proteção:'var(--accent)',Amor:'var(--rose)',Foco:'var(--teal)',Paz:'var(--green)',Abundância:'#F59E0B'};
+  const catBg={Cura:'rgba(249,115,22,0.12)',Proteção:'rgba(200,105,42,0.12)',Amor:'rgba(214,51,132,0.12)',Foco:'rgba(14,158,147,0.12)',Paz:'rgba(30,158,114,0.12)',Abundância:'rgba(245,158,11,0.12)'};
+  // Duração em segundos (aproximado)
+  const durNum=parseInt(d)||15;
+  MED.push({t,d,dur:durNum*60,cat,c:catColors[cat]||'var(--accent)',bg:catBg[cat]||'rgba(200,105,42,0.12)'});
+  // Re-render grid de meditações na Home
+  const medEl=document.getElementById('medG');
+  if(medEl) medEl.innerHTML=MED.map((m,i)=>`<div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:14px;border:1px solid var(--border);cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(100,50,20,0.06)" onclick="openMed(${i})"><div style="width:36px;height:36px;border-radius:10px;background:${m.bg};display:flex;align-items:center;justify-content:center;margin-bottom:8px"><div style="width:10px;height:10px;border-radius:50%;background:${m.c}"></div></div><div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px">${m.t}</div><div style="display:flex;justify-content:space-between"><span style="font-size:14px;color:var(--text-muted)">${m.d}</span><span class="badge ${m.cat==='Cura'?'bp':m.cat==='Proteção'?'ba':m.cat==='Amor'?'br':'bt'}" style="font-size:13px">${m.cat}</span></div></div>`).join('');
+  closeAdminForm();
+  toast(`Meditação "${t}" adicionada! 🧘`);
+}
+
+function adminSaveTarot(){
+  const name=document.getElementById('af_titulo').value.trim();
+  const m=document.getElementById('af_desc').value.trim();
+  if(!name||!m){toast('Preencha nome e mensagem ❌');return;}
+  const n=document.getElementById('af_num').value||'—';
+  const emoji=document.getElementById('af_emoji').value||'✨';
+  const a=document.getElementById('af_conselho').value||'Reflita sobre essa energia hoje.';
+  const r=document.getElementById('af_ritual').value||'Acenda uma vela e medite com intenção.';
+  TAROT.push({name,n,m,a,r,emoji});
+  closeAdminForm();
+  toast(`Carta "${name}" adicionada ao Tarot! 🃏`);
 }
 
 function renderAdminAulas(){
