@@ -904,6 +904,16 @@ img{max-width:100%;display:block}
       </div>
     </div>
 
+    <!-- Editar Conteúdo -->
+    <div style="font-size:17px;font-weight:700;color:var(--text);font-family:var(--font-display);margin-bottom:12px">Editar Conteúdo</div>
+    <div style="background:#fff;border-radius:var(--radius);box-shadow:0 2px 12px rgba(100,50,20,0.08);overflow:hidden;margin-bottom:20px">
+      <div class="menu-item" onclick="adminAction('editMsg')"><span style="font-size:15px;color:var(--text)">💬 Mensagem do Dia</span><span style="color:var(--text-dim)">›</span></div>
+      <div class="menu-item" onclick="adminAction('editMed')"><span style="font-size:15px;color:var(--text)">🧘 Gerenciar Meditações</span><span style="color:var(--text-dim)">›</span></div>
+      <div class="menu-item" onclick="adminAction('editTarot')"><span style="font-size:15px;color:var(--text)">🃏 Gerenciar Cartas Tarot</span><span style="color:var(--text-dim)">›</span></div>
+      <div class="menu-item" onclick="adminAction('editTrilhas')"><span style="font-size:15px;color:var(--text)">🕯️ Gerenciar Trilhas</span><span style="color:var(--text-dim)">›</span></div>
+      <div class="menu-item" onclick="adminAction('editPrecos')"><span style="font-size:15px;color:var(--text)">💰 Editar Preços / Planos</span><span style="color:var(--text-dim)">›</span></div>
+    </div>
+
     <!-- Configurações do App -->
     <div style="font-size:17px;font-weight:700;color:var(--text);font-family:var(--font-display);margin-bottom:12px">Configurações do App</div>
     <div style="background:#fff;border-radius:var(--radius);box-shadow:0 2px 12px rgba(100,50,20,0.08);overflow:hidden;margin-bottom:20px">
@@ -1135,6 +1145,14 @@ function adminAction(a,idx){
   else if(a==='live') openAdminForm('live');
   else if(a==='meditacao') openAdminForm('meditacao');
   else if(a==='tarot') openAdminForm('tarot');
+  else if(a==='editMsg') openAdminForm('editMsg');
+  else if(a==='editMed') openAdminForm('editMed');
+  else if(a==='editTarot') openAdminForm('editTarot');
+  else if(a==='editTrilhas') openAdminForm('editTrilhas');
+  else if(a==='editPrecos') openAdminForm('editPrecos');
+  else if(a==='delMed') adminDeleteMed(idx);
+  else if(a==='delTarot') adminDeleteTarot(idx);
+  else if(a==='delTrilha') adminDeleteTrilha(idx);
   else if(a==='edit') openAdminForm('editaula',idx);
   else if(a==='publish'){adminPublish(idx);}
 }
@@ -1157,6 +1175,7 @@ function openAdminForm(type, idx){
       <div class="af-group"><label class="af-label">Descrição</label><textarea class="af-input" id="af_desc" rows="3" placeholder="Breve descrição da aula..."></textarea></div>
       <div class="af-group"><label class="af-label">Duração</label><input class="af-input" id="af_dur" placeholder="Ex: 25min"></div>
       <div class="af-group"><label class="af-label">Horário</label><input class="af-input" id="af_horario" placeholder="Ex: 20:00 hoje, Sáb 15:00, Gravado"></div>
+      <div class="af-group"><label class="af-label">Link do vídeo (YouTube/Vimeo)</label><input class="af-input" id="af_media" placeholder="https://youtube.com/watch?v=..."></div>
       <div class="af-group"><label class="af-label">Tipo</label><select class="af-input" id="af_tipo"><option value="REPLAY">Gravada (Replay)</option><option value="AO VIVO">Ao Vivo</option><option value="HOJE">Hoje</option><option value="AMANHÃ">Amanhã</option><option value="SEMANAL">Semanal</option><option value="ESPECIAL">Especial</option></select></div>
       <div class="af-group"><label class="af-label">Adicionar a uma trilha (opcional)</label><select class="af-input" id="af_trilha" onchange="adminTrilhaChange(this)"><option value="">— Não vincular a trilha —</option>${TR.map((t,i)=>`<option value="${i}">${t.i} ${t.t}</option>`).join('')}</select></div>
       <div class="af-group" id="af_modGroup" style="display:none"><label class="af-label">Módulo da trilha</label><select class="af-input" id="af_modulo"></select></div>
@@ -1217,6 +1236,50 @@ function openAdminForm(type, idx){
       <div class="af-group"><label class="af-label">Conselho</label><textarea class="af-input" id="af_conselho" rows="2" placeholder="O que fazer com essa energia..."></textarea></div>
       <div class="af-group"><label class="af-label">Ritual sugerido</label><textarea class="af-input" id="af_ritual" rows="2" placeholder="Prática espiritual relacionada..."></textarea></div>
       <button class="af-btn" onclick="adminSaveTarot()">🃏 Adicionar Carta</button>`;
+  } else if(type==='editMsg'){
+    const curMsg=document.getElementById('dailyMsg').textContent;
+    const curAuthor=document.getElementById('dailyMsgAuthor').textContent;
+    body.innerHTML=`
+      <div class="af-group"><label class="af-label">Mensagem do Dia *</label><textarea class="af-input" id="af_msg" rows="4">${curMsg}</textarea></div>
+      <div class="af-group"><label class="af-label">Autor / Entidade</label><input class="af-input" id="af_autor" value="${curAuthor}"></div>
+      <button class="af-btn" onclick="adminSaveMsg()">💾 Atualizar Mensagem</button>`;
+  } else if(type==='editMed'){
+    const rows=MED.map((m,i)=>`
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.05)">
+        <div style="flex:1"><div style="font-size:15px;font-weight:600;color:var(--text)">${m.t}</div><div style="font-size:13px;color:var(--text-muted)">${m.d} · ${m.cat}</div></div>
+        <button onclick="adminAction('delMed',${i})" style="padding:6px 12px;border-radius:20px;border:1px solid var(--rose);background:#fff;color:var(--rose);font-size:13px;font-weight:600;cursor:pointer">🗑️</button>
+      </div>`).join('');
+    body.innerHTML=`
+      <div style="background:#fff;border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:16px">${rows||'<div style="padding:16px;color:var(--text-muted)">Nenhuma meditação cadastrada.</div>'}</div>
+      <button class="af-btn" onclick="closeAdminForm();adminAction('meditacao')">+ Nova Meditação</button>`;
+  } else if(type==='editTarot'){
+    const rows=TAROT.map((c,i)=>`
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.05)">
+        <div style="font-size:22px;width:32px;text-align:center">${c.emoji||'🃏'}</div>
+        <div style="flex:1"><div style="font-size:15px;font-weight:600;color:var(--text)">${c.n} · ${c.name}</div><div style="font-size:13px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px">${c.m}</div></div>
+        <button onclick="adminAction('delTarot',${i})" style="padding:6px 12px;border-radius:20px;border:1px solid var(--rose);background:#fff;color:var(--rose);font-size:13px;font-weight:600;cursor:pointer">🗑️</button>
+      </div>`).join('');
+    body.innerHTML=`
+      <div style="background:#fff;border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:16px">${rows}</div>
+      <button class="af-btn" onclick="closeAdminForm();adminAction('tarot')">+ Nova Carta</button>`;
+  } else if(type==='editTrilhas'){
+    const rows=TR.map((t,i)=>`
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.05)">
+        <div style="font-size:22px;width:32px;text-align:center">${t.i}</div>
+        <div style="flex:1"><div style="font-size:15px;font-weight:600;color:var(--text)">${t.t}</div><div style="font-size:13px;color:var(--text-muted)">${t.mod} módulos · ${t.p>0?t.p+'% progresso':'Não iniciada'}</div></div>
+        <button onclick="adminAction('delTrilha',${i})" style="padding:6px 12px;border-radius:20px;border:1px solid var(--rose);background:#fff;color:var(--rose);font-size:13px;font-weight:600;cursor:pointer">🗑️</button>
+      </div>`).join('');
+    body.innerHTML=`
+      <div style="background:#fff;border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:16px">${rows}</div>
+      <button class="af-btn" onclick="closeAdminForm();adminAction('trilha')">+ Nova Trilha</button>`;
+  } else if(type==='editPrecos'){
+    body.innerHTML=`
+      <div style="font-size:14px;color:var(--text-muted);margin-bottom:16px;font-style:italic">Edite os preços exibidos nos planos de assinatura.</div>
+      <div class="af-group"><label class="af-label">Plano PRO — Preço mensal (R$)</label><input class="af-input" id="af_proMes" type="number" step="0.01" value="39.90"></div>
+      <div class="af-group"><label class="af-label">Plano PRO — Preço anual (R$)</label><input class="af-input" id="af_proAno" type="number" step="0.01" value="349.90"></div>
+      <div class="af-group"><label class="af-label">Plano VIP — Preço mensal (R$)</label><input class="af-input" id="af_vipMes" type="number" step="0.01" value="79.90"></div>
+      <div class="af-group"><label class="af-label">Desconto anual PRO (%)</label><input class="af-input" id="af_desc_pct" type="number" value="27"></div>
+      <button class="af-btn" onclick="adminSavePrecos()">💾 Atualizar Preços</button>`;
   }
   modal.style.display='block';modal.scrollTop=0;
 }
@@ -1247,9 +1310,10 @@ function adminSaveAula(){
   const dur=document.getElementById('af_dur').value||'20min';
   const tag=document.getElementById('af_tipo').value;
   const d=document.getElementById('af_desc').value;
+  const media=document.getElementById('af_media')?document.getElementById('af_media').value.trim():'';
   const tagColors={REPLAY:'var(--accent)','AO VIVO':'var(--rose)',HOJE:'var(--teal)',AMANHÃ:'var(--amber)',SEMANAL:'var(--accent)',ESPECIAL:'var(--blue)'};
   const tagBadge={REPLAY:'ba','AO VIVO':'br',HOJE:'bt',AMANHÃ:'bp',SEMANAL:'ba',ESPECIAL:'bb'};
-  LC.unshift({t,te,ti,tag,c:tagColors[tag]||'var(--accent)',b:tagBadge[tag]||'ba',d,v:0});
+  LC.unshift({t,te,ti,tag,c:tagColors[tag]||'var(--accent)',b:tagBadge[tag]||'ba',d,media,v:0});
   // Vincular à trilha se selecionado
   const trilhaIdx=document.getElementById('af_trilha')?document.getElementById('af_trilha').value:'';
   if(trilhaIdx!==''){
@@ -1277,11 +1341,14 @@ function adminSaveLive(){
   if(!t||!te){toast('Preencha título e professor ❌');return;}
   const ti=document.getElementById('af_horario').value||'20:00 hoje';
   const plat=document.getElementById('af_plat').value;
-  LC.unshift({t,te,ti,tag:'AO VIVO',c:'var(--rose)',b:'br',d:`${plat} · Aula ao vivo`,v:0});
+  const link=document.getElementById('af_link')?document.getElementById('af_link').value.trim():'';
+  LC.unshift({t,te,ti,tag:'AO VIVO',c:'var(--rose)',b:'br',d:`${plat} · Aula ao vivo`,media:link,v:0});
   // Re-render live carousel
-  document.getElementById('liveC').innerHTML=LC.slice(0,3).map(c=>`<div class="carousel-item"><div style="background:#fff;border-radius:20px;overflow:hidden;margin-bottom:0;box-shadow:0 2px 16px rgba(100,50,20,0.08)"><div style="background:linear-gradient(135deg,#C8692A,#E0884A);padding:10px 14px;display:flex;align-items:center;gap:8px"><span style="font-size:14px;color:rgba(255,255,255,0.9)">📹</span><span style="font-size:13px;font-weight:700;color:#fff;letter-spacing:.06em;text-transform:uppercase">${c.tag}</span>${c.v?`<span style="margin-left:auto;font-size:13px;color:rgba(255,255,255,0.85)">● ${c.v}</span>`:''}</div><div style="padding:14px"><div style="font-size:16px;font-weight:700;color:#3D2314;margin-bottom:8px;line-height:1.35">${c.t}</div><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:14px">✨</span><span style="font-size:14px;color:#7A6055">${c.te}</span></div><div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span style="font-size:13px;color:#7A6055">📹 Zoom</span><span style="font-size:13px;color:#7A6055">🕐 ${c.ti}</span></div><button style="width:100%;background:linear-gradient(135deg,#C8692A,#E0884A);color:#fff;border:none;border-radius:50px;padding:10px;font-size:14px;font-weight:600;cursor:pointer">Entrar na Aula</button></div></div></div>`).join('');
+  document.getElementById('liveC').innerHTML=LC.slice(0,3).map(c=>`<div class="carousel-item"><div style="background:#fff;border-radius:20px;overflow:hidden;margin-bottom:0;box-shadow:0 2px 16px rgba(100,50,20,0.08)"><div style="background:linear-gradient(135deg,#C8692A,#E0884A);padding:10px 14px;display:flex;align-items:center;gap:8px"><span style="font-size:14px;color:rgba(255,255,255,0.9)">📹</span><span style="font-size:13px;font-weight:700;color:#fff;letter-spacing:.06em;text-transform:uppercase">${c.tag}</span>${c.v?`<span style="margin-left:auto;font-size:13px;color:rgba(255,255,255,0.85)">● ${c.v}</span>`:''}</div><div style="padding:14px"><div style="font-size:16px;font-weight:700;color:#3D2314;margin-bottom:8px;line-height:1.35">${c.t}</div><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:14px">✨</span><span style="font-size:14px;color:#7A6055">${c.te}</span></div><div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span style="font-size:13px;color:#7A6055">📹 ${c.d||'Zoom'}</span><span style="font-size:13px;color:#7A6055">🕐 ${c.ti}</span></div><button onclick="${c.media?`window.open('${c.media}','_blank')`:'toast(\'Link não definido\')'}" style="width:100%;background:linear-gradient(135deg,#C8692A,#E0884A);color:#fff;border:none;border-radius:50px;padding:10px;font-size:14px;font-weight:600;cursor:pointer">Entrar na Aula</button></div></div></div>`).join('');
+  // Auto-generate notification
+  addAdminNotif('🔴','Aula ao Vivo agora!',`${t} com ${te} · ${ti}`);
   renderAList();renderAdminAulas();
-  closeAdminForm();toast('Aula ao vivo agendada! 📡');
+  closeAdminForm();toast('Aula ao vivo agendada + notificação enviada! 📡');
 }
 
 function adminSaveTrilha(){
@@ -1330,6 +1397,66 @@ function adminDeleteAula(idx){
   LC.splice(idx,1);
   renderAList();renderAdminAulas();
   closeAdminForm();toast('Aula excluída 🗑️');
+}
+
+function adminSaveMsg(){
+  const msg=document.getElementById('af_msg').value.trim();
+  const autor=document.getElementById('af_autor').value.trim();
+  if(!msg){toast('Mensagem não pode ser vazia ❌');return;}
+  document.getElementById('dailyMsg').textContent=msg;
+  if(autor)document.getElementById('dailyMsgAuthor').textContent=autor;
+  closeAdminForm();toast('Mensagem do dia atualizada! 💬');
+}
+
+function adminDeleteMed(idx){
+  if(!confirm('Excluir esta meditação?'))return;
+  MED.splice(idx,1);
+  const medEl=document.getElementById('medG');
+  if(medEl) medEl.innerHTML=MED.map((m,i)=>`<div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:14px;border:1px solid var(--border);cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(100,50,20,0.06)" onclick="openMed(${i})"><div style="width:36px;height:36px;border-radius:10px;background:${m.bg};display:flex;align-items:center;justify-content:center;margin-bottom:8px"><div style="width:10px;height:10px;border-radius:50%;background:${m.c}"></div></div><div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px">${m.t}</div><div style="display:flex;justify-content:space-between"><span style="font-size:14px;color:var(--text-muted)">${m.d}</span><span class="badge ${m.cat==='Cura'?'bp':m.cat==='Proteção'?'ba':m.cat==='Amor'?'br':'bt'}" style="font-size:13px">${m.cat}</span></div></div>`).join('');
+  openAdminForm('editMed');toast('Meditação excluída 🗑️');
+}
+
+function adminDeleteTarot(idx){
+  if(TAROT.length<=1){toast('Precisa ter ao menos 1 carta ❌');return;}
+  if(!confirm('Excluir esta carta?'))return;
+  TAROT.splice(idx,1);
+  openAdminForm('editTarot');toast('Carta excluída 🗑️');
+}
+
+function adminDeleteTrilha(idx){
+  if(!confirm('Excluir esta trilha?'))return;
+  TR.splice(idx,1);
+  renderTList();
+  openAdminForm('editTrilhas');toast('Trilha excluída 🗑️');
+}
+
+function adminSavePrecos(){
+  const proMes=parseFloat(document.getElementById('af_proMes').value)||39.90;
+  const proAno=parseFloat(document.getElementById('af_proAno').value)||349.90;
+  const vipMes=parseFloat(document.getElementById('af_vipMes').value)||79.90;
+  const descPct=parseInt(document.getElementById('af_desc_pct').value)||27;
+  // Update all price elements in the DOM
+  document.querySelectorAll('[data-price="pro-mes"]').forEach(el=>el.textContent=proMes.toFixed(2).replace('.',','));
+  document.querySelectorAll('[data-price="pro-ano"]').forEach(el=>el.textContent=proAno.toFixed(2).replace('.',','));
+  document.querySelectorAll('[data-price="vip-mes"]').forEach(el=>el.textContent=vipMes.toFixed(2).replace('.',','));
+  // Update price text in pricing modal (find by content pattern)
+  document.querySelectorAll('.price-amount').forEach((el,i)=>{
+    if(i===1)el.innerHTML=`R$${Math.floor(proMes)}<span style="font-size:15px;color:var(--text-muted);font-weight:400">,${String(proMes.toFixed(2)).split('.')[1]}/mês</span>`;
+    if(i===2)el.innerHTML=`R$${Math.floor(vipMes)}<span style="font-size:15px;color:var(--text-muted);font-weight:400">,${String(vipMes.toFixed(2)).split('.')[1]}/mês</span>`;
+  });
+  closeAdminForm();toast('Preços atualizados! 💰');
+}
+
+function addAdminNotif(icon, titulo, msg){
+  const notifList=document.querySelector('#notifOv .modal');
+  if(!notifList)return;
+  const item=document.createElement('div');
+  item.className='notif-item';
+  item.innerHTML=`<div class="nicon" style="background:rgba(200,105,42,0.12);font-size:18px">${icon}</div><div><div style="font-size:15px;color:var(--text-muted);line-height:1.5"><strong style="color:var(--text)">${titulo}</strong> ${msg}</div><div style="font-size:13px;color:var(--text-dim);margin-top:4px">Agora</div></div>`;
+  const handle=notifList.querySelector('.modal-handle');
+  if(handle)handle.after(item);
+  // Show dot on bell
+  document.querySelectorAll('.ndot').forEach(d=>d.style.display='block');
 }
 
 function adminPublish(idx){
