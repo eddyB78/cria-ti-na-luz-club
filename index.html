@@ -546,6 +546,21 @@ img{max-width:100%;display:block}
 
 <!-- ===== APP ===== -->
 <div class="app-shell">
+
+<!-- BANNER DE AVISO -->
+<div id="appBanner" style="display:none;background:linear-gradient(135deg,var(--accent),#E0884A);color:#fff;padding:10px 16px;font-size:14px;font-weight:600;text-align:center;position:relative;z-index:20;flex-shrink:0">
+  <span id="appBannerText">⚠️ Manutenção programada hoje às 22h</span>
+  <button onclick="document.getElementById('appBanner').style.display='none'" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.3);border:none;color:#fff;width:22px;height:22px;border-radius:50%;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+</div>
+
+<!-- TELA DE MANUTENÇÃO -->
+<div id="manutScreen" style="display:none;position:absolute;inset:0;z-index:400;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center">
+  <div style="font-size:64px;margin-bottom:20px">🔧</div>
+  <div style="font-size:26px;font-weight:700;color:var(--text);font-family:var(--font-display);margin-bottom:10px">Em Manutenção</div>
+  <div style="font-size:16px;color:var(--text-muted);line-height:1.6;margin-bottom:28px" id="manutMsg">O app está em manutenção temporária.<br>Voltamos em breve com novidades! ✨</div>
+  <div style="width:60px;height:4px;background:var(--accent-dim);border-radius:4px;overflow:hidden"><div style="height:100%;background:var(--accent);border-radius:4px;animation:loadBar 2s ease-in-out infinite alternate"></div></div>
+</div>
+
 <div class="app-content" id="appContent">
 
 <!-- HOME -->
@@ -608,13 +623,13 @@ img{max-width:100%;display:block}
 
     <!-- Aulas ao vivo -->
     <div style="margin-bottom:22px">
-      <div class="section-title"><span style="color:var(--rose)">◉</span> Aulas ao Vivo <span class="section-more" onclick="go('aulas')">Ver todas →</span></div>
+      <div class="section-title"><span style="color:var(--rose)">◉</span> Aulas ao Vivo <span class="new-badge badge ba" style="font-size:11px;display:none">NOVO</span><span class="section-more" onclick="go('aulas')">Ver todas →</span></div>
       <div class="carousel" id="liveC"></div>
     </div>
 
     <!-- Meditações -->
     <div style="margin-bottom:22px">
-      <div class="section-title"><span style="color:var(--teal)">◈</span> Meditações</div>
+      <div class="section-title"><span style="color:var(--teal)">◈</span> Meditações <span class="new-badge badge bt" style="font-size:11px;display:none">NOVO</span></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="medG"></div>
     </div>
 
@@ -636,7 +651,7 @@ img{max-width:100%;display:block}
 
     <!-- Comunidade preview -->
     <div>
-      <div class="section-title"><span style="color:var(--amber)">◎</span> Comunidade <span class="section-more" onclick="go('social')">Ver mais →</span></div>
+      <div class="section-title"><span style="color:var(--amber)">◎</span> Comunidade <span class="new-badge badge bp" style="font-size:11px;display:none">NOVO</span><span class="section-more" onclick="go('social')">Ver mais →</span></div>
       <div class="post">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><div class="post-avatar">🌙</div><div style="flex:1"><div style="font-size:15px;font-weight:600;color:var(--text)">Marina S. <span class="badge bp" style="font-size:14px">Adepta</span></div><div style="font-size:16px;color:var(--text-dim)">2h atrás</div></div></div>
         <div style="font-size:16px;color:var(--text-muted);line-height:1.6;margin-bottom:12px">Acabei de completar o módulo 2 da trilha Despertar Espiritual! Energia incrível 🌿✨</div>
@@ -917,9 +932,12 @@ img{max-width:100%;display:block}
     <!-- Configurações do App -->
     <div style="font-size:17px;font-weight:700;color:var(--text);font-family:var(--font-display);margin-bottom:12px">Configurações do App</div>
     <div style="background:#fff;border-radius:var(--radius);box-shadow:0 2px 12px rgba(100,50,20,0.08);overflow:hidden;margin-bottom:20px">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:15px 16px;border-bottom:1px solid rgba(0,0,0,0.05)"><span style="font-size:15px;color:var(--text)">🔴 Modo manutenção</span><div class="toggle" data-key="manut" onclick="toggleSet(this)"></div></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:15px 16px;border-bottom:1px solid rgba(0,0,0,0.05)"><span style="font-size:15px;color:var(--text)">📢 Banner de aviso</span><div class="toggle" data-key="banner" onclick="toggleSet(this)"></div></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:15px 16px"><span style="font-size:15px;color:var(--text)">✨ Novas funcionalidades</span><div class="toggle on" data-key="feat" onclick="toggleSet(this)"></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:15px 16px;border-bottom:1px solid rgba(0,0,0,0.05)"><div><span style="font-size:15px;color:var(--text)">🔴 Modo manutenção</span><div style="font-size:13px;color:var(--text-dim);margin-top:2px">Bloqueia o app para alunos</div></div><div class="toggle" data-key="manut" onclick="toggleAdminSet(this)"></div></div>
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:15px 16px;border-bottom:1px solid rgba(0,0,0,0.05)"><div><span style="font-size:15px;color:var(--text)">📢 Banner de aviso</span><div style="font-size:13px;color:var(--text-dim);margin-top:2px">Faixa com mensagem no topo</div></div><div class="toggle" data-key="banner" onclick="toggleAdminSet(this)"></div></div>
+        <div id="bannerMsgRow" style="display:none;padding:0 16px 14px;border-bottom:1px solid rgba(0,0,0,0.05)"><input id="bannerMsgInput" class="af-input" placeholder="Texto do banner…" value="⚠️ Manutenção programada hoje às 22h" style="font-size:14px"><button onclick="applyBanner()" style="margin-top:8px;width:100%;padding:10px;border-radius:50px;border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:600;cursor:pointer">Aplicar banner</button></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:15px 16px"><div><span style="font-size:15px;color:var(--text)">✨ Novas funcionalidades</span><div style="font-size:13px;color:var(--text-dim);margin-top:2px">Exibe badge NOVO nas seções</div></div><div class="toggle on" data-key="feat" onclick="toggleAdminSet(this)"></div></div>
     </div>
 
     <button onclick="logoutAdmin()" style="width:100%;padding:15px;border-radius:50px;border:2px solid rgba(200,105,42,0.20);background:#fff;color:var(--rose);font-size:15px;font-weight:600;cursor:pointer">🔓 Sair do Admin</button>
@@ -1916,6 +1934,36 @@ function toggleSet(el){
   state.settings[k]=el.classList.contains('on')?1:0;
   saveState();
   toast('Configuração salva');
+}
+
+// ============ ADMIN SETTINGS ============
+function toggleAdminSet(el){
+  el.classList.toggle('on');
+  const k=el.dataset.key;
+  const on=el.classList.contains('on');
+  if(k==='manut'){
+    const screen=document.getElementById('manutScreen');
+    screen.style.display=on?'flex':'none';
+    toast(on?'🔴 Modo manutenção ATIVADO — alunos veem tela de bloqueio':'✅ Modo manutenção desativado');
+  } else if(k==='banner'){
+    const row=document.getElementById('bannerMsgRow');
+    const banner=document.getElementById('appBanner');
+    row.style.display=on?'block':'none';
+    banner.style.display=on?'flex':'none';
+    toast(on?'📢 Banner ativado — edite o texto abaixo':'Banner removido');
+  } else if(k==='feat'){
+    // Adiciona/remove badge NOVO nas seções
+    document.querySelectorAll('.new-badge').forEach(b=>b.style.display=on?'inline-flex':'none');
+    toast(on?'✨ Badges NOVO visíveis':'Badges NOVO ocultos');
+  }
+}
+
+function applyBanner(){
+  const txt=document.getElementById('bannerMsgInput').value.trim();
+  if(!txt){toast('Digite o texto do banner ❌');return;}
+  document.getElementById('appBannerText').textContent=txt;
+  document.getElementById('appBanner').style.display='flex';
+  toast('Banner atualizado! 📢');
 }
 function applySettingsUI(){
   document.querySelectorAll('.toggle[data-key]').forEach(t=>{
