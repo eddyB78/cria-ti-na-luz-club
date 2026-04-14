@@ -160,6 +160,11 @@ img{max-width:100%;display:block}
 /* ============ ANIMATIONS ============ */
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.08)}}
 .pulse{animation:pulse 1.2s ease-in-out infinite}
+.af-group{margin-bottom:14px}
+.af-label{display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+.af-input{width:100%;padding:12px 14px;border-radius:14px;border:1.5px solid var(--border);background:#fff;color:var(--text);font-size:15px;font-family:var(--font-body);outline:none;transition:border-color .2s;box-sizing:border-box}
+.af-input:focus{border-color:var(--accent)}
+.af-btn{width:100%;padding:14px;border-radius:50px;border:none;background:linear-gradient(135deg,var(--accent),#E0884A);color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin-top:6px}
 
 /* ============ POST / COMMUNITY ============ */
 .post{background:var(--bg-card);border-radius:var(--radius);padding:16px;margin-bottom:12px;border:1px solid var(--border)}
@@ -784,6 +789,17 @@ img{max-width:100%;display:block}
   </button>
 </div>
 
+<!-- ADMIN FORM MODAL -->
+<div id="adminFormModal" style="display:none;position:fixed;inset:0;z-index:700;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);align-items:flex-end;justify-content:center">
+  <div style="background:#fff;border-radius:24px 24px 0 0;width:100%;max-width:430px;max-height:88vh;overflow-y:auto;padding:24px 20px 40px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div style="font-size:19px;font-weight:700;color:var(--text);font-family:var(--font-display)" id="adminFormTitle">Formulário</div>
+      <button onclick="closeAdminForm()" style="width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:#fff;color:var(--text-muted);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer">✕</button>
+    </div>
+    <div id="adminFormBody"></div>
+  </div>
+</div>
+
 <!-- PIN MODAL -->
 <div id="pinModal" style="display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);align-items:center;justify-content:center">
   <div style="background:#fff;border-radius:24px;padding:32px 28px;width:calc(100% - 48px);max-width:340px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
@@ -864,21 +880,6 @@ img{max-width:100%;display:block}
       <span style="font-size:14px;color:var(--accent);cursor:pointer;font-weight:600">Ver todas</span>
     </div>
     <div style="background:#fff;border-radius:var(--radius);box-shadow:0 2px 12px rgba(100,50,20,0.08);overflow:hidden;margin-bottom:20px" id="adminAulasList">
-      <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid rgba(0,0,0,0.05)">
-        <div style="width:40px;height:40px;border-radius:10px;background:rgba(200,105,42,0.10);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🕊️</div>
-        <div style="flex:1"><div style="font-size:15px;font-weight:600;color:var(--text)">Desenvolvimento Mediúnico</div><div style="font-size:13px;color:var(--text-muted)">247 visualizações · Publicada</div></div>
-        <div style="display:flex;gap:6px"><button onclick="adminAction('edit')" style="padding:6px 12px;border-radius:20px;border:1px solid var(--accent);background:#fff;color:var(--accent);font-size:13px;font-weight:600;cursor:pointer">Editar</button></div>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid rgba(0,0,0,0.05)">
-        <div style="width:40px;height:40px;border-radius:10px;background:rgba(200,105,42,0.10);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🃏</div>
-        <div style="flex:1"><div style="font-size:15px;font-weight:600;color:var(--text)">Tarot — Arcanos Maiores</div><div style="font-size:13px;color:var(--text-muted)">189 visualizações · Publicada</div></div>
-        <div style="display:flex;gap:6px"><button onclick="adminAction('edit')" style="padding:6px 12px;border-radius:20px;border:1px solid var(--accent);background:#fff;color:var(--accent);font-size:13px;font-weight:600;cursor:pointer">Editar</button></div>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:14px 16px">
-        <div style="width:40px;height:40px;border-radius:10px;background:rgba(212,135,58,0.10);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🌿</div>
-        <div style="flex:1"><div style="font-size:15px;font-weight:600;color:var(--text)">Banho de Ervas Sagradas</div><div style="font-size:13px;color:var(--amber);font-weight:600">Rascunho</div></div>
-        <div style="display:flex;gap:6px"><button onclick="adminAction('publish')" style="padding:6px 12px;border-radius:20px;border:none;background:var(--accent);color:#fff;font-size:13px;font-weight:600;cursor:pointer">Publicar</button></div>
-      </div>
     </div>
 
     <!-- Usuários Recentes -->
@@ -1115,6 +1116,7 @@ function checkPin(){
 function openAdmin(){
   if(!localStorage.getItem(ADMIN_KEY)){toast('Acesso negado 🔒');return;}
   const p=document.getElementById('adminPanel');p.style.display='block';p.scrollTop=0;
+  renderAdminAulas();
 }
 function closeAdmin(){document.getElementById('adminPanel').style.display='none'}
 function logoutAdmin(){
@@ -1123,7 +1125,171 @@ function logoutAdmin(){
   closeAdmin();
   toast('Sessão admin encerrada');
 }
-function adminAction(a){const msgs={aula:'Abrindo editor de nova aula… 📹',trilha:'Abrindo editor de nova trilha… 🕯️',notif:'Criando notificação push… 🔔',live:'Agendando aula ao vivo… 📡',edit:'Abrindo editor… ✏️',publish:'Aula publicada com sucesso! ✅'};toast(msgs[a]||'Ação realizada!')}
+// ============ ADMIN FORMS ============
+function adminAction(a,idx){
+  if(a==='aula') openAdminForm('aula');
+  else if(a==='trilha') openAdminForm('trilha');
+  else if(a==='notif') openAdminForm('notif');
+  else if(a==='live') openAdminForm('live');
+  else if(a==='edit') openAdminForm('editaula',idx);
+  else if(a==='publish'){adminPublish(idx);}
+}
+
+let adminFormTarget=null;
+
+function openAdminForm(type, idx){
+  adminFormTarget={type,idx};
+  const modal=document.getElementById('adminFormModal');
+  const body=document.getElementById('adminFormBody');
+  const title=document.getElementById('adminFormTitle');
+  const icons={aula:'📹',trilha:'🕯️',notif:'🔔',live:'📡',editaula:'✏️'};
+  const titles={aula:'Nova Aula',trilha:'Nova Trilha',notif:'Enviar Notificação',live:'Agendar Aula ao Vivo',editaula:'Editar Aula'};
+  title.textContent = (icons[type]||'') + ' ' + (titles[type]||'');
+
+  if(type==='aula'){
+    body.innerHTML=`
+      <div class="af-group"><label class="af-label">Título da aula *</label><input class="af-input" id="af_titulo" placeholder="Ex: Meditação com Pretos Velhos"></div>
+      <div class="af-group"><label class="af-label">Professor / Guia *</label><input class="af-input" id="af_professor" placeholder="Ex: Mãe Stella"></div>
+      <div class="af-group"><label class="af-label">Descrição</label><textarea class="af-input" id="af_desc" rows="3" placeholder="Breve descrição da aula..."></textarea></div>
+      <div class="af-group"><label class="af-label">Horário</label><input class="af-input" id="af_horario" placeholder="Ex: 20:00 hoje, Sáb 15:00, Gravado"></div>
+      <div class="af-group"><label class="af-label">Tipo</label><select class="af-input" id="af_tipo"><option value="REPLAY">Gravada (Replay)</option><option value="AO VIVO">Ao Vivo</option><option value="HOJE">Hoje</option><option value="AMANHÃ">Amanhã</option><option value="SEMANAL">Semanal</option><option value="ESPECIAL">Especial</option></select></div>
+      <button class="af-btn" onclick="adminSaveAula()">✅ Publicar Aula</button>`;
+  } else if(type==='live'){
+    body.innerHTML=`
+      <div class="af-group"><label class="af-label">Título da aula ao vivo *</label><input class="af-input" id="af_titulo" placeholder="Ex: Conexão com Vovó Maria Conga"></div>
+      <div class="af-group"><label class="af-label">Professor / Guia *</label><input class="af-input" id="af_professor" placeholder="Ex: Vovó Maria Conga"></div>
+      <div class="af-group"><label class="af-label">Horário *</label><input class="af-input" id="af_horario" placeholder="Ex: 20:00 hoje"></div>
+      <div class="af-group"><label class="af-label">Plataforma</label><select class="af-input" id="af_plat"><option>Zoom</option><option>YouTube</option><option>Instagram</option><option>Google Meet</option></select></div>
+      <div class="af-group"><label class="af-label">Link da aula</label><input class="af-input" id="af_link" placeholder="https://..."></div>
+      <button class="af-btn" onclick="adminSaveLive()">📡 Agendar Ao Vivo</button>`;
+  } else if(type==='trilha'){
+    body.innerHTML=`
+      <div class="af-group"><label class="af-label">Nome da trilha *</label><input class="af-input" id="af_titulo" placeholder="Ex: Proteção Espiritual Avançada"></div>
+      <div class="af-group"><label class="af-label">Descrição *</label><textarea class="af-input" id="af_desc" rows="3" placeholder="Objetivo da trilha..."></textarea></div>
+      <div class="af-group"><label class="af-label">Ícone (emoji)</label><input class="af-input" id="af_icone" placeholder="🕯️" maxlength="4"></div>
+      <div class="af-group"><label class="af-label">Número de módulos</label><input class="af-input" id="af_mods" type="number" min="1" max="20" value="4" placeholder="4"></div>
+      <div class="af-group"><label class="af-label">Cor (hex)</label><input class="af-input" id="af_cor" type="color" value="#C8692A"></div>
+      <button class="af-btn" onclick="adminSaveTrilha()">✅ Criar Trilha</button>`;
+  } else if(type==='notif'){
+    body.innerHTML=`
+      <div class="af-group"><label class="af-label">Título da notificação *</label><input class="af-input" id="af_titulo" placeholder="Ex: Aula ao vivo em 30min!"></div>
+      <div class="af-group"><label class="af-label">Mensagem *</label><textarea class="af-input" id="af_desc" rows="3" placeholder="Escreva a mensagem para todos os alunos..."></textarea></div>
+      <div class="af-group"><label class="af-label">Tipo</label><select class="af-input" id="af_tipo"><option value="📢">📢 Geral</option><option value="🔴">🔴 Urgente</option><option value="🎓">🎓 Aula</option><option value="☽">☽ Espiritual</option></select></div>
+      <button class="af-btn" onclick="adminSaveNotif()">🔔 Enviar para Todos</button>`;
+  } else if(type==='editaula'){
+    const aula=LC[idx];
+    if(!aula){toast('Aula não encontrada');return;}
+    body.innerHTML=`
+      <div class="af-group"><label class="af-label">Título *</label><input class="af-input" id="af_titulo" value="${aula.t}"></div>
+      <div class="af-group"><label class="af-label">Professor</label><input class="af-input" id="af_professor" value="${aula.te}"></div>
+      <div class="af-group"><label class="af-label">Descrição</label><textarea class="af-input" id="af_desc" rows="3">${aula.d||''}</textarea></div>
+      <div class="af-group"><label class="af-label">Horário</label><input class="af-input" id="af_horario" value="${aula.ti}"></div>
+      <div class="af-group"><label class="af-label">Tipo</label><select class="af-input" id="af_tipo"><option${aula.tag==='REPLAY'?' selected':''}>REPLAY</option><option${aula.tag==='AO VIVO'?' selected':''}>AO VIVO</option><option${aula.tag==='HOJE'?' selected':''}>HOJE</option><option${aula.tag==='AMANHÃ'?' selected':''}>AMANHÃ</option><option${aula.tag==='SEMANAL'?' selected':''}>SEMANAL</option><option${aula.tag==='ESPECIAL'?' selected':''}>ESPECIAL</option></select></div>
+      <button class="af-btn" onclick="adminUpdateAula(${idx})">💾 Salvar Alterações</button>
+      <button onclick="adminDeleteAula(${idx})" style="width:100%;padding:13px;border-radius:50px;border:2px solid var(--rose);background:#fff;color:var(--rose);font-size:15px;font-weight:600;cursor:pointer;margin-top:8px">🗑️ Excluir Aula</button>`;
+  }
+  modal.style.display='flex';
+}
+
+function closeAdminForm(){document.getElementById('adminFormModal').style.display='none';}
+
+function adminSaveAula(){
+  const t=document.getElementById('af_titulo').value.trim();
+  const te=document.getElementById('af_professor').value.trim();
+  if(!t||!te){toast('Preencha título e professor ❌');return;}
+  const ti=document.getElementById('af_horario').value||'Gravado';
+  const tag=document.getElementById('af_tipo').value;
+  const d=document.getElementById('af_desc').value;
+  const tagColors={REPLAY:'var(--accent)','AO VIVO':'var(--rose)',HOJE:'var(--teal)',AMANHÃ:'var(--amber)',SEMANAL:'var(--accent)',ESPECIAL:'var(--blue)'};
+  const tagBadge={REPLAY:'ba','AO VIVO':'br',HOJE:'bt',AMANHÃ:'bp',SEMANAL:'ba',ESPECIAL:'bb'};
+  LC.unshift({t,te,ti,tag,c:tagColors[tag]||'var(--accent)',b:tagBadge[tag]||'ba',d,v:0});
+  renderAList();renderAdminAulas();
+  closeAdminForm();toast('Aula publicada com sucesso! ✅');
+}
+
+function adminSaveLive(){
+  const t=document.getElementById('af_titulo').value.trim();
+  const te=document.getElementById('af_professor').value.trim();
+  if(!t||!te){toast('Preencha título e professor ❌');return;}
+  const ti=document.getElementById('af_horario').value||'20:00 hoje';
+  const plat=document.getElementById('af_plat').value;
+  LC.unshift({t,te,ti,tag:'AO VIVO',c:'var(--rose)',b:'br',d:`${plat} · Aula ao vivo`,v:0});
+  // Re-render live carousel
+  document.getElementById('liveC').innerHTML=LC.slice(0,3).map(c=>`<div class="carousel-item"><div style="background:#fff;border-radius:20px;overflow:hidden;margin-bottom:0;box-shadow:0 2px 16px rgba(100,50,20,0.08)"><div style="background:linear-gradient(135deg,#C8692A,#E0884A);padding:10px 14px;display:flex;align-items:center;gap:8px"><span style="font-size:14px;color:rgba(255,255,255,0.9)">📹</span><span style="font-size:13px;font-weight:700;color:#fff;letter-spacing:.06em;text-transform:uppercase">${c.tag}</span>${c.v?`<span style="margin-left:auto;font-size:13px;color:rgba(255,255,255,0.85)">● ${c.v}</span>`:''}</div><div style="padding:14px"><div style="font-size:16px;font-weight:700;color:#3D2314;margin-bottom:8px;line-height:1.35">${c.t}</div><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:14px">✨</span><span style="font-size:14px;color:#7A6055">${c.te}</span></div><div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span style="font-size:13px;color:#7A6055">📹 Zoom</span><span style="font-size:13px;color:#7A6055">🕐 ${c.ti}</span></div><button style="width:100%;background:linear-gradient(135deg,#C8692A,#E0884A);color:#fff;border:none;border-radius:50px;padding:10px;font-size:14px;font-weight:600;cursor:pointer">Entrar na Aula</button></div></div></div>`).join('');
+  renderAList();renderAdminAulas();
+  closeAdminForm();toast('Aula ao vivo agendada! 📡');
+}
+
+function adminSaveTrilha(){
+  const t=document.getElementById('af_titulo').value.trim();
+  const d=document.getElementById('af_desc').value.trim();
+  if(!t||!d){toast('Preencha nome e descrição ❌');return;}
+  const i=document.getElementById('af_icone').value||'✨';
+  const mod=parseInt(document.getElementById('af_mods').value)||4;
+  const c=document.getElementById('af_cor').value;
+  TR.unshift({t,i,mod,p:0,c,d});
+  renderTList();renderAdminAulas();
+  closeAdminForm();toast('Trilha criada! 🕯️');
+}
+
+function adminSaveNotif(){
+  const titulo=document.getElementById('af_titulo').value.trim();
+  const msg=document.getElementById('af_desc').value.trim();
+  if(!titulo||!msg){toast('Preencha título e mensagem ❌');return;}
+  const tipo=document.getElementById('af_tipo').value;
+  // Add to notification modal
+  const notifList=document.querySelector('#notifOv .modal');
+  if(notifList){
+    const item=document.createElement('div');
+    item.className='notif-item';
+    item.innerHTML=`<div class="nicon" style="background:rgba(200,105,42,0.12)">${tipo}</div><div><div style="font-size:15px;color:var(--text-muted);line-height:1.5"><strong style="color:var(--text)">${titulo}</strong> ${msg}</div><div style="font-size:13px;color:var(--text-dim);margin-top:4px">Agora</div></div>`;
+    const handle=notifList.querySelector('.modal-handle');
+    if(handle)handle.after(item);
+  }
+  closeAdminForm();toast(`Notificação enviada para todos! 🔔`);
+}
+
+function adminUpdateAula(idx){
+  const t=document.getElementById('af_titulo').value.trim();
+  if(!t){toast('Título obrigatório ❌');return;}
+  LC[idx].t=t;
+  LC[idx].te=document.getElementById('af_professor').value;
+  LC[idx].ti=document.getElementById('af_horario').value;
+  LC[idx].tag=document.getElementById('af_tipo').value;
+  LC[idx].d=document.getElementById('af_desc').value;
+  renderAList();renderAdminAulas();
+  closeAdminForm();toast('Aula atualizada! 💾');
+}
+
+function adminDeleteAula(idx){
+  if(!confirm('Excluir esta aula?'))return;
+  LC.splice(idx,1);
+  renderAList();renderAdminAulas();
+  closeAdminForm();toast('Aula excluída 🗑️');
+}
+
+function adminPublish(idx){
+  // Move draft to published (just changes the visual in admin list)
+  renderAdminAulas();
+  toast('Aula publicada com sucesso! ✅');
+}
+
+function renderAdminAulas(){
+  const el=document.getElementById('adminAulasList');
+  if(!el)return;
+  el.innerHTML=LC.slice(0,5).map((c,i)=>`
+    <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid rgba(0,0,0,0.05)">
+      <div style="width:40px;height:40px;border-radius:10px;background:rgba(200,105,42,0.10);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📹</div>
+      <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.t}</div><div style="font-size:13px;color:var(--text-muted)">${c.te} · ${c.tag}</div></div>
+      <button onclick="adminAction('edit',${i})" style="flex-shrink:0;padding:6px 12px;border-radius:20px;border:1px solid var(--accent);background:#fff;color:var(--accent);font-size:13px;font-weight:600;cursor:pointer">Editar</button>
+    </div>`).join('');
+}
+
+function renderTList(){
+  const el=document.getElementById('tList');
+  if(!el)return;
+  el.innerHTML=TR.map((t,i)=>`<div class="card" onclick="openTrail(${i})"><div style="display:flex;gap:14px;align-items:center"><div style="width:52px;height:52px;border-radius:14px;background:${t.c}22;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">${t.i}</div><div style="flex:1"><div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px">${t.t}</div><div style="font-size:14px;color:var(--text-muted);margin-bottom:8px">${t.mod} módulos · ${t.d}</div><div class="pbar" style="height:5px"><div class="pfill" style="width:${t.p}%;background:${t.c}"></div></div><div style="font-size:14px;color:var(--text-muted);margin-top:4px">${t.p>0?t.p+'% concluído':'Não iniciada'}</div></div></div></div>`).join('');
+}
 
 // Verifica sessão admin ao abrir o app
 if(localStorage.getItem(ADMIN_KEY)){
