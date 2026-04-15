@@ -2027,13 +2027,32 @@ updateOracleLimit();
 // ============ AUDIO PLAYER ============
 let isP=false,pInt=null,pProg=0,pDur=900;
 
+// Converte links de nuvem em URL de streaming direto
+function getAudioStreamUrl(url){
+  if(!url)return null;
+  // MP3/OGG/WAV/M4A direto
+  if(url.match(/\.(mp3|ogg|wav|m4a|aac|flac)(\?.*)?$/i))return url;
+  // Google Drive — converte para link direto de download/stream
+  // Formatos: /file/d/ID/view  ou  ?id=ID  ou  open?id=ID
+  const gdrive=url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?.*id=)([a-zA-Z0-9_-]+)/);
+  if(gdrive)return 'https://drive.google.com/uc?export=download&id='+gdrive[1];
+  // Dropbox — troca dl=0 por dl=1 e www por dl
+  if(url.includes('dropbox.com')){
+    return url.replace('www.dropbox.com','dl.dropboxusercontent.com').replace('dl=0','dl=1').replace('/s/','/s/').split('?')[0]+'?dl=1';
+  }
+  // Qualquer outro link direto que não seja plataforma de streaming
+  const streaming=/(youtube\.com|youtu\.be|spotify\.com|soundcloud\.com|deezer\.com|tidal\.com)/i;
+  if(!streaming.test(url))return url; // tenta como áudio direto
+  return null; // plataformas de streaming → abre externamente
+}
+
 function openMed(idx){
   const m=MED[idx];
   if(!m)return;
-  // Se tem link externo (YouTube, Spotify, MP3), abre direto
   if(m.media){
-    // Verifica se é MP3 direto para usar o player nativo
-    if(m.media.match(/\.(mp3|ogg|wav|m4a)(\?.*)?$/i)){
+    const streamUrl=getAudioStreamUrl(m.media);
+    if(streamUrl){
+      // Usa o player nativo do app
       document.getElementById('playerTitle').textContent=m.t;
       document.getElementById('playerSub').textContent='Meditação guiada · '+m.d;
       const mins=parseInt(m.d);
@@ -2045,14 +2064,14 @@ function openMed(idx){
       isP=false;
       document.getElementById('playBtn').textContent='▶';
       if(pInt)clearInterval(pInt);
-      // Configura o audio element
       let audio=document.getElementById('medAudio');
       if(!audio){audio=document.createElement('audio');audio.id='medAudio';audio.style.display='none';document.body.appendChild(audio);}
-      audio.src=m.media;
+      audio.src=streamUrl;
+      audio.onerror=()=>{ toast('⚠️ Não foi possível carregar o áudio. Verifique o link.'); };
       document.getElementById('audioPlayer').classList.add('show');
       toast('🎵 '+m.t+' — toque ▶ para iniciar');
     } else {
-      // YouTube, Spotify, SoundCloud — abre em nova aba
+      // YouTube, Spotify, SoundCloud → abre em nova aba
       window.open(m.media,'_blank');
       toast('🎵 Abrindo '+m.t+'…');
     }
