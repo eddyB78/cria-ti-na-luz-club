@@ -1765,7 +1765,7 @@ async function initApp(){
     // Carrega em paralelo
     const[{data:meds},{data:aulas},{data:trilhas},{data:cfg}]=await Promise.all([
       sb.from('meditacoes').select('*').eq('ativo',true).order('ordem'),
-      sb.from('aulas').select('*').eq('ativo',true).order('ordem'),
+      sb.from('aulas').select('*').eq('ativo',true).order('criado_em',{ascending:false}),
       sb.from('trilhas').select('*').eq('ativo',true).order('ordem'),
       sb.from('config').select('*'),
     ]);
