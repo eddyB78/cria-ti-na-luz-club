@@ -366,8 +366,8 @@ img{max-width:100%;display:block}
   #oCards{grid-template-columns:repeat(5,1fr)!important}
   #cFeed{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
   #cFeed .post{margin-bottom:0}
-  #liveC{grid-template-columns:repeat(3,1fr)!important;overflow-x:visible!important}
-  #liveC .carousel-item{min-width:unset}
+  #liveC{display:flex!important;overflow-x:auto!important;grid-template-columns:unset!important}
+  #liveC .carousel-item{min-width:260px!important}
 }
 
 /* Tablet — grids menores */
@@ -377,7 +377,8 @@ img{max-width:100%;display:block}
   .carousel{grid-template-columns:repeat(2,1fr)}
   #oCards{grid-template-columns:repeat(4,1fr)!important}
   #medG{grid-template-columns:repeat(2,1fr)!important}
-  #liveC{grid-template-columns:repeat(2,1fr)!important}
+  #liveC{display:flex!important;overflow-x:auto!important;grid-template-columns:unset!important}
+  #liveC .carousel-item{min-width:240px!important}
 }
 </style>
 </head>
