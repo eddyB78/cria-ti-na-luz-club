@@ -2028,30 +2028,32 @@ updateOracleLimit();
 let isP=false,pInt=null,pProg=0,pDur=900;
 
 // Converte links de nuvem em URL de streaming direto
+// Retorna {url, isDrive} ou null se deve abrir externamente
 function getAudioStreamUrl(url){
   if(!url)return null;
   // MP3/OGG/WAV/M4A direto
-  if(url.match(/\.(mp3|ogg|wav|m4a|aac|flac)(\?.*)?$/i))return url;
-  // Google Drive — converte para link direto de download/stream
-  // Formatos: /file/d/ID/view  ou  ?id=ID  ou  open?id=ID
+  if(url.match(/\.(mp3|ogg|wav|m4a|aac|flac)(\?.*)?$/i))return{url,isDrive:false};
+  // Google Drive — converte para link direto (pode ter CORS)
   const gdrive=url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?.*id=)([a-zA-Z0-9_-]+)/);
-  if(gdrive)return 'https://drive.google.com/uc?export=download&id='+gdrive[1];
-  // Dropbox — troca dl=0 por dl=1 e www por dl
+  if(gdrive)return{url:'https://drive.google.com/uc?export=download&confirm=t&id='+gdrive[1],original:url,isDrive:true};
+  // Dropbox — link direto funcional
   if(url.includes('dropbox.com')){
-    return url.replace('www.dropbox.com','dl.dropboxusercontent.com').replace('dl=0','dl=1').replace('/s/','/s/').split('?')[0]+'?dl=1';
+    const u=url.replace('www.dropbox.com','dl.dropboxusercontent.com').replace('dl=0','dl=1').split('?')[0]+'?dl=1';
+    return{url:u,isDrive:false};
   }
-  // Qualquer outro link direto que não seja plataforma de streaming
+  // Plataformas de streaming → abre externamente
   const streaming=/(youtube\.com|youtu\.be|spotify\.com|soundcloud\.com|deezer\.com|tidal\.com)/i;
-  if(!streaming.test(url))return url; // tenta como áudio direto
-  return null; // plataformas de streaming → abre externamente
+  if(streaming.test(url))return null;
+  // Qualquer outro link direto
+  return{url,isDrive:false};
 }
 
 function openMed(idx){
   const m=MED[idx];
   if(!m)return;
   if(m.media){
-    const streamUrl=getAudioStreamUrl(m.media);
-    if(streamUrl){
+    const stream=getAudioStreamUrl(m.media);
+    if(stream){
       // Usa o player nativo do app
       document.getElementById('playerTitle').textContent=m.t;
       document.getElementById('playerSub').textContent='Meditação guiada · '+m.d;
@@ -2066,8 +2068,18 @@ function openMed(idx){
       if(pInt)clearInterval(pInt);
       let audio=document.getElementById('medAudio');
       if(!audio){audio=document.createElement('audio');audio.id='medAudio';audio.style.display='none';document.body.appendChild(audio);}
-      audio.src=streamUrl;
-      audio.onerror=()=>{ toast('⚠️ Não foi possível carregar o áudio. Verifique o link.'); };
+      audio.src=stream.url;
+      // Google Drive pode bloquear CORS — fallback para abrir externamente
+      audio.onerror=()=>{
+        isP=false;
+        document.getElementById('playBtn').textContent='▶';
+        if(stream.isDrive){
+          toast('⚠️ Google Drive bloqueou o áudio. Abrindo no Drive…');
+          setTimeout(()=>window.open(stream.original||m.media,'_blank'),800);
+        } else {
+          toast('⚠️ Não foi possível carregar o áudio.');
+        }
+      };
       document.getElementById('audioPlayer').classList.add('show');
       toast('🎵 '+m.t+' — toque ▶ para iniciar');
     } else {
@@ -2100,7 +2112,11 @@ function togglePlay(){
   if(isP){
     // Se tem áudio real, usa ele
     if(audio&&audio.src){
-      audio.play().catch(()=>{});
+      audio.play().catch(()=>{
+        isP=false;
+        document.getElementById('playBtn').textContent='▶';
+        toast('⚠️ Não foi possível reproduzir. Use um link direto de MP3 ou GitHub.');
+      });
       audio.ontimeupdate=function(){
         if(!audio.duration)return;
         pProg=(audio.currentTime/audio.duration)*100;
