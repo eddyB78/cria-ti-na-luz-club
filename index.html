@@ -555,7 +555,7 @@ img{max-width:100%;display:block}
 
 <!-- TELA DE MANUTENÇÃO -->
 <div id="manutScreen" style="display:none;position:absolute;inset:0;z-index:400;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center">
-  <div style="font-size:64px;margin-bottom:20px">🔧</div>
+  <div style="font-size:64px;margin-bottom:20px;cursor:pointer;user-select:none" onclick="manutAdminTap()">🔧</div>
   <div style="font-size:26px;font-weight:700;color:var(--text);font-family:var(--font-display);margin-bottom:10px">Em Manutenção</div>
   <div style="font-size:16px;color:var(--text-muted);line-height:1.6;margin-bottom:28px" id="manutMsg">O app está em manutenção temporária.<br>Voltamos em breve com novidades! ✨</div>
   <div style="width:60px;height:4px;background:var(--accent-dim);border-radius:4px;overflow:hidden"><div style="height:100%;background:var(--accent);border-radius:4px;animation:loadBar 2s ease-in-out infinite alternate"></div></div>
@@ -1099,6 +1099,27 @@ function toast(m){const t=document.getElementById('toast');t.textContent=m;t.cla
 const ADMIN_PIN='1234'; // 🔑 Altere este PIN
 const ADMIN_KEY='criatinaluz_admin';
 let pinBuf='',adminTapCount=0,adminTapTimer=null;
+let manutTapCount=0,manutTapTimer=null;
+
+function manutAdminTap(){
+  manutTapCount++;
+  clearTimeout(manutTapTimer);
+  manutTapTimer=setTimeout(()=>{manutTapCount=0;},1500);
+  if(manutTapCount>=5){
+    manutTapCount=0;
+    if(localStorage.getItem(ADMIN_KEY)){
+      // Admin já autenticado — sai direto
+      document.getElementById('manutScreen').style.display='none';
+      const tog=document.querySelector('.toggle[data-key="manut"]');
+      if(tog)tog.classList.remove('on');
+      toast('✅ Manutenção desativada');
+    } else {
+      // Pede PIN e, se correto, sai da manutenção
+      window._manutExit=true;
+      showPinModal();
+    }
+  }
+}
 
 function adminTap(){
   adminTapCount++;
@@ -1132,6 +1153,14 @@ function checkPin(){
   if(pinBuf===ADMIN_PIN){
     localStorage.setItem(ADMIN_KEY,'1');
     closePinModal();
+    if(window._manutExit){
+      window._manutExit=false;
+      document.getElementById('manutScreen').style.display='none';
+      const tog=document.querySelector('.toggle[data-key="manut"]');
+      if(tog)tog.classList.remove('on');
+      toast('✅ Manutenção desativada — bem-vindo, admin!');
+      return;
+    }
     document.getElementById('adminMenuBtn').style.display='flex';
     toast('Acesso admin liberado! 🛡️');
   } else {
