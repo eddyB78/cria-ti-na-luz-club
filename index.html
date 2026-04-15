@@ -115,9 +115,14 @@ img{max-width:100%;display:block}
 .search-bar input::placeholder{color:var(--text-dim)}
 
 /* ============ CAROUSEL ============ */
-.carousel{display:flex;gap:12px;overflow-x:auto;padding:0 0 6px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.carousel{display:flex;gap:12px;overflow-x:auto;padding:0 0 6px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;align-items:stretch}
 .carousel::-webkit-scrollbar{display:none}
-.carousel-item{min-width:min(240px,75vw);flex-shrink:0;scroll-snap-align:start}
+.carousel-item{min-width:min(240px,75vw);flex-shrink:0;scroll-snap-align:start;display:flex}
+.aula-card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(100,50,20,0.08);display:flex;flex-direction:column;width:100%}
+.aula-card-capa{width:100%;height:120px;object-fit:cover;display:block;flex-shrink:0}
+.aula-card-capa-placeholder{height:120px;background:linear-gradient(135deg,#C8692A,#E0884A);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative}
+.aula-card-body{padding:14px;display:flex;flex-direction:column;flex:1}
+.aula-card-btn{width:100%;background:linear-gradient(135deg,#C8692A,#E0884A);color:#fff;border:none;border-radius:50px;padding:10px;font-size:14px;font-weight:600;cursor:pointer;margin-top:auto}
 
 /* ============ FILTERS ============ */
 .filters{display:flex;gap:8px;overflow-x:auto;margin-bottom:18px;padding-bottom:4px}
@@ -1229,6 +1234,13 @@ function openAdminForm(type, idx){
       <div class="af-group"><label class="af-label">Duração</label><input class="af-input" id="af_dur" placeholder="Ex: 25min"></div>
       <div class="af-group"><label class="af-label">Horário</label><input class="af-input" id="af_horario" placeholder="Ex: 20:00 hoje, Sáb 15:00, Gravado"></div>
       <div class="af-group"><label class="af-label">Link do vídeo (YouTube/Vimeo)</label><input class="af-input" id="af_media" placeholder="https://youtube.com/watch?v=..."></div>
+      <div class="af-group">
+        <label class="af-label">🖼️ Capa do card (imagem)</label>
+        <input type="file" accept="image/*" id="af_capa_file" style="display:none" onchange="uploadCapaStorage('af_capa_file','af_capa')">
+        <button type="button" onclick="document.getElementById('af_capa_file').click()" style="width:100%;padding:12px;border-radius:14px;border:2px dashed var(--accent);background:var(--accent-dim);color:var(--accent);font-size:15px;font-weight:600;cursor:pointer;margin-bottom:10px">📤 Enviar imagem de capa</button>
+        <input class="af-input" id="af_capa" placeholder="— ou cole URL da imagem —">
+        <div id="af_capa_preview" style="margin-top:8px;display:none"><img id="af_capa_img" style="width:100%;height:100px;object-fit:cover;border-radius:12px;border:1px solid var(--border)"></div>
+      </div>
       <div class="af-group"><label class="af-label">Tipo</label><select class="af-input" id="af_tipo"><option value="REPLAY">Gravada (Replay)</option><option value="AO VIVO">Ao Vivo</option><option value="HOJE">Hoje</option><option value="AMANHÃ">Amanhã</option><option value="SEMANAL">Semanal</option><option value="ESPECIAL">Especial</option></select></div>
       <div class="af-group"><label class="af-label">Adicionar a uma trilha (opcional)</label><select class="af-input" id="af_trilha" onchange="adminTrilhaChange(this)"><option value="">— Não vincular a trilha —</option>${TR.map((t,i)=>`<option value="${i}">${t.i} ${t.t}</option>`).join('')}</select></div>
       <div class="af-group" id="af_modGroup" style="display:none"><label class="af-label">Módulo da trilha</label><select class="af-input" id="af_modulo"></select></div>
@@ -1240,6 +1252,12 @@ function openAdminForm(type, idx){
       <div class="af-group"><label class="af-label">Horário *</label><input class="af-input" id="af_horario" placeholder="Ex: 20:00 hoje"></div>
       <div class="af-group"><label class="af-label">Plataforma</label><select class="af-input" id="af_plat"><option>Zoom</option><option>YouTube</option><option>Instagram</option><option>Google Meet</option></select></div>
       <div class="af-group"><label class="af-label">Link da aula</label><input class="af-input" id="af_link" placeholder="https://..."></div>
+      <div class="af-group">
+        <label class="af-label">🖼️ Capa do card (imagem)</label>
+        <input type="file" accept="image/*" id="af_capa_file" style="display:none" onchange="uploadCapaStorage('af_capa_file','af_capa')">
+        <button type="button" onclick="document.getElementById('af_capa_file').click()" style="width:100%;padding:12px;border-radius:14px;border:2px dashed var(--accent);background:var(--accent-dim);color:var(--accent);font-size:15px;font-weight:600;cursor:pointer;margin-bottom:10px">📤 Enviar imagem de capa</button>
+        <input class="af-input" id="af_capa" placeholder="— ou cole URL da imagem —">
+      </div>
       <button class="af-btn" onclick="adminSaveLive()">📡 Agendar Ao Vivo</button>`;
   } else if(type==='trilha'){
     body.innerHTML=`
@@ -1376,7 +1394,8 @@ async function adminSaveAula(){
   const tagBadge={REPLAY:'ba','AO VIVO':'br',HOJE:'bt',AMANHÃ:'bp',SEMANAL:'ba',ESPECIAL:'bb'};
   const trilhaIdx=document.getElementById('af_trilha')?document.getElementById('af_trilha').value:'';
   const trilhaId=trilhaIdx!==''&&TR[trilhaIdx]?TR[trilhaIdx].id||null:null;
-  LC.unshift({t,te,ti,tag,c:tagColors[tag]||'var(--accent)',b:tagBadge[tag]||'ba',d,media,v:0});
+  const capa=document.getElementById('af_capa')?document.getElementById('af_capa').value.trim():'';
+  LC.unshift({t,te,ti,tag,c:tagColors[tag]||'var(--accent)',b:tagBadge[tag]||'ba',d,media,capa,v:0});
   tagLC();
   // Vincular à trilha local
   if(trilhaIdx!==''){
@@ -1395,7 +1414,7 @@ async function adminSaveAula(){
   try{
     await sb.from('aulas').insert({
       titulo:t, professor:te, horario:ti, plataforma:d||'Zoom',
-      tag, media_url:media||null, trilha_id:trilhaId, ao_vivo:tag==='AO VIVO', ativo:true, ordem:LC.length
+      tag, media_url:media||null, capa_url:capa||null, trilha_id:trilhaId, ao_vivo:tag==='AO VIVO', ativo:true, ordem:LC.length
     });
   }catch(e){console.warn('Supabase save aula:',e);}
   renderAList();renderAdminAulas();renderLiveC();
@@ -1643,7 +1662,36 @@ const catBg={CURA:'rgba(249,115,22,0.12)',PROTEÇÃO:'rgba(249,115,22,0.12)',AMO
 const catBadge={CURA:'bp',PROTEÇÃO:'ba',AMOR:'br',FOCO:'bt'};
 
 function renderLiveC(){
-  document.getElementById('liveC').innerHTML=LC.slice(0,3).map(c=>`<div class="carousel-item"><div style="background:#fff;border-radius:20px;overflow:hidden;margin-bottom:0;box-shadow:0 2px 16px rgba(100,50,20,0.08)"><div style="background:linear-gradient(135deg,#C8692A,#E0884A);padding:10px 14px;display:flex;align-items:center;gap:8px"><span style="font-size:14px;color:rgba(255,255,255,0.9)">📹</span><span style="font-size:13px;font-weight:700;color:#fff;letter-spacing:.06em;text-transform:uppercase">${c.tag}</span>${c.v?`<span style="margin-left:auto;font-size:13px;color:rgba(255,255,255,0.85)">● ${c.v}</span>`:''}</div><div style="padding:14px"><div style="font-size:16px;font-weight:700;color:#3D2314;margin-bottom:8px;line-height:1.35">${c.t}</div><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:14px">✨</span><span style="font-size:14px;color:#7A6055">${c.te}</span></div><div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span style="font-size:13px;color:#7A6055">📹 Zoom</span><span style="font-size:13px;color:#7A6055">🕐 ${c.ti}</span></div><button style="width:100%;background:linear-gradient(135deg,#C8692A,#E0884A);color:#fff;border:none;border-radius:50px;padding:10px;font-size:14px;font-weight:600;cursor:pointer">Entrar na Aula</button></div></div></div>`).join('');
+  document.getElementById('liveC').innerHTML=LC.slice(0,3).map(c=>{
+    const tagBadgeColor={
+      'AO VIVO':'#E84D8A','HOJE':'#2EC4B6','AMANHÃ':'#D4873A',
+      'REPLAY':'#C8692A','SEMANAL':'#C8692A','ESPECIAL':'#4C6EF5'
+    };
+    const tagBg=tagBadgeColor[c.tag]||'#C8692A';
+    const capaHtml=c.capa
+      ?`<img class="aula-card-capa" src="${c.capa}" alt="${c.t}" onerror="this.style.display='none';this.nextSibling.style.display='flex'">`
+      :'';
+    const placeholderHtml=`<div class="aula-card-capa-placeholder" style="${c.capa?'display:none':''}">
+        <span style="font-size:36px;opacity:.5">📹</span>
+        <div style="position:absolute;inset:0;background:linear-gradient(135deg,${tagBg}cc,${tagBg}88)"></div>
+      </div>`;
+    const linkClick=c.media?`window.open('${c.media}','_blank')`:`toast('Link não definido')`;
+    return `<div class="carousel-item">
+      <div class="aula-card">
+        ${capaHtml}${placeholderHtml}
+        <div style="padding:8px 14px 0;display:flex;align-items:center;gap:6px;margin-top:-18px;position:relative;z-index:2">
+          <span style="background:${tagBg};color:#fff;font-size:11px;font-weight:700;letter-spacing:.06em;padding:3px 10px;border-radius:20px;text-transform:uppercase">${c.tag}</span>
+          ${c.v?`<span style="font-size:12px;color:var(--rose);font-weight:700;margin-left:auto">● ${c.v}</span>`:''}
+        </div>
+        <div class="aula-card-body">
+          <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.35;margin-top:6px">${c.t}</div>
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:13px">✨</span><span style="font-size:13px;color:var(--text-muted)">${c.te}</span></div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><span style="font-size:12px;color:var(--text-dim)">📹 ${c.d||'Zoom'}</span><span style="font-size:12px;color:var(--text-dim)">🕐 ${c.ti}</span></div>
+          <button class="aula-card-btn" onclick="${linkClick}">Entrar na Aula</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 function renderMedG(){
@@ -1715,7 +1763,7 @@ async function initApp(){
         id:a.id, t:a.titulo, te:a.professor||'', ti:a.horario||'',
         tag:a.tag||'AULA', c:tagColors[a.tag]||'var(--accent)',
         b:tagBadge[a.tag]||'ba', d:a.plataforma||'Zoom',
-        media:a.media_url||'', v:0
+        media:a.media_url||'', capa:a.capa_url||'', v:0
       }));
     }
 
@@ -2126,6 +2174,25 @@ async function uploadMidiaStorage(inputId,urlFieldId){
   const urlField=document.getElementById(urlFieldId);
   if(urlField){urlField.value=publicUrl;urlField.readOnly=true;}
   toast('✅ Arquivo enviado! URL preenchida automaticamente.');
+}
+
+async function uploadCapaStorage(inputId,urlFieldId){
+  const input=document.getElementById(inputId);
+  if(!input||!input.files||!input.files[0])return;
+  const file=input.files[0];
+  const ext=file.name.split('.').pop();
+  const nome=`capas/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+  toast('⏳ Enviando capa…');
+  const{data,error}=await sb.storage.from('midias').upload(nome,file,{contentType:file.type,upsert:false});
+  if(error){toast('❌ Erro no upload: '+error.message);return;}
+  const{data:{publicUrl}}=sb.storage.from('midias').getPublicUrl(nome);
+  const urlField=document.getElementById(urlFieldId);
+  if(urlField){urlField.value=publicUrl;urlField.readOnly=false;}
+  // Preview da imagem
+  const prev=document.getElementById('af_capa_preview');
+  const img=document.getElementById('af_capa_img');
+  if(prev&&img){img.src=publicUrl;prev.style.display='block';}
+  toast('✅ Capa enviada!');
 }
 
 function applyBanner(){
