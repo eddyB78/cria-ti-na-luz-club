@@ -1281,6 +1281,14 @@ function openAdminForm(type, idx){
       <div class="af-group"><label class="af-label">Professor</label><input class="af-input" id="af_professor" value="${aula.te}"></div>
       <div class="af-group"><label class="af-label">Descrição</label><textarea class="af-input" id="af_desc" rows="3">${aula.d||''}</textarea></div>
       <div class="af-group"><label class="af-label">Horário</label><input class="af-input" id="af_horario" value="${aula.ti}"></div>
+      <div class="af-group"><label class="af-label">Link do vídeo</label><input class="af-input" id="af_media" value="${aula.media||''}"></div>
+      <div class="af-group">
+        <label class="af-label">🖼️ Capa do card</label>
+        ${aula.capa?`<img src="${aula.capa}" style="width:100%;height:100px;object-fit:cover;border-radius:12px;border:1px solid var(--border);margin-bottom:10px" id="af_capa_img">`:'<div id="af_capa_img" style="display:none"></div>'}
+        <input type="file" accept="image/*" id="af_capa_file" style="display:none" onchange="uploadCapaStorage('af_capa_file','af_capa')">
+        <button type="button" onclick="document.getElementById('af_capa_file').click()" style="width:100%;padding:12px;border-radius:14px;border:2px dashed var(--accent);background:var(--accent-dim);color:var(--accent);font-size:15px;font-weight:600;cursor:pointer;margin-bottom:10px">📤 ${aula.capa?'Trocar capa':'Enviar capa'}</button>
+        <input class="af-input" id="af_capa" value="${aula.capa||''}" placeholder="— ou cole URL da imagem —">
+      </div>
       <div class="af-group"><label class="af-label">Tipo</label><select class="af-input" id="af_tipo"><option${aula.tag==='REPLAY'?' selected':''}>REPLAY</option><option${aula.tag==='AO VIVO'?' selected':''}>AO VIVO</option><option${aula.tag==='HOJE'?' selected':''}>HOJE</option><option${aula.tag==='AMANHÃ'?' selected':''}>AMANHÃ</option><option${aula.tag==='SEMANAL'?' selected':''}>SEMANAL</option><option${aula.tag==='ESPECIAL'?' selected':''}>ESPECIAL</option></select></div>
       <button class="af-btn" onclick="adminUpdateAula(${idx})">💾 Salvar Alterações</button>
       <button onclick="adminDeleteAula(${idx})" style="width:100%;padding:13px;border-radius:50px;border:2px solid var(--rose);background:#fff;color:var(--rose);font-size:15px;font-weight:600;cursor:pointer;margin-top:8px">🗑️ Excluir Aula</button>`;
@@ -1474,7 +1482,7 @@ function adminSaveNotif(){
   closeAdminForm();toast(`Notificação enviada para todos! 🔔`);
 }
 
-function adminUpdateAula(idx){
+async function adminUpdateAula(idx){
   const t=document.getElementById('af_titulo').value.trim();
   if(!t){toast('Título obrigatório ❌');return;}
   LC[idx].t=t;
@@ -1482,7 +1490,24 @@ function adminUpdateAula(idx){
   LC[idx].ti=document.getElementById('af_horario').value;
   LC[idx].tag=document.getElementById('af_tipo').value;
   LC[idx].d=document.getElementById('af_desc').value;
-  renderAList();renderAdminAulas();
+  LC[idx].media=document.getElementById('af_media')?document.getElementById('af_media').value.trim():'';
+  LC[idx].capa=document.getElementById('af_capa')?document.getElementById('af_capa').value.trim():'';
+  // Atualiza tags de cor
+  const tagColors={'AO VIVO':'var(--rose)',HOJE:'var(--teal)',AMANHÃ:'var(--amber)',REPLAY:'var(--accent)',SEMANAL:'var(--accent)',ESPECIAL:'var(--blue)'};
+  const tagBadge={'AO VIVO':'br',HOJE:'bt',AMANHÃ:'bp',REPLAY:'ba',SEMANAL:'ba',ESPECIAL:'bb'};
+  LC[idx].c=tagColors[LC[idx].tag]||'var(--accent)';
+  LC[idx].b=tagBadge[LC[idx].tag]||'ba';
+  // Salva no Supabase se tiver id
+  if(LC[idx].id){
+    try{
+      await sb.from('aulas').update({
+        titulo:LC[idx].t, professor:LC[idx].te, horario:LC[idx].ti,
+        tag:LC[idx].tag, media_url:LC[idx].media||null,
+        capa_url:LC[idx].capa||null
+      }).eq('id',LC[idx].id);
+    }catch(e){console.warn('Supabase update aula:',e);}
+  }
+  tagLC();renderAList();renderAdminAulas();renderLiveC();
   closeAdminForm();toast('Aula atualizada! 💾');
 }
 
