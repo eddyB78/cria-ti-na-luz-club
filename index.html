@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;0,800;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 /* ============ RESET & VARIABLES ============ */
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
@@ -957,6 +958,11 @@ img{max-width:100%;display:block}
 </div>
 
 <script>
+// ============ SUPABASE ============
+const SB_URL='https://bmgdubpgujdrfrjgtrku.supabase.co';
+const SB_KEY='sb_publishable_kqBFNdxNsuAKOJrMddESqQ_bgEWENZ5';
+const sb=supabase.createClient(SB_URL,SB_KEY);
+
 // ============ DATA ============
 const TAROT=[
   {name:"A Estrela",n:"XVII",m:"Esperança, inspiração e renovação espiritual. Energias cósmicas alinhadas ao seu favor.",a:"Confie no universo. Algo que pediu está se manifestando.",r:"Acenda uma vela branca e medite por 5 minutos pedindo clareza."},
@@ -1272,8 +1278,14 @@ function openAdminForm(type, idx){
         <option value="Paz">🟢 Paz</option>
         <option value="Abundância">💛 Abundância</option>
       </select></div>
-      <div class="af-group"><label class="af-label">Link do áudio/vídeo</label><input class="af-input" id="af_media" placeholder="https://youtube.com/watch?v=... ou link de áudio MP3"></div>
-      <div style="font-size:13px;color:var(--text-dim);margin-top:-8px;margin-bottom:14px;padding:0 2px">YouTube, SoundCloud, Spotify, link direto de MP3, etc.</div>
+      <div class="af-group">
+        <label class="af-label">🎵 Enviar arquivo de áudio (Supabase Storage)</label>
+        <input type="file" accept="audio/*" id="af_media_file" style="display:none" onchange="uploadMidiaStorage('af_media_file','af_media')">
+        <button type="button" onclick="document.getElementById('af_media_file').click()" style="width:100%;padding:12px;border-radius:14px;border:2px dashed var(--accent);background:var(--accent-dim);color:var(--accent);font-size:15px;font-weight:600;cursor:pointer;margin-bottom:10px">📤 Selecionar arquivo MP3/OGG/WAV</button>
+        <label class="af-label" style="margin-top:8px">— ou cole um link externo —</label>
+        <input class="af-input" id="af_media" placeholder="https://... (YouTube, SoundCloud, MP3...)">
+      </div>
+      <div style="font-size:13px;color:var(--text-dim);margin-top:-8px;margin-bottom:14px;padding:0 2px">Upload direto → player nativo ✅ · YouTube/Spotify → abre externamente</div>
       <div class="af-group"><label class="af-label">Descrição (opcional)</label><textarea class="af-input" id="af_desc" rows="3" placeholder="Breve descrição da meditação..."></textarea></div>
       <button class="af-btn" onclick="adminSaveMeditacao()">🧘 Adicionar Meditação</button>`;
   } else if(type==='tarot'){
@@ -1351,7 +1363,7 @@ function adminTrilhaChange(sel){
   grp.style.display='block';
 }
 
-function adminSaveAula(){
+async function adminSaveAula(){
   const t=document.getElementById('af_titulo').value.trim();
   const te=document.getElementById('af_professor').value.trim();
   if(!t||!te){toast('Preencha título e professor ❌');return;}
@@ -1362,9 +1374,11 @@ function adminSaveAula(){
   const media=document.getElementById('af_media')?document.getElementById('af_media').value.trim():'';
   const tagColors={REPLAY:'var(--accent)','AO VIVO':'var(--rose)',HOJE:'var(--teal)',AMANHÃ:'var(--amber)',SEMANAL:'var(--accent)',ESPECIAL:'var(--blue)'};
   const tagBadge={REPLAY:'ba','AO VIVO':'br',HOJE:'bt',AMANHÃ:'bp',SEMANAL:'ba',ESPECIAL:'bb'};
-  LC.unshift({t,te,ti,tag,c:tagColors[tag]||'var(--accent)',b:tagBadge[tag]||'ba',d,media,v:0});
-  // Vincular à trilha se selecionado
   const trilhaIdx=document.getElementById('af_trilha')?document.getElementById('af_trilha').value:'';
+  const trilhaId=trilhaIdx!==''&&TR[trilhaIdx]?TR[trilhaIdx].id||null:null;
+  LC.unshift({t,te,ti,tag,c:tagColors[tag]||'var(--accent)',b:tagBadge[tag]||'ba',d,media,v:0});
+  tagLC();
+  // Vincular à trilha local
   if(trilhaIdx!==''){
     const modIdx=document.getElementById('af_modulo').value;
     const novaAula={t,d:dur,ok:0,desc:d||'Aula adicionada pelo admin.'};
@@ -1376,12 +1390,17 @@ function adminSaveAula(){
       const mod=MODS_BY_TRAIL[trilhaIdx][modIdx];
       if(mod){mod.ls.push(novaAula);mod.ct=`${mod.ls.length} aulas`;}
     }
-    toast(`Aula publicada e adicionada à trilha "${TR[trilhaIdx].t}"! ✅`);
-  } else {
-    toast('Aula publicada com sucesso! ✅');
   }
-  renderAList();renderAdminAulas();
+  // Salva no Supabase
+  try{
+    await sb.from('aulas').insert({
+      titulo:t, professor:te, horario:ti, plataforma:d||'Zoom',
+      tag, media_url:media||null, trilha_id:trilhaId, ao_vivo:tag==='AO VIVO', ativo:true, ordem:LC.length
+    });
+  }catch(e){console.warn('Supabase save aula:',e);}
+  renderAList();renderAdminAulas();renderLiveC();
   closeAdminForm();
+  toast(trilhaIdx!==''?`Aula publicada e adicionada à trilha "${TR[trilhaIdx].t}"! ✅`:'Aula publicada com sucesso! ✅');
 }
 
 function adminSaveLive(){
@@ -1400,7 +1419,7 @@ function adminSaveLive(){
   closeAdminForm();toast('Aula ao vivo agendada + notificação enviada! 📡');
 }
 
-function adminSaveTrilha(){
+async function adminSaveTrilha(){
   const t=document.getElementById('af_titulo').value.trim();
   const d=document.getElementById('af_desc').value.trim();
   if(!t||!d){toast('Preencha nome e descrição ❌');return;}
@@ -1408,6 +1427,13 @@ function adminSaveTrilha(){
   const mod=parseInt(document.getElementById('af_mods').value)||4;
   const c=document.getElementById('af_cor').value;
   TR.unshift({t,i,mod,p:0,c,d});
+  // Salva no Supabase
+  try{
+    const{data,error}=await sb.from('trilhas').insert({
+      titulo:t, descricao:d, icone:i, cor:c, nivel:'Iniciante', ativo:true, ordem:TR.length
+    }).select().single();
+    if(!error&&data)TR[0].id=data.id;
+  }catch(e){console.warn('Supabase save trilha:',e);}
   renderTList();renderAdminAulas();
   closeAdminForm();toast('Trilha criada! 🕯️');
 }
@@ -1513,7 +1539,7 @@ function adminPublish(idx){
   toast('Aula publicada com sucesso! ✅');
 }
 
-function adminSaveMeditacao(){
+async function adminSaveMeditacao(){
   const t=document.getElementById('af_titulo').value.trim();
   const d=document.getElementById('af_dur').value.trim();
   if(!t||!d){toast('Preencha título e duração ❌');return;}
@@ -1524,10 +1550,17 @@ function adminSaveMeditacao(){
   const durNum=parseInt(d)||15;
   const media=document.getElementById('af_media')?document.getElementById('af_media').value.trim():'';
   const desc=document.getElementById('af_desc')?document.getElementById('af_desc').value.trim():'';
-  MED.push({t,d,dur:durNum*60,cat,c:catColors[cat]||'var(--accent)',bg:catBg[cat]||'rgba(200,105,42,0.12)',media,desc});
-  // Re-render grid de meditações na Home
-  const medEl=document.getElementById('medG');
-  if(medEl) medEl.innerHTML=MED.map((m,i)=>`<div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:14px;border:1px solid var(--border);cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(100,50,20,0.06)" onclick="openMed(${i})"><div style="width:36px;height:36px;border-radius:10px;background:${m.bg};display:flex;align-items:center;justify-content:center;margin-bottom:8px"><div style="width:10px;height:10px;border-radius:50%;background:${m.c}"></div></div><div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px">${m.t}</div><div style="display:flex;justify-content:space-between"><span style="font-size:14px;color:var(--text-muted)">${m.d}</span><span class="badge ${m.cat==='Cura'?'bp':m.cat==='Proteção'?'ba':m.cat==='Amor'?'br':'bt'}" style="font-size:13px">${m.cat}</span></div></div>`).join('');
+  const novaM={t,d,dur:durNum*60,cat,c:catColors[cat]||'var(--accent)',bg:catBg[cat]||'rgba(200,105,42,0.12)',media,desc};
+  MED.push(novaM);
+  // Salva no Supabase
+  try{
+    const{data,error}=await sb.from('meditacoes').insert({
+      titulo:t, duracao_min:durNum, categoria:cat.toUpperCase(),
+      media_url:media||null, descricao:desc||null, ativo:true, ordem:MED.length
+    }).select().single();
+    if(!error&&data)novaM.id=data.id;
+  }catch(e){console.warn('Supabase save med:',e);}
+  renderMedG();
   closeAdminForm();
   toast(`Meditação "${t}" adicionada! 🧘`);
 }
@@ -1554,12 +1587,6 @@ function renderAdminAulas(){
       <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.t}</div><div style="font-size:13px;color:var(--text-muted)">${c.te} · ${c.tag}</div></div>
       <button onclick="adminAction('edit',${i})" style="flex-shrink:0;padding:6px 12px;border-radius:20px;border:1px solid var(--accent);background:#fff;color:var(--accent);font-size:13px;font-weight:600;cursor:pointer">Editar</button>
     </div>`).join('');
-}
-
-function renderTList(){
-  const el=document.getElementById('tList');
-  if(!el)return;
-  el.innerHTML=TR.map((t,i)=>`<div class="card" onclick="openTrail(${i})"><div style="display:flex;gap:14px;align-items:center"><div style="width:52px;height:52px;border-radius:14px;background:${t.c}22;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">${t.i}</div><div style="flex:1"><div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px">${t.t}</div><div style="font-size:14px;color:var(--text-muted);margin-bottom:8px">${t.mod} módulos · ${t.d}</div><div class="pbar" style="height:5px"><div class="pfill" style="width:${t.p}%;background:${t.c}"></div></div><div style="font-size:14px;color:var(--text-muted);margin-top:4px">${t.p>0?t.p+'% concluído':'Não iniciada'}</div></div></div></div>`).join('');
 }
 
 // Verifica sessão admin ao abrir o app
@@ -1610,19 +1637,34 @@ function doSearch(v){
 }
 
 // ============ RENDER ============
-document.getElementById('liveC').innerHTML=LC.slice(0,3).map(c=>`<div class="carousel-item"><div style="background:#fff;border-radius:20px;overflow:hidden;margin-bottom:0;box-shadow:0 2px 16px rgba(100,50,20,0.08)"><div style="background:linear-gradient(135deg,#C8692A,#E0884A);padding:10px 14px;display:flex;align-items:center;gap:8px"><span style="font-size:14px;color:rgba(255,255,255,0.9)">📹</span><span style="font-size:13px;font-weight:700;color:#fff;letter-spacing:.06em;text-transform:uppercase">${c.tag}</span>${c.v?`<span style="margin-left:auto;font-size:13px;color:rgba(255,255,255,0.85)">● ${c.v}</span>`:''}</div><div style="padding:14px"><div style="font-size:16px;font-weight:700;color:#3D2314;margin-bottom:8px;line-height:1.35">${c.t}</div><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:14px">✨</span><span style="font-size:14px;color:#7A6055">${c.te}</span></div><div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span style="font-size:13px;color:#7A6055">📹 Zoom</span><span style="font-size:13px;color:#7A6055">🕐 ${c.ti}</span></div><button style="width:100%;background:linear-gradient(135deg,#C8692A,#E0884A);color:#fff;border:none;border-radius:50px;padding:10px;font-size:14px;font-weight:600;cursor:pointer">Entrar na Aula</button></div></div></div>`).join('');
+// Cores por categoria de meditação
+const catColors={CURA:'var(--amber)',PROTEÇÃO:'var(--accent)',AMOR:'var(--rose)',FOCO:'var(--teal)'};
+const catBg={CURA:'rgba(249,115,22,0.12)',PROTEÇÃO:'rgba(249,115,22,0.12)',AMOR:'rgba(232,77,138,0.12)',FOCO:'rgba(46,196,182,0.12)'};
+const catBadge={CURA:'bp',PROTEÇÃO:'ba',AMOR:'br',FOCO:'bt'};
 
-document.getElementById('medG').innerHTML=MED.map((m,i)=>`<div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:14px;border:1px solid var(--border);cursor:pointer;transition:all .2s" onclick="openMed(${i})"><div style="width:36px;height:36px;border-radius:10px;background:${m.bg};display:flex;align-items:center;justify-content:center;margin-bottom:8px"><div style="width:10px;height:10px;border-radius:50%;background:${m.c}"></div></div><div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px">${m.t}</div><div style="display:flex;justify-content:space-between"><span style="font-size:16px;color:var(--text-muted)">${m.d}</span><span class="badge ${m.cat==='Cura'?'bp':m.cat==='Proteção'?'ba':m.cat==='Amor'?'br':'bt'}" style="font-size:14px">${m.cat}</span></div></div>`).join('');
+function renderLiveC(){
+  document.getElementById('liveC').innerHTML=LC.slice(0,3).map(c=>`<div class="carousel-item"><div style="background:#fff;border-radius:20px;overflow:hidden;margin-bottom:0;box-shadow:0 2px 16px rgba(100,50,20,0.08)"><div style="background:linear-gradient(135deg,#C8692A,#E0884A);padding:10px 14px;display:flex;align-items:center;gap:8px"><span style="font-size:14px;color:rgba(255,255,255,0.9)">📹</span><span style="font-size:13px;font-weight:700;color:#fff;letter-spacing:.06em;text-transform:uppercase">${c.tag}</span>${c.v?`<span style="margin-left:auto;font-size:13px;color:rgba(255,255,255,0.85)">● ${c.v}</span>`:''}</div><div style="padding:14px"><div style="font-size:16px;font-weight:700;color:#3D2314;margin-bottom:8px;line-height:1.35">${c.t}</div><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:14px">✨</span><span style="font-size:14px;color:#7A6055">${c.te}</span></div><div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span style="font-size:13px;color:#7A6055">📹 Zoom</span><span style="font-size:13px;color:#7A6055">🕐 ${c.ti}</span></div><button style="width:100%;background:linear-gradient(135deg,#C8692A,#E0884A);color:#fff;border:none;border-radius:50px;padding:10px;font-size:14px;font-weight:600;cursor:pointer">Entrar na Aula</button></div></div></div>`).join('');
+}
 
-// Tag each LC entry with a filter category
-LC.forEach(c=>{
-  const t=(c.t+' '+c.d).toLowerCase();
-  if(c.tag==='AO VIVO'||c.tag==='HOJE'||c.tag==='AMANHÃ')c.fcat='vivo';
-  else if(t.includes('medit'))c.fcat='meditação';
-  else if(t.includes('ritual')||t.includes('ervas'))c.fcat='ritual';
-  else if(t.includes('mediún')||t.includes('passe')||t.includes('búzio'))c.fcat='mediunica';
-  else c.fcat='outras';
-});
+function renderMedG(){
+  document.getElementById('medG').innerHTML=MED.map((m,i)=>`<div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:14px;border:1px solid var(--border);cursor:pointer;transition:all .2s" onclick="openMed(${i})"><div style="width:36px;height:36px;border-radius:10px;background:${m.bg||catBg[m.cat]||'rgba(200,105,42,0.12)'};display:flex;align-items:center;justify-content:center;margin-bottom:8px"><div style="width:10px;height:10px;border-radius:50%;background:${m.c||catColors[m.cat]||'var(--accent)'}"></div></div><div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px">${m.t}</div><div style="display:flex;justify-content:space-between"><span style="font-size:16px;color:var(--text-muted)">${m.d}</span><span class="badge ${catBadge[m.cat]||'bp'}" style="font-size:14px">${m.cat}</span></div></div>`).join('');
+}
+
+function renderTList(){
+  document.getElementById('tList').innerHTML=TR.map((t,i)=>`<div class="card" onclick="openTrail(${i})"><div style="position:absolute;top:-40px;right:-40px;width:100px;height:100px;border-radius:50%;background:${t.c}11;filter:blur(30px)" aria-hidden="true"></div><div style="display:flex;gap:14px;align-items:flex-start;position:relative"><div style="width:52px;height:52px;border-radius:14px;background:${t.c}18;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">${t.i}</div><div style="flex:1"><div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px">${t.t}</div><div style="font-size:14px;color:var(--text-muted);margin-bottom:8px;line-height:1.4">${t.d}</div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:16px;color:var(--text-dim)">${t.mod||0} módulos</span>${t.p?`<span style="font-size:16px;color:${t.c};font-weight:700">${t.p}%</span>`:''}</div>${t.p?`<div class="pbar"><div class="pfill" style="width:${t.p}%;background:${t.c}"></div></div>`:`<div style="font-size:15px;color:var(--accent);font-weight:600">Começar →</div>`}</div></div></div>`).join('');
+}
+
+// Tag cada aula com categoria de filtro
+function tagLC(){
+  LC.forEach(c=>{
+    const t=(c.t+' '+(c.d||'')).toLowerCase();
+    if(c.tag==='AO VIVO'||c.tag==='HOJE'||c.tag==='AMANHÃ')c.fcat='vivo';
+    else if(t.includes('medit'))c.fcat='meditação';
+    else if(t.includes('ritual')||t.includes('ervas'))c.fcat='ritual';
+    else if(t.includes('mediún')||t.includes('passe')||t.includes('búzio'))c.fcat='mediunica';
+    else c.fcat='outras';
+  });
+}
 
 const A_FILTERS=[{k:'todas',l:'Todas'},{k:'vivo',l:'Ao vivo'},{k:'mediunica',l:'Mediúnica'},{k:'ritual',l:'Ritual'},{k:'meditação',l:'Meditação'}];
 let aFilter='todas';
@@ -1638,11 +1680,92 @@ function renderAList(){
   const list=aFilter==='todas'?LC:LC.filter(c=>c.fcat===aFilter);
   const el=document.getElementById('aList');
   if(!list.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--text-dim)"><div style="font-size:32px;margin-bottom:12px">🔍</div>Nada encontrado nesta categoria</div>';return}
-  el.innerHTML=list.map((c,realIdx)=>{const i=LC.indexOf(c);return`<div style="background:var(--bg-card);border-radius:var(--radius);padding:16px 16px 16px 20px;margin-bottom:12px;border:1px solid var(--border);cursor:pointer;position:relative;overflow:hidden;transition:all .2s" onclick="openLiveLesson(${i})"><div style="position:absolute;top:0;left:0;bottom:0;width:3px;background:${c.c}"></div><div style="padding-left:6px"><div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><span class="badge ${c.b}">${c.tag}</span>${c.v?`<span style="font-size:16px;color:var(--rose)">● ${c.v}</span>`:''}</div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3">${c.t}</div><div style="font-size:14px;color:var(--text-muted);line-height:1.4;margin-bottom:8px">${c.d}</div><div style="display:flex;justify-content:space-between"><span style="font-size:14px;color:var(--text-muted)">${c.te}</span><span style="font-size:14px;color:var(--accent);font-weight:600">${c.ti}</span></div></div></div>`}).join('');
+  el.innerHTML=list.map((c,realIdx)=>{const i=LC.indexOf(c);return`<div style="background:var(--bg-card);border-radius:var(--radius);padding:16px 16px 16px 20px;margin-bottom:12px;border:1px solid var(--border);cursor:pointer;position:relative;overflow:hidden;transition:all .2s" onclick="openLiveLesson(${i})"><div style="position:absolute;top:0;left:0;bottom:0;width:3px;background:${c.c}"></div><div style="padding-left:6px"><div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><span class="badge ${c.b}">${c.tag}</span>${c.v?`<span style="font-size:16px;color:var(--rose)">● ${c.v}</span>`:''}</div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3">${c.t}</div><div style="font-size:14px;color:var(--text-muted);line-height:1.4;margin-bottom:8px">${c.d||''}</div><div style="display:flex;justify-content:space-between"><span style="font-size:14px;color:var(--text-muted)">${c.te||''}</span><span style="font-size:14px;color:var(--accent);font-weight:600">${c.ti||''}</span></div></div></div>`}).join('');
 }
-renderAList();
 
-document.getElementById('tList').innerHTML=TR.map((t,i)=>`<div class="card" onclick="openTrail(${i})"><div style="position:absolute;top:-40px;right:-40px;width:100px;height:100px;border-radius:50%;background:${t.c}11;filter:blur(30px)" aria-hidden="true"></div><div style="display:flex;gap:14px;align-items:flex-start;position:relative"><div style="width:52px;height:52px;border-radius:14px;background:${t.c}18;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">${t.i}</div><div style="flex:1"><div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px">${t.t}</div><div style="font-size:14px;color:var(--text-muted);margin-bottom:8px;line-height:1.4">${t.d}</div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:16px;color:var(--text-dim)">${t.mod} módulos</span>${t.p?`<span style="font-size:16px;color:${t.c};font-weight:700">${t.p}%</span>`:''}</div>${t.p?`<div class="pbar"><div class="pfill" style="width:${t.p}%;background:${t.c}"></div></div>`:`<div style="font-size:15px;color:var(--accent);font-weight:600">Começar →</div>`}</div></div></div>`).join('');
+// ============ INIT APP (carrega dados do Supabase) ============
+async function initApp(){
+  try{
+    // Carrega em paralelo
+    const[{data:meds},{data:aulas},{data:trilhas},{data:cfg}]=await Promise.all([
+      sb.from('meditacoes').select('*').eq('ativo',true).order('ordem'),
+      sb.from('aulas').select('*').eq('ativo',true).order('ordem'),
+      sb.from('trilhas').select('*').eq('ativo',true).order('ordem'),
+      sb.from('config').select('*'),
+    ]);
+
+    // Popula meditações
+    if(meds&&meds.length){
+      MED.length=0;
+      meds.forEach(m=>MED.push({
+        id:m.id, t:m.titulo, d:m.duracao_min+'min', dur:m.duracao_min*60,
+        cat:m.categoria||'CURA', media:m.media_url||'',
+        c:catColors[m.categoria]||'var(--accent)',
+        bg:catBg[m.categoria]||'rgba(200,105,42,0.12)',
+        desc:m.descricao||''
+      }));
+    }
+
+    // Popula aulas
+    if(aulas&&aulas.length){
+      LC.length=0;
+      const tagColors={'AO VIVO':'var(--rose)','HOJE':'var(--teal)','AMANHÃ':'var(--amber)','REPLAY':'var(--accent)','SEMANAL':'var(--accent)','ESPECIAL':'var(--blue)'};
+      const tagBadge={'AO VIVO':'br','HOJE':'bt','AMANHÃ':'bp','REPLAY':'ba','SEMANAL':'ba','ESPECIAL':'bb'};
+      aulas.forEach(a=>LC.push({
+        id:a.id, t:a.titulo, te:a.professor||'', ti:a.horario||'',
+        tag:a.tag||'AULA', c:tagColors[a.tag]||'var(--accent)',
+        b:tagBadge[a.tag]||'ba', d:a.plataforma||'Zoom',
+        media:a.media_url||'', v:0
+      }));
+    }
+
+    // Popula trilhas
+    if(trilhas&&trilhas.length){
+      TR.length=0;
+      trilhas.forEach(t=>TR.push({
+        id:t.id, t:t.titulo, i:t.icone||'🌟',
+        mod:0, p:0, c:t.cor||'var(--accent)', d:t.descricao||''
+      }));
+    }
+
+    // Aplica configurações do Supabase
+    if(cfg&&cfg.length){
+      const cfgMap={};
+      cfg.forEach(r=>{cfgMap[r.chave]=r.valor;});
+      // Manutenção
+      if(cfgMap.manutencao==='true'){
+        document.getElementById('manutScreen').style.display='flex';
+        const tog=document.querySelector('.toggle[data-key="manut"]');
+        if(tog)tog.classList.add('on');
+      }
+      if(cfgMap.manutencao_msg)document.getElementById('manutMsg').innerHTML=cfgMap.manutencao_msg;
+      // Banner
+      if(cfgMap.banner_ativo==='true'){
+        document.getElementById('appBanner').style.display='flex';
+        const tog=document.querySelector('.toggle[data-key="banner"]');
+        if(tog)tog.classList.add('on');
+      }
+      if(cfgMap.banner_texto)document.getElementById('appBannerText').textContent=cfgMap.banner_texto;
+      // Badge novidades
+      if(cfgMap.novidades_badge==='true'){
+        document.querySelectorAll('.new-badge').forEach(b=>b.style.display='inline-flex');
+        const tog=document.querySelector('.toggle[data-key="feat"]');
+        if(tog)tog.classList.add('on');
+      }
+    }
+  }catch(e){
+    console.warn('Supabase offline — usando dados locais',e);
+  }
+
+  // Renderiza tudo
+  tagLC();
+  renderLiveC();
+  renderMedG();
+  renderAList();
+  renderTList();
+}
+
+initApp();
 
 function renderTrailMods(){
   const mods=MODS_BY_TRAIL[activeTrail]||[];
@@ -1966,7 +2089,7 @@ function toggleSet(el){
 }
 
 // ============ ADMIN SETTINGS ============
-function toggleAdminSet(el){
+async function toggleAdminSet(el){
   el.classList.toggle('on');
   const k=el.dataset.key;
   const on=el.classList.contains('on');
@@ -1974,17 +2097,35 @@ function toggleAdminSet(el){
     const screen=document.getElementById('manutScreen');
     screen.style.display=on?'flex':'none';
     toast(on?'🔴 Modo manutenção ATIVADO — alunos veem tela de bloqueio':'✅ Modo manutenção desativado');
+    await sb.from('config').upsert({chave:'manutencao',valor:String(on)});
   } else if(k==='banner'){
     const row=document.getElementById('bannerMsgRow');
     const banner=document.getElementById('appBanner');
     row.style.display=on?'block':'none';
     banner.style.display=on?'flex':'none';
     toast(on?'📢 Banner ativado — edite o texto abaixo':'Banner removido');
+    await sb.from('config').upsert({chave:'banner_ativo',valor:String(on)});
   } else if(k==='feat'){
-    // Adiciona/remove badge NOVO nas seções
     document.querySelectorAll('.new-badge').forEach(b=>b.style.display=on?'inline-flex':'none');
     toast(on?'✨ Badges NOVO visíveis':'Badges NOVO ocultos');
+    await sb.from('config').upsert({chave:'novidades_badge',valor:String(on)});
   }
+}
+
+// ============ UPLOAD DE MÍDIA PARA SUPABASE STORAGE ============
+async function uploadMidiaStorage(inputId,urlFieldId){
+  const input=document.getElementById(inputId);
+  if(!input||!input.files||!input.files[0])return;
+  const file=input.files[0];
+  const ext=file.name.split('.').pop();
+  const nome=`audio/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+  toast('⏳ Enviando arquivo…');
+  const{data,error}=await sb.storage.from('midias').upload(nome,file,{contentType:file.type,upsert:false});
+  if(error){toast('❌ Erro no upload: '+error.message);return;}
+  const{data:{publicUrl}}=sb.storage.from('midias').getPublicUrl(nome);
+  const urlField=document.getElementById(urlFieldId);
+  if(urlField){urlField.value=publicUrl;urlField.readOnly=true;}
+  toast('✅ Arquivo enviado! URL preenchida automaticamente.');
 }
 
 function applyBanner(){
