@@ -812,7 +812,7 @@ img{max-width:100%;display:block}
 
 <!-- ADMIN FORM MODAL -->
 <div id="adminFormModal" style="display:none;position:fixed;inset:0;z-index:700;background:#fff;overflow-y:auto;-webkit-overflow-scrolling:touch;flex-direction:column">
-  <div style="max-width:430px;width:100%;margin:0 auto;padding:max(20px,env(safe-area-inset-top,20px)) 20px calc(env(safe-area-inset-bottom,0px) + 40px)">
+  <div style="max-width:430px;width:100%;margin:0 auto;padding:max(20px,env(safe-area-inset-top,20px)) 20px calc(var(--nav-height) + env(safe-area-inset-bottom,0px) + 40px)">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
       <button onclick="closeAdminForm()" style="width:38px;height:38px;flex-shrink:0;border-radius:50%;border:1px solid var(--border);background:#fff;color:var(--accent);font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer">←</button>
       <div style="font-size:20px;font-weight:700;color:var(--text);font-family:var(--font-display)" id="adminFormTitle">Formulário</div>
@@ -1420,11 +1420,14 @@ async function adminSaveAula(){
   }
   // Salva no Supabase
   try{
-    await sb.from('aulas').insert({
-      titulo:t, professor:te, horario:ti, plataforma:d||'Zoom',
-      tag, media_url:media||null, capa_url:capa||null, trilha_id:trilhaId, ao_vivo:tag==='AO VIVO', ativo:true, ordem:LC.length
+    const plat=document.getElementById('af_plat')?document.getElementById('af_plat').value:'Zoom';
+    const{error}=await sb.from('aulas').insert({
+      titulo:t, professor:te, horario:ti, plataforma:plat||'Zoom',
+      descricao:d||null, tag, media_url:media||null, capa_url:capa||null,
+      trilha_id:trilhaId, ao_vivo:tag==='AO VIVO', ativo:true, ordem:LC.length
     });
-  }catch(e){console.warn('Supabase save aula:',e);}
+    if(error)toast('⚠️ Erro ao salvar no banco: '+error.message);
+  }catch(e){toast('⚠️ Sem conexão — aula salva só localmente.');}
   renderAList();renderAdminAulas();renderLiveC();
   closeAdminForm();
   toast(trilhaIdx!==''?`Aula publicada e adicionada à trilha "${TR[trilhaIdx].t}"! ✅`:'Aula publicada com sucesso! ✅');
@@ -1787,7 +1790,8 @@ async function initApp(){
       aulas.forEach(a=>LC.push({
         id:a.id, t:a.titulo, te:a.professor||'', ti:a.horario||'',
         tag:a.tag||'AULA', c:tagColors[a.tag]||'var(--accent)',
-        b:tagBadge[a.tag]||'ba', d:a.plataforma||'Zoom',
+        b:tagBadge[a.tag]||'ba',
+        d:a.descricao||a.plataforma||'Zoom',
         media:a.media_url||'', capa:a.capa_url||'', v:0
       }));
     }
