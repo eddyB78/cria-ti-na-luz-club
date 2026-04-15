@@ -630,7 +630,11 @@ img{max-width:100%;display:block}
     <!-- Aulas ao vivo -->
     <div style="margin-bottom:22px">
       <div class="section-title"><span style="color:var(--rose)">◉</span> Aulas ao Vivo <span class="new-badge badge ba" style="font-size:11px;display:none">NOVO</span><span class="section-more" onclick="go('aulas')">Ver todas →</span></div>
-      <div class="carousel" id="liveC"></div>
+      <div style="position:relative">
+        <button onclick="slideCarousel('liveC',-1)" id="liveC-prev" style="display:none;position:absolute;left:-10px;top:50%;transform:translateY(-50%);z-index:5;width:34px;height:34px;border-radius:50%;border:none;background:var(--bg-card);box-shadow:0 2px 10px rgba(100,50,20,0.15);color:var(--accent);font-size:16px;cursor:pointer;align-items:center;justify-content:center">‹</button>
+        <div class="carousel" id="liveC" onscroll="updateCarouselArrows('liveC')"></div>
+        <button onclick="slideCarousel('liveC',1)" id="liveC-next" style="position:absolute;right:-10px;top:50%;transform:translateY(-50%);z-index:5;width:34px;height:34px;border-radius:50%;border:none;background:var(--bg-card);box-shadow:0 2px 10px rgba(100,50,20,0.15);color:var(--accent);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center">›</button>
+      </div>
     </div>
 
     <!-- Meditações -->
@@ -1721,6 +1725,7 @@ function renderLiveC(){
       </div>
     </div>`;
   }).join('');
+  setTimeout(()=>updateCarouselArrows('liveC'),50);
 }
 
 function renderMedG(){
@@ -2407,6 +2412,23 @@ document.getElementById('pBarWrap').addEventListener('click',function(e){
   const mm=Math.floor(sec/60),ss=sec%60;
   document.getElementById('pCur').textContent=mm+':'+(ss<10?'0':'')+ss;
 });
+
+// ============ CAROUSEL NAVIGATION ============
+function slideCarousel(id, dir){
+  const el=document.getElementById(id);
+  if(!el)return;
+  const itemW=el.querySelector('.carousel-item');
+  const step=itemW?(itemW.offsetWidth+12)*2:260;
+  el.scrollBy({left:dir*step,behavior:'smooth'});
+}
+function updateCarouselArrows(id){
+  const el=document.getElementById(id);
+  if(!el)return;
+  const prev=document.getElementById(id+'-prev');
+  const next=document.getElementById(id+'-next');
+  if(prev)prev.style.display=el.scrollLeft>10?'flex':'none';
+  if(next)next.style.display=el.scrollLeft+el.clientWidth<el.scrollWidth-10?'flex':'none';
+}
 
 function closePlayer(){
   document.getElementById('audioPlayer').classList.remove('show');
