@@ -1291,6 +1291,7 @@ function openAdminForm(type, idx){
       </div>
       <div class="af-group"><label class="af-label">Tipo</label><select class="af-input" id="af_tipo"><option${aula.tag==='REPLAY'?' selected':''}>REPLAY</option><option${aula.tag==='AO VIVO'?' selected':''}>AO VIVO</option><option${aula.tag==='HOJE'?' selected':''}>HOJE</option><option${aula.tag==='AMANHÃ'?' selected':''}>AMANHÃ</option><option${aula.tag==='SEMANAL'?' selected':''}>SEMANAL</option><option${aula.tag==='ESPECIAL'?' selected':''}>ESPECIAL</option></select></div>
       <button class="af-btn" onclick="adminUpdateAula(${idx})">💾 Salvar Alterações</button>
+      <button onclick="adminToggleAula(${idx})" style="width:100%;padding:13px;border-radius:50px;border:2px solid var(--amber);background:#fff;color:var(--amber);font-size:15px;font-weight:600;cursor:pointer;margin-top:8px">${aula.ativo===false?'✅ Reativar Aula':'🙈 Desativar Aula'}</button>
       <button onclick="adminDeleteAula(${idx})" style="width:100%;padding:13px;border-radius:50px;border:2px solid var(--rose);background:#fff;color:var(--rose);font-size:15px;font-weight:600;cursor:pointer;margin-top:8px">🗑️ Excluir Aula</button>`;
   } else if(type==='meditacao'){
     body.innerHTML=`
@@ -1690,7 +1691,7 @@ const catBg={CURA:'rgba(249,115,22,0.12)',PROTEÇÃO:'rgba(249,115,22,0.12)',AMO
 const catBadge={CURA:'bp',PROTEÇÃO:'ba',AMOR:'br',FOCO:'bt'};
 
 function renderLiveC(){
-  document.getElementById('liveC').innerHTML=LC.slice(0,3).map(c=>{
+  document.getElementById('liveC').innerHTML=LC.map(c=>{
     const tagBadgeColor={
       'AO VIVO':'#E84D8A','HOJE':'#2EC4B6','AMANHÃ':'#D4873A',
       'REPLAY':'#C8692A','SEMANAL':'#C8692A','ESPECIAL':'#4C6EF5'
